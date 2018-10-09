@@ -28,7 +28,6 @@
 
   <!--系统日志 -->
   <appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <encoding>UTF-8</encoding>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${LOG_HOME}/${APP_Name}.%d{yyyy-MM-dd}.log</fileNamePattern>
       <!-- 最大保存60天日志 -->

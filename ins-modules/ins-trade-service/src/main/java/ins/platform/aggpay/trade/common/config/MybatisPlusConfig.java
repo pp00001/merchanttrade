@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
  * @date 2017/10/29
  */
 @Configuration
-@MapperScan("ins.platform.aggpay.admin.mapper")
+@MapperScan("ins.platform.aggpay.trade.mapper")
 public class MybatisPlusConfig {
     /**
      * 分页插件

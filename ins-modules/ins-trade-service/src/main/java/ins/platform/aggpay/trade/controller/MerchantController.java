@@ -22,7 +22,6 @@ import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.entity.Merchant;
 import ins.platform.aggpay.trade.service.MerchantService;
-import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import java.util.Date;
 import java.util.Map;
@@ -121,11 +120,11 @@ public class MerchantController extends BaseController {
 
 
 
-    @PutMapping
+   /* @PutMapping
     public R<RegisterQueryVo> edit(@PathVariable String isvOrgId,@PathVariable String orderNo) {
 
     	return new R<>(merchantService.registerQuery(isvOrgId,orderNo));
     }
-
+*/
 
 }
