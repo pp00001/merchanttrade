@@ -37,6 +37,7 @@ eureka:
 #认证服务器地址
 security:
   auth:
+    #server: http://47.106.91.233:8010
     server: http://localhost:8010
 ---
 spring:
@@ -51,4 +52,5 @@ eureka:
 #建议使用ng负载均衡
 security:
   auth:
+    #server: http://47.106.91.233:8010
     server: http://localhost:8010

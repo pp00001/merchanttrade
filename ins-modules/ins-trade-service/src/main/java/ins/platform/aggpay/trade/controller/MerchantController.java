@@ -21,10 +21,12 @@ import ins.platform.aggpay.common.util.Query;
 import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.model.entity.Merchant;
+import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.service.MerchantService;
 
 import java.util.Date;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 
@@ -111,4 +114,20 @@ public class MerchantController extends BaseController {
     }
 
     //regist
+
+
+
+
+
+
+
+
+
+    @PutMapping
+    public R<RegisterQueryVo> edit(@PathVariable String isvOrgId,@PathVariable String orderNo) {
+    	
+    	return new R<>(merchantService.registerQuery(isvOrgId,orderNo));
+    }
+
+
 }

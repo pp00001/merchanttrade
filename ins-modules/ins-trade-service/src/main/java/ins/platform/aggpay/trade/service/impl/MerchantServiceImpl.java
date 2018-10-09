@@ -16,15 +16,20 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
+import ins.platform.aggpay.trade.common.util.MapUtil;
 import ins.platform.aggpay.trade.mapper.MerchantMapper;
 import ins.platform.aggpay.trade.model.entity.Merchant;
 import ins.platform.aggpay.trade.model.vo.RegistResVo;
+import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.service.MerchantService;
 
 import java.util.Map;
+
 import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.mybank.bkmerchant.merchant.Register;
+import com.mybank.bkmerchant.merchant.RegisterQuery;
 
 /**
  * <p>
@@ -55,4 +60,21 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 
 		return null;
 	}
+
+	@Override
+	public RegisterQueryVo registerQuery(String isvOrgId, String orderNo) {
+		RegisterQuery rq = new RegisterQuery(orderNo);
+		RegisterQueryVo vo = null;
+		try {
+			Map<String, Object> call = rq.call();
+			vo = MapUtil.map2Obj(call,RegisterQueryVo.class);
+			System.out.println(vo.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return vo;
+	}
+
 }

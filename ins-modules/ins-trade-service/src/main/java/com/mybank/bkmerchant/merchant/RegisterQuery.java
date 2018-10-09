@@ -1,10 +1,13 @@
 package com.mybank.bkmerchant.merchant;
 
+import ins.platform.aggpay.trade.common.util.MapUtil;
+import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.model.vo.RespInfoVo;
 import sun.misc.BASE64Decoder;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
 
@@ -59,14 +62,17 @@ public class RegisterQuery extends AbstractReq {
     RegisterQuery registerQuery = new RegisterQuery("2018091811150710010000000000000000165045");
 
     Map<String, Object> rst = registerQuery.call();
-    System.out.println("#########" + rst.toString());
-
-    RespInfoVo respInfo = new RespInfoVo();
-    org.apache.commons.beanutils.BeanUtils.populate(respInfo,(Map<String,Object>)rst.get("respInfo"));
-    System.out.println("###respInfo:"+ respInfo.toString());
-    //将base加密的相关字段解密
-    BASE64Decoder decoder = new BASE64Decoder();
-    rst.put("wechatChannelList", new String(decoder.decodeBuffer((String) rst.get("wechatChannelList"))));
-    System.out.println((String) rst.get("wechatChannelList"));
+    RegisterQueryVo vo = MapUtil.map2Obj(rst,RegisterQueryVo.class);
+	System.out.println(vo.toString());
+    
+//    System.out.println("#########" + rst.toString());
+//
+//    RespInfoVo respInfo = new RespInfoVo();
+//    org.apache.commons.beanutils.BeanUtils.populate(respInfo,(Map<String,Object>)rst.get("respInfo"));
+//    System.out.println("###respInfo:"+ respInfo.toString());
+//    //将base加密的相关字段解密
+//    BASE64Decoder decoder = new BASE64Decoder();
+//    rst.put("wechatChannelList", new String(decoder.decodeBuffer((String) rst.get("wechatChannelList"))));
+//    System.out.println((String) rst.get("wechatChannelList"));
   }
 }

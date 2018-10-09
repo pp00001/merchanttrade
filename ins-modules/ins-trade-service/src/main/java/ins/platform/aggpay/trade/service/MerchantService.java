@@ -11,9 +11,11 @@ package ins.platform.aggpay.trade.service;
 
 import ins.platform.aggpay.trade.model.entity.Merchant;
 import ins.platform.aggpay.trade.model.vo.RegistResVo;
+import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.mybank.bkmerchant.merchant.Register;
+import com.mybank.bkmerchant.merchant.RegisterQuery;
 
 /**
  * @author RipinYan
@@ -25,6 +27,6 @@ public interface MerchantService extends IService<Merchant> {
 
 	RegistResVo regist(Register register);
 
-
+	RegisterQueryVo registerQuery(String isvOrgId,String orderNo);
 
 }
