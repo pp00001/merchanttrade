@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.mapper;
 
-import ins.platform.aggpay.trade.model.entity.BankCardParam;
+import ins.platform.aggpay.trade.entity.BankCardParam;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**

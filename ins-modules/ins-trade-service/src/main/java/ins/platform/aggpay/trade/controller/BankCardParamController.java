@@ -20,7 +20,7 @@ import ins.platform.aggpay.common.constant.CommonConstant;
 import ins.platform.aggpay.common.util.Query;
 import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
-import ins.platform.aggpay.trade.model.entity.BankCardParam;
+import ins.platform.aggpay.trade.entity.BankCardParam;
 import ins.platform.aggpay.trade.service.BankCardParamService;
 
 import java.util.Date;

@@ -62,6 +62,10 @@ public class HttpsMain {
     public static String        payUrl       = "https://fcsupergw.dl.alipaydev.com/open/api/common/requestasync.htm";
 
     public static String        uploadUrl    = "https://fcsupergwlite.dl.alipaydev.com/ant/mybank/merchantprod/merchant/uploadphoto.htm";
+
+    public static String        oauthUrl    = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2018073160766860&scope=auth_base&redirect_uri=https://baidu.com";
+
+    public static String        openApiUrl    = "https://openapi.alipay.com/gateway.do";
     /**
      * partner
      */

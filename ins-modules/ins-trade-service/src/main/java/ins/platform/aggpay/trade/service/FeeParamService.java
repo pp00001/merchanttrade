@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.service;
 
-import ins.platform.aggpay.trade.model.entity.FeeParam;
+import ins.platform.aggpay.trade.entity.FeeParam;
 
 import com.baomidou.mybatisplus.service.IService;
 

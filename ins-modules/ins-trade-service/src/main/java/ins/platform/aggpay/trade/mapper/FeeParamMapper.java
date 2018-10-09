@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.mapper;
 
-import ins.platform.aggpay.trade.model.entity.FeeParam;
+import ins.platform.aggpay.trade.entity.FeeParam;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**

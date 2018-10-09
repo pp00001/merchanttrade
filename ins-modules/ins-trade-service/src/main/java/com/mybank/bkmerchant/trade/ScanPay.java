@@ -40,9 +40,9 @@ public class ScanPay {
         // 28763443825664394
         // 微信ok-134621141753364349-134723186961316101
         form.put("AuthCode", "134621141753364349");
-        form.put("AuthCode", "284808638893205454");
+        form.put("AuthCode", "286664990659481080");
         form.put("OutTradeNo",UUID.randomUUID().toString().replace("-",""));
-        form.put("Body","反扫测试-碧螺春3");
+        form.put("Body","反扫测试-碧螺春9");
         form.put("GoodsTag","test");
         form.put("GoodsDetail","test");
         form.put("TotalAmount","3");

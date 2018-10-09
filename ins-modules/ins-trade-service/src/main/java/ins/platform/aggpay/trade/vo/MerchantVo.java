@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package ins.platform.aggpay.trade.model.vo;
+package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 

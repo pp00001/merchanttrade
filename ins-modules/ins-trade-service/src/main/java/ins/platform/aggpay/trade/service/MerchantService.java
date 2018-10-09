@@ -9,13 +9,12 @@
 package ins.platform.aggpay.trade.service;
 
 
-import ins.platform.aggpay.trade.model.entity.Merchant;
-import ins.platform.aggpay.trade.model.vo.RegistResVo;
-import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
+import ins.platform.aggpay.trade.entity.Merchant;
+import ins.platform.aggpay.trade.vo.RegistResVo;
+import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.mybank.bkmerchant.merchant.Register;
-import com.mybank.bkmerchant.merchant.RegisterQuery;
 
 /**
  * @author RipinYan

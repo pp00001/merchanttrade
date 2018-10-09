@@ -32,6 +32,7 @@ public class PrePay {
     public static void main(String[] args) throws Exception{
 
 
+
         String URL = "https://openapi.alipay.com/gateway.do";
         String APP_ID = "2018073160766860";
       //  APP_ID = "2018090700000286";
@@ -42,6 +43,7 @@ public class PrePay {
 
         AlipaySystemOauthTokenRequest request = new AlipaySystemOauthTokenRequest();
         request.setCode("edf39ce11cb444549736b2022c98SX37");
+        request.setCode("87df25d4b23c4637ba7b85ee0020XX44");
         request.setGrantType("authorization_code");
         String userId = "";
         try {
@@ -75,6 +77,8 @@ public class PrePay {
         form.put("ChannelType","ALI");
         form.put("OpenId","otBP8wWRG63MS9IZkK27hhO0jYnM");
         form.put("OpenId",userId);
+        form.put("OpenId","2088412422162444");
+
         form.put("OperatorId","test");
         form.put("StoreId","test");
         form.put("DeviceId","test");

@@ -19,7 +19,7 @@
 <mapper namespace="ins.platform.aggpay.trade.mapper.FeeParamMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.model.entity.FeeParam">
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.FeeParam">
         <id column="id" property="id" />
         <result column="channeltype" property="channeltype" />
         <result column="feetype" property="feetype" />

@@ -17,16 +17,14 @@
 package ins.platform.aggpay.trade.service.impl;
 
 import ins.platform.aggpay.trade.common.util.MapUtil;
+import ins.platform.aggpay.trade.entity.Merchant;
 import ins.platform.aggpay.trade.mapper.MerchantMapper;
-import ins.platform.aggpay.trade.model.entity.Merchant;
-import ins.platform.aggpay.trade.model.vo.RegistResVo;
-import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.service.MerchantService;
+import ins.platform.aggpay.trade.vo.RegistResVo;
+import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import java.util.Map;
-
 import org.springframework.stereotype.Service;
-
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.mybank.bkmerchant.merchant.Register;
 import com.mybank.bkmerchant.merchant.RegisterQuery;
@@ -73,7 +71,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return vo;
 	}
 

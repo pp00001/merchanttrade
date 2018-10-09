@@ -17,7 +17,7 @@
 package ins.platform.aggpay.trade.service.impl;
 
 import ins.platform.aggpay.trade.mapper.BankCardParamMapper;
-import ins.platform.aggpay.trade.model.entity.BankCardParam;
+import ins.platform.aggpay.trade.entity.BankCardParam;
 import ins.platform.aggpay.trade.service.BankCardParamService;
 
 import org.springframework.stereotype.Service;

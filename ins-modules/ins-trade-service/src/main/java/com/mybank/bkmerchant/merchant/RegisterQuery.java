@@ -1,13 +1,10 @@
 package com.mybank.bkmerchant.merchant;
 
 import ins.platform.aggpay.trade.common.util.MapUtil;
-import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
-import ins.platform.aggpay.trade.model.vo.RespInfoVo;
-import sun.misc.BASE64Decoder;
+import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
 

@@ -47,7 +47,7 @@ public class SendSmsCode {
 		form.put("ReqTime", new Timestamp(System.currentTimeMillis()).toString());
 		//reqMsgId每次报文必须都不一样
 		form.put("ReqMsgId", UUID.randomUUID().toString());
-		//form.put("MerchantId", merchantId);
+		form.put("MerchantId", merchantId);
 		form.put("OutTradeNo", outTradeNo);
 		form.put("BizType", bizType.getBizCode());
 		form.put("Mobile", mobile);

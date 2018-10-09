@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ins.platform.aggpay.trade.model.entity;
+package ins.platform.aggpay.trade.entity;
 
 import lombok.Data;
 

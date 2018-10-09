@@ -17,7 +17,7 @@
 package ins.platform.aggpay.trade.service.impl;
 
 import ins.platform.aggpay.trade.mapper.MerchantDetailMapper;
-import ins.platform.aggpay.trade.model.entity.MerchantDetail;
+import ins.platform.aggpay.trade.entity.MerchantDetail;
 import ins.platform.aggpay.trade.service.MerchantDetailService;
 
 import org.springframework.stereotype.Service;

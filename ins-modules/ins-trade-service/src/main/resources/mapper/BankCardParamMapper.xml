@@ -19,7 +19,7 @@
 <mapper namespace="ins.platform.aggpay.trade.mapper.BankCardParamMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.model.entity.BankCardParam">
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.BankCardParam">
         <id column="id" property="id" />
         <result column="bank_card_no" property="bankCardNo" />
         <result column="bank_cert_name" property="bankCertName" />

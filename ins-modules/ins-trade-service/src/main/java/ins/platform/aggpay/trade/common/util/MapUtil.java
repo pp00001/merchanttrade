@@ -1,13 +1,11 @@
 package ins.platform.aggpay.trade.common.util;
 
+import ins.platform.aggpay.trade.vo.RegisterQueryVo;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.mybank.bkmerchant.merchant.RegisterQuery;
-
-import ins.platform.aggpay.trade.model.vo.RegisterQueryVo;
 
 public class MapUtil {
 	

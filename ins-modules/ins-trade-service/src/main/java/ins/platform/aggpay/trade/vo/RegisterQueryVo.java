@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package ins.platform.aggpay.trade.service;
+package ins.platform.aggpay.trade.vo;
 
-import ins.platform.aggpay.trade.entity.MerchantDetail;
+import lombok.Data;
 
-import com.baomidou.mybatisplus.service.IService;
-
-/**
- * <p>
- * 商户详情表 服务类
- * </p>
- *
- * @author ripin
- * @since 2018-09-18
- */
-public interface MerchantDetailService extends IService<MerchantDetail> {
-
+@Data
+public class RegisterQueryVo {
+	private String resultStatus;
+	private String resultCode;
+	private String resultMsg;
+	private String merchantId;
+	private String registerStatus;
+	private String failReason;
+	private String outTradeNo;
+	private String orderNo;
+	private String accountNo;
+	private String smid;
+	private String wechatChannelList;
+	private String onlineSmid;
+	private String alipayChannelList;
+	
+	 
+	
+//	private RegisterQueryVo a;
 }

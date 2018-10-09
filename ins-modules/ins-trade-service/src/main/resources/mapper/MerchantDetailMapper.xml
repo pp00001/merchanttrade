@@ -19,7 +19,7 @@
 <mapper namespace="ins.platform.aggpay.trade.mapper.MerchantDetailMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.model.entity.MerchantDetail">
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.MerchantDetail">
         <id column="id" property="id" />
         <result column="alias" property="alias" />
         <result column="contact_mobile" property="contactMobile" />
