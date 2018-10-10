@@ -99,6 +99,7 @@ public class MerchantDetailController extends BaseController {
 		MerchantDetail merchantDetail = new MerchantDetail();
 		merchantDetail.setId(id);
 		merchantDetail.setUpdateTime(new Date());
+		merchantDetail.setDelFlag(CommonConstant.STATUS_DEL);
 		return new R<>(merchantDetailService.updateById(merchantDetail));
 	}
 

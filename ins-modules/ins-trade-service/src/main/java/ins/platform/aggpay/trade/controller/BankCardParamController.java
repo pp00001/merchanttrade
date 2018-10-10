@@ -49,63 +49,69 @@ import com.baomidou.mybatisplus.plugins.Page;
 @RestController
 @RequestMapping("/bankCardParam")
 public class BankCardParamController extends BaseController {
-    @Autowired private BankCardParamService bankCardParamService;
 
-    /**
-    * 通过ID查询
-    *
-    * @param id ID
-    * @return BankCardParam
-    */
-    @GetMapping("/{id}")
-    public R<BankCardParam> get(@PathVariable Integer id) {
-        return new R<>(bankCardParamService.selectById(id));
-    }
+	@Autowired
+	private BankCardParamService bankCardParamService;
+
+	/**
+	 * 通过ID查询
+	 *
+	 * @param id ID
+	 * @return BankCardParam
+	 */
+	@GetMapping("/{id}")
+	public R<BankCardParam> get(@PathVariable Integer id) {
+		return new R<>(bankCardParamService.selectById(id));
+	}
 
 
-    /**
-    * 分页查询信息
-    *
-    * @param params 分页对象
-    * @return 分页对象
-    */
-    @RequestMapping("/page")
-    public Page page(@RequestParam Map<String, Object> params) {
-        params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
-        return bankCardParamService.selectPage(new Query<>(params), new EntityWrapper<>());
-    }
+	/**
+	 * 分页查询信息
+	 *
+	 * @param params 分页对象
+	 * @return 分页对象
+	 */
+	@RequestMapping("/page")
+	public Page page(@RequestParam Map<String, Object> params) {
+		params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
+		return bankCardParamService.selectPage(new Query<>(params), new EntityWrapper<>());
+	}
 
-    /**
-     * 添加
-     * @param  bankCardParam  实体
-     * @return success/false
-     */
-    @PostMapping
-    public R<Boolean> add(@RequestBody BankCardParam bankCardParam) {
-        return new R<>(bankCardParamService.insert(bankCardParam));
-    }
+	/**
+	 * 添加
+	 *
+	 * @param bankCardParam 实体
+	 * @return success/false
+	 */
+	@PostMapping
+	public R<Boolean> add(@RequestBody BankCardParam bankCardParam) {
+		return new R<>(bankCardParamService.insert(bankCardParam));
+	}
 
-    /**
-     * 删除
-     * @param id ID
-     * @return success/false
-     */
-    @DeleteMapping("/{id}")
-    public R<Boolean> delete(@PathVariable Long id) {
-        BankCardParam bankCardParam = new BankCardParam();
-        bankCardParam.setId(id);
-        bankCardParam.setUpdateTime(new Date());
-        return new R<>(bankCardParamService.updateById(bankCardParam));
-    }
+	/**
+	 * 删除
+	 *
+	 * @param id ID
+	 * @return success/false
+	 */
+	@DeleteMapping("/{id}")
+	public R<Boolean> delete(@PathVariable Long id) {
+		BankCardParam bankCardParam = new BankCardParam();
+		bankCardParam.setId(id);
+		bankCardParam.setUpdateTime(new Date());
+		bankCardParam.setDelFlag(CommonConstant.STATUS_DEL);
+		return new R<>(bankCardParamService.updateById(bankCardParam));
+	}
 
-    /**
-     * 编辑
-     * @param  bankCardParam  实体
-     * @return success/false
-     */
-    @PutMapping
-    public R<Boolean> edit(@RequestBody BankCardParam bankCardParam) {
-        bankCardParam.setUpdateTime(new Date());
-        return new R<>(bankCardParamService.updateById(bankCardParam));
-    }
+	/**
+	 * 编辑
+	 *
+	 * @param bankCardParam 实体
+	 * @return success/false
+	 */
+	@PutMapping
+	public R<Boolean> edit(@RequestBody BankCardParam bankCardParam) {
+		bankCardParam.setUpdateTime(new Date());
+		return new R<>(bankCardParamService.updateById(bankCardParam));
+	}
 }

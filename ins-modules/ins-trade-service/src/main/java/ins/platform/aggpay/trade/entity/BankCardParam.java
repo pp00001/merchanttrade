@@ -46,6 +46,11 @@ public class BankCardParam extends Model<BankCardParam> {
 	@TableId(value = "id", type = IdType.AUTO)
 	private Long id;
 	/**
+	 * 外部商户号
+	 */
+	@TableField("out_merchant_id")
+	private String outMerchantId;
+	/**
 	 * 银行卡号
 	 */
 	@TableField("bank_card_no")
@@ -101,6 +106,11 @@ public class BankCardParam extends Model<BankCardParam> {
 	@TableField("valid_ind")
 	private String validInd;
 	/**
+	 * 是否删除  -1：已删除  0：正常
+	 */
+	@TableField("del_flag")
+	private String delFlag;
+	/**
 	 * 创建人代码
 	 */
 	@TableField("creator_code")
@@ -128,8 +138,10 @@ public class BankCardParam extends Model<BankCardParam> {
 
 	@Override
 	public String toString() {
-		return "BankCardParam{" + ", id=" + id + ", bankCardNo=" + bankCardNo + ", bankCertName=" + bankCertName + ", accountType=" + accountType + ", contactLine=" + contactLine + ", branchName=" + branchName + ", branchProvince=" + branchProvince + ", branchCity=" + branchCity
-                + ", certType=" + certType + ", certNo=" + certNo + ", cardHolderAddress=" + cardHolderAddress + ", validInd=" + validInd + ", " +
-                "creatorCode=" + creatorCode + ", createTime=" + createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
+		return "BankCardParam{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", bankCardNo=" + bankCardNo + ", bankCertName=" +
+				bankCertName + ", accountType=" + accountType + ", contactLine=" + contactLine + ", branchName=" + branchName + ", branchProvince="
+				+ branchProvince + ", branchCity=" + branchCity + ", certType=" + certType + ", certNo=" + certNo + ", cardHolderAddress=" +
+				cardHolderAddress + ", validInd=" + validInd + ", delFlag=" + delFlag + ", creatorCode=" + creatorCode + ", createTime=" +
+				createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
 	}
 }

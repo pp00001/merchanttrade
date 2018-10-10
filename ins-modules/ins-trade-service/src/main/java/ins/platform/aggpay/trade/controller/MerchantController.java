@@ -49,75 +49,70 @@ import com.baomidou.mybatisplus.plugins.Page;
 @RestController
 @RequestMapping("/merchant")
 public class MerchantController extends BaseController {
+	@Autowired
+	private MerchantService merchantService;
 
-    @Autowired private MerchantService merchantService;
-
-    /**
-    * 通过ID查询
-    *
-    * @param id ID
-    * @return Merchant
-    */
-    @GetMapping("/{id}")
-    public R<Merchant> get(@PathVariable Integer id) {
-        return new R<>(merchantService.selectById(id));
-    }
+	/**
+	 * 通过ID查询
+	 *
+	 * @param id ID
+	 * @return Merchant
+	 */
+	@GetMapping("/{id}")
+	public R<Merchant> get(@PathVariable Integer id) {
+		return new R<>(merchantService.selectById(id));
+	}
 
 
-    /**
-    * 分页查询信息
-    *
-    * @param params 分页对象
-    * @return 分页对象
-    */
-    @RequestMapping("/page")
-    public Page page(@RequestParam Map<String, Object> params) {
+	/**
+	 * 分页查询信息
+	 *
+	 * @param params 分页对象
+	 * @return 分页对象
+	 */
+	@RequestMapping("/page")
+	public Page page(@RequestParam Map<String, Object> params) {
         params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
-        return merchantService.selectPage(new Query<>(params), new EntityWrapper<>());
-    }
+		return merchantService.selectPage(new Query<>(params), new EntityWrapper<>());
+	}
 
-    /**
-     * 添加
-     * @param  merchant  实体
-     * @return success/false
-     */
-    @PostMapping
-    public R<Boolean> add(@RequestBody Merchant merchant) {
-        return new R<>(merchantService.insert(merchant));
-    }
+	/**
+	 * 添加
+	 *
+	 * @param merchant 实体
+	 * @return success/false
+	 */
+	@PostMapping
+	public R<Boolean> add(@RequestBody Merchant merchant) {
+		return new R<>(merchantService.insert(merchant));
+	}
 
-    /**
-     * 删除
-     * @param id ID
-     * @return success/false
-     */
-    @DeleteMapping("/{id}")
-    public R<Boolean> delete(@PathVariable Long id) {
-        Merchant merchant = new Merchant();
-        merchant.setId(id);
-        merchant.setUpdateTime(new Date());
-        return new R<>(merchantService.updateById(merchant));
-    }
+	/**
+	 * 删除
+	 *
+	 * @param id ID
+	 * @return success/false
+	 */
+	@DeleteMapping("/{id}")
+	public R<Boolean> delete(@PathVariable Long id) {
+		Merchant merchant = new Merchant();
+		merchant.setId(id);
+		merchant.setUpdateTime(new Date());
+        merchant.setDelFlag(CommonConstant.STATUS_DEL);
+		return new R<>(merchantService.updateById(merchant));
+	}
 
-    /**
-     * 编辑
-     * @param  merchant  实体
-     * @return success/false
-     */
-    @PutMapping
-    public R<Boolean> edit(@RequestBody Merchant merchant) {
-        merchant.setUpdateTime(new Date());
-        return new R<>(merchantService.updateById(merchant));
-    }
-
-    //regist
-
-
-
-
-
-
-
+	/**
+	 * 编辑
+	 *
+	 * @param merchant 实体
+	 * @return success/false
+	 */
+	@PutMapping
+	public R<Boolean> edit(@RequestBody Merchant merchant) {
+		merchant.setUpdateTime(new Date());
+		return new R<>(merchantService.updateById(merchant));
+	}
 
 
    /* @PutMapping

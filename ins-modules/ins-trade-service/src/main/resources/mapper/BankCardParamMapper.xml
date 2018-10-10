@@ -18,29 +18,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ins.platform.aggpay.trade.mapper.BankCardParamMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.BankCardParam">
-        <id column="id" property="id" />
-        <result column="bank_card_no" property="bankCardNo" />
-        <result column="bank_cert_name" property="bankCertName" />
-        <result column="account_type" property="accountType" />
-        <result column="contact_line" property="contactLine" />
-        <result column="branch_name" property="branchName" />
-        <result column="branch_province" property="branchProvince" />
-        <result column="branch_city" property="branchCity" />
-        <result column="cert_type" property="certType" />
-        <result column="cert_no" property="certNo" />
-        <result column="card_holder_address" property="cardHolderAddress" />
-        <result column="valid_ind" property="validInd" />
-        <result column="creator_code" property="creatorCode" />
-        <result column="create_time" property="createTime" />
-        <result column="updater_code" property="updaterCode" />
-        <result column="update_time" property="updateTime" />
-    </resultMap>
+  <!-- 通用查询映射结果 -->
+  <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.BankCardParam">
+    <id column="id" property="id"/>
+    <result column="out_merchant_id" property="outMerchantId"/>
+    <result column="bank_card_no" property="bankCardNo"/>
+    <result column="bank_cert_name" property="bankCertName"/>
+    <result column="account_type" property="accountType"/>
+    <result column="contact_line" property="contactLine"/>
+    <result column="branch_name" property="branchName"/>
+    <result column="branch_province" property="branchProvince"/>
+    <result column="branch_city" property="branchCity"/>
+    <result column="cert_type" property="certType"/>
+    <result column="cert_no" property="certNo"/>
+    <result column="card_holder_address" property="cardHolderAddress"/>
+    <result column="valid_ind" property="validInd"/>
+    <result column="del_flag" property="delFlag"/>
+    <result column="creator_code" property="creatorCode"/>
+    <result column="create_time" property="createTime"/>
+    <result column="updater_code" property="updaterCode"/>
+    <result column="update_time" property="updateTime"/>
+  </resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, bank_card_no AS bankCardNo, bank_cert_name AS bankCertName, account_type AS accountType, contact_line AS contactLine, branch_name AS branchName, branch_province AS branchProvince, branch_city AS branchCity, cert_type AS certType, cert_no AS certNo, card_holder_address AS cardHolderAddress, valid_ind AS validInd, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
-    </sql>
+  <!-- 通用查询结果列 -->
+  <sql id="Base_Column_List">
+    id, out_merchant_id AS outMerchantId, bank_card_no AS bankCardNo, bank_cert_name AS bankCertName, account_type AS accountType, contact_line AS contactLine, branch_name AS branchName, branch_province AS branchProvince, branch_city AS branchCity, cert_type AS certType, cert_no AS certNo, card_holder_address AS cardHolderAddress, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+  </sql>
 
 </mapper>

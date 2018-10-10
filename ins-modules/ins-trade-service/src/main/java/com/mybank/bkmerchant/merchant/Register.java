@@ -1,6 +1,7 @@
 package com.mybank.bkmerchant.merchant;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,9 @@ import com.mybank.bkmerchant.constant.TradeTypeEnum;
 import com.mybank.bkmerchant.models.BankCardParam;
 import com.mybank.bkmerchant.models.FeeParam;
 import com.mybank.bkmerchant.models.MerchantDetail;
+import com.xiaoleilu.hutool.date.DatePattern;
+import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**
  *  商户入驻申请接口（不开银行账户）
@@ -196,6 +200,7 @@ public class Register extends AbstractReq {
     String rateVersion
   ) throws JSONException {
     super("ant.mybank.merchantprod.merchant.register");
+    this.outMerchantId = DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT) + RandomUtil.simpleUUID();
     this.merchantName = merchantName;
     this.merchantType = merchantType;
     this.dealtype = dealtype;
@@ -218,7 +223,7 @@ public class Register extends AbstractReq {
 
     this.body = new HashMap<>();
     this.body.put("IsvOrgId", this.isvOrgId);
-    this.body.put("OutMerchantId", this.outTradeNo);
+    this.body.put("OutMerchantId", this.outMerchantId);
     this.body.put("MerchantName", this.merchantName);
     this.body.put("MerchantType", this.merchantType.getMchCode());
     this.body.put("DealType", this.dealtype.getDealCode());
@@ -335,7 +340,7 @@ public class Register extends AbstractReq {
             feeParamList,
             bankCardParam,
             "888888",
-            UUID.randomUUID().toString().replace("-",""),
+            RandomUtil.simpleUUID(),
             "N",
             "03",
             "2018090700000286",

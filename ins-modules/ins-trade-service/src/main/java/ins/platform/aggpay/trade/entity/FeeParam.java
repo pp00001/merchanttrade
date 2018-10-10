@@ -38,68 +38,69 @@ import com.baomidou.mybatisplus.enums.IdType;
 @Data
 public class FeeParam extends Model<FeeParam> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-    /**
-     * 渠道类型 - 01：支付宝，02：微信支付
-     */
-    private String channeltype;
-    /**
-     * 费用类型 - 01：t0收单手续费，02：t1收单手续费
-     */
-    private String feetype;
-    /**
-     * 费率最多支持小数点后5位
-     */
-    private String feevalue;
-    /**
-     * 是否有效 - 1：有效，0：无效
-     */
-    @TableField("valid_ind")
-    private String validInd;
-    /**
-     * 创建人代码
-     */
-    @TableField("creator_code")
-    private String creatorCode;
-    /**
-     * 创建时间
-     */
-    @TableField("create_time")
-    private Date createTime;
-    /**
-     * 更新人代码
-     */
-    @TableField("updater_code")
-    private String updaterCode;
-    /**
-     * 更新时间
-     */
-    @TableField("update_time")
-    private Date updateTime;
+	/**
+	 * 主键
+	 */
+	@TableId(value = "id", type = IdType.AUTO)
+	private Long id;
+	/**
+	 * 外部商户号
+	 */
+	@TableField("out_merchant_id")
+	private String outMerchantId;
+	/**
+	 * 渠道类型 - 01：支付宝，02：微信支付
+	 */
+	private String channeltype;
+	/**
+	 * 费用类型 - 01：t0收单手续费，02：t1收单手续费
+	 */
+	private String feetype;
+	/**
+	 * 费率最多支持小数点后5位
+	 */
+	private String feevalue;
+	/**
+	 * 是否有效 - 1：有效，0：无效
+	 */
+	@TableField("valid_ind")
+	private String validInd;
+	/**
+	 * 是否删除  -1：已删除  0：正常
+	 */
+	@TableField("del_flag")
+	private String delFlag;
+	/**
+	 * 创建人代码
+	 */
+	@TableField("creator_code")
+	private String creatorCode;
+	/**
+	 * 创建时间
+	 */
+	@TableField("create_time")
+	private Date createTime;
+	/**
+	 * 更新人代码
+	 */
+	@TableField("updater_code")
+	private String updaterCode;
+	/**
+	 * 更新时间
+	 */
+	@TableField("update_time")
+	private Date updateTime;
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
+	@Override
+	protected Serializable pkVal() {
+		return this.id;
+	}
 
-    @Override
-    public String toString() {
-        return "FeeParam{" +
-        ", id=" + id +
-        ", channeltype=" + channeltype +
-        ", feetype=" + feetype +
-        ", feevalue=" + feevalue +
-        ", validInd=" + validInd +
-        ", creatorCode=" + creatorCode +
-        ", createTime=" + createTime +
-        ", updaterCode=" + updaterCode +
-        ", updateTime=" + updateTime +
-        "}";
-    }
+	@Override
+	public String toString() {
+		return "FeeParam{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", channeltype=" + channeltype + ", feetype=" + feetype + ", " + "feevalue=" + feevalue + ", validInd=" + validInd + ", delFlag=" + delFlag + ", creatorCode=" + creatorCode + ", createTime=" +
+                createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
+	}
 }
