@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
+
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.constant.AccountType;
 import com.mybank.bkmerchant.constant.DealTypeEnum;
@@ -20,6 +22,8 @@ import com.mybank.bkmerchant.constant.MccEnum;
 import com.mybank.bkmerchant.constant.PayChannelEnum;
 import com.mybank.bkmerchant.constant.PrincipalCertTypeEnum;
 import com.mybank.bkmerchant.constant.ReturnCodeEnum;
+import com.mybank.bkmerchant.constant.SettleModeEnum;
+import com.mybank.bkmerchant.constant.SupportPrepaymentEnum;
 import com.mybank.bkmerchant.constant.TradeTypeEnum;
 import com.mybank.bkmerchant.models.BankCardParam;
 import com.mybank.bkmerchant.models.FeeParam;
@@ -35,6 +39,36 @@ import com.mybank.bkmerchant.util.XmlUtil;
  */
 public class UpdateMerchant {
 
+	private String isvOrgId = HttpsMain.IsvOrgId;
+
+	private String outMerchantId;
+	
+	private DealTypeEnum dealtype;
+	
+	private SupportPrepaymentEnum supportPrepayment;
+	
+	private SettleModeEnum settleMode;
+	
+	private MccEnum mcc;
+	
+	private MerchantDetail merchantDetail;
+	
+	private List<TradeTypeEnum> tradeTypeList;
+	
+	private List<PayChannelEnum> payChannelList;
+	
+	private List<DeniedPayToolEnum> deniedPayToolList;
+	
+	private List<FeeParam> feeParamList;
+	
+	private BankCardParam bankCardParam;
+	
+	private String outTradeNo;
+	
+	private String supportStage;
+	
+	private String alipaySource;
+		
     /**
      * @author simon.xxm
      * @version $Id: BalanceQuery.java, v 0.1 2016年3月3日 下午6:33:49 simon.xxm Exp $

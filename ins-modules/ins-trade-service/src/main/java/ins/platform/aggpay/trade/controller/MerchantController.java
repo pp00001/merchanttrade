@@ -22,9 +22,11 @@ import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.entity.Merchant;
 import ins.platform.aggpay.trade.service.MerchantService;
+import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import java.util.Date;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +37,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.mybank.bkmerchant.merchant.Register;
+import com.mybank.bkmerchant.merchant.UpdateMerchant;
+import com.mybank.bkmerchant.merchant.UploadPhoto;
+import com.mybank.bkmerchant.trade.SendSmsCode;
 
 /**
  * <p>
@@ -109,22 +116,80 @@ public class MerchantController extends BaseController {
         merchant.setUpdateTime(new Date());
         return new R<>(merchantService.updateById(merchant));
     }
+    
+    /**
+     * 5.1.1	短信验证码发送接口
+     * @param sendSmsCode
+     * @return
+     */
+    @PostMapping("/sendSmsCode")
+    public R<Object> sendsmscode(@RequestBody SendSmsCode sendSmsCode) {
+    	return new R<>(merchantService.sendsmscode(sendSmsCode));
+    }
+    
+    /**
+     * 5.1.2	图片上传接口
+     * @param uploadPhoto
+     * @return
+     */
+    @PostMapping("/uploadphoto")
+    public R<Object> uploadphoto(@RequestBody UploadPhoto uploadPhoto) {
+    	return new R<>(merchantService.uploadphoto(uploadPhoto));
+    }
 
-    //regist
+    /**
+     * 5.2.2	商户入驻申请接口（不开银行账户）
+     * @param register
+     * @return
+     */
+    @PostMapping("/regist")
+    public R<Object> regist(@RequestBody Register register) {
+    	return new R<>(merchantService.regist(register));
+    }
 
-
-
-
-
-
-
-
-
-   /* @PutMapping
-    public R<RegisterQueryVo> edit(@PathVariable String isvOrgId,@PathVariable String orderNo) {
-
+    /**
+     * 5.2.3	商户入驻结果查询
+     * @param isvOrgId
+     * @param orderNo
+     * @return
+     */
+    @GetMapping("/{isvOrgId}/{orderNo}")
+    public R<RegisterQueryVo> registerQuery(@PathVariable String isvOrgId,@PathVariable String orderNo) {
     	return new R<>(merchantService.registerQuery(isvOrgId,orderNo));
     }
-*/
+    
+    /**
+     * 5.2.5	商户信息修改
+     */
+    @PostMapping("/updateMerchant")
+    public R<Object> updateMerchant(UpdateMerchant updateMerchant){
+    	return new R<>(merchantService.updateMerchant(updateMerchant));
+    }
 
+    /**
+     * 5.2.6	商户信息查询
+     */
+    @GetMapping("/{isvOrgId}/{merchantId}")
+    public R<Object> merchantQuery(@PathVariable String isvOrgId,@PathVariable String merchantId){
+    	return new R<>(merchantService.merchantQuery(isvOrgId,merchantId));
+    }
+    
+    /**
+     * 5.2.7	商户关闭接口
+     */
+    @GetMapping("/{isvOrgId}/{merchantId}/{freezeReason}/{outTradeNo}")
+    public R<Object> merchantFreeze(@PathVariable String isvOrgId,@PathVariable String merchantId
+    		,@PathVariable String freezeReason,@PathVariable String outTradeNo){
+    	return new R<>(merchantService.merchantFreeze(isvOrgId,merchantId,freezeReason,outTradeNo));
+    }
+    
+    /**
+     * 5.2.8	商户开启接口
+     */
+    @GetMapping("/{isvOrgId}/{merchantId}/{unfreezeReason}/{outTradeNo}")
+    public R<Object> merchantUnfreeze(@PathVariable String isvOrgId,@PathVariable String merchantId
+    		,@PathVariable String unfreezeReason,@PathVariable String outTradeNo){
+    	return new R<>(merchantService.merchantUnfreeze(isvOrgId,merchantId,unfreezeReason,outTradeNo));
+    }
+    
 }

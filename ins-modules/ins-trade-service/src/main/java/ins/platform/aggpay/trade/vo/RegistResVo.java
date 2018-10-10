@@ -19,6 +19,9 @@ import lombok.Data;
 @Data
 public class RegistResVo {
 
-	private RespInfoVo respInfo;
-	private String outMerchantId;
+	private RespInfoVo respInfo;//返回码组件。Result Status 返回S不代表入驻成功，只代表入驻申请已受理。需要回查。
+	private String outMerchantId;//外部商户号
+	private String orderNo;//申请单号。合作方可通过此单号回查商户进件结果。
+	private String outTradeNo;//外部交易号
+	
 }
