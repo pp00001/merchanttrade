@@ -10,11 +10,19 @@ package ins.platform.aggpay.trade.service;
 
 
 import ins.platform.aggpay.trade.entity.Merchant;
+import ins.platform.aggpay.trade.vo.MerchantResVo;
+import ins.platform.aggpay.trade.vo.MerchantVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
+import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.mybank.bkmerchant.merchant.Register;
+import com.mybank.bkmerchant.merchant.UpdateMerchant;
+import com.mybank.bkmerchant.merchant.UploadPhoto;
+import com.mybank.bkmerchant.trade.SendSmsCode;
+
+
 
 /**
  * @author RipinYan
@@ -24,8 +32,32 @@ import com.mybank.bkmerchant.merchant.Register;
  */
 public interface MerchantService extends IService<Merchant> {
 
-	RegistResVo regist(Register register);
+	//短信验证码发送接口
+	MerchantResVo sendsmscode(SendSmsCode sendSmsCode);
+	
+	//图片上传接口
+	UploadPhotoVo uploadphoto(UploadPhoto uploadPhoto);
 
+	//商户入驻申请接口
+	RegistResVo regist(Register register);
+	
+	//商户入驻结果查询
 	RegisterQueryVo registerQuery(String isvOrgId,String orderNo);
+
+	//商户信息修改
+	MerchantResVo updateMerchant(UpdateMerchant updateMerchant);
+
+	//商户信息查询接口
+	MerchantVo merchantQuery(String isvOrgId, String orderNo);
+
+	//商户关闭接口
+	MerchantResVo merchantFreeze(String isvOrgId, String merchantId,
+			String freezeReason, String outTradeNo);
+
+	//商户开启接口
+	MerchantResVo merchantUnfreeze(String isvOrgId, String merchantId,
+			String unfreezeReason, String outTradeNo);
+	
+	
 
 }

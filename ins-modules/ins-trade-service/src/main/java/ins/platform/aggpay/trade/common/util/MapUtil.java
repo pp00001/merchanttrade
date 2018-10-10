@@ -28,7 +28,7 @@ public class MapUtil {
 				}
 				field.setAccessible(true);	
 				if(map.get(field.getName()) instanceof Map<?, ?>){
-					field.set(obj,map2Obj((Map<?, ?>)map.get(field.getName()),field.getDeclaringClass()));
+					field.set(obj,map2Obj((Map<?, ?>)map.get(field.getName()),field.getType()));
 				}else{
 					field.set(obj, map.get(field.getName()));
 				}

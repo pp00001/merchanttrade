@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.constant.BizTypeEnum;
 import com.mybank.bkmerchant.constant.ReturnCodeEnum;
@@ -25,6 +26,12 @@ import com.mybank.bkmerchant.util.XmlUtil;
  */
 public class SendSmsCode {
 
+	private String isvOrgId;
+	private String bizType;
+	private String merchantId;
+	private String mobile;
+	private String outTradeNo;
+	
 	/**
 	 * @param args
 	 * @author simon.xxm
@@ -36,8 +43,7 @@ public class SendSmsCode {
 
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static boolean sendSmsCode(String merchantId, String outTradeNo, BizTypeEnum bizType, String mobile) throws Exception {
+	public static Map<String, Object> sendSmsCodeReturnMap(String merchantId, String outTradeNo, BizTypeEnum bizType, String mobile) throws Exception {
 		//短信验证码发送
 		String function = "ant.mybank.merchantprod.sendsmscode";
 
@@ -47,7 +53,7 @@ public class SendSmsCode {
 		form.put("ReqTime", new Timestamp(System.currentTimeMillis()).toString());
 		//reqMsgId每次报文必须都不一样
 		form.put("ReqMsgId", UUID.randomUUID().toString());
-		form.put("MerchantId", merchantId);
+		//form.put("MerchantId", merchantId);
 		form.put("OutTradeNo", outTradeNo);
 		form.put("BizType", bizType.getBizCode());
 		form.put("Mobile", mobile);
@@ -74,7 +80,14 @@ public class SendSmsCode {
 			}
 		}
 		//解析报文
-		Map<String, Object> resMap = xmlUtil.parse(response, function);
+//		Map<String, Object> resMap = xmlUtil.parse(response, function);
+		return xmlUtil.parse(response, function);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static boolean sendSmsCode(String merchantId, String outTradeNo, BizTypeEnum bizType, String mobile) throws Exception {
+		//解析报文
+		Map<String, Object> resMap = sendSmsCodeReturnMap(merchantId,outTradeNo,bizType,mobile);
 		//外部交易号
 		outTradeNo = (String) resMap.get("OutTradeNo");
 		System.out.println(outTradeNo);
@@ -84,4 +97,43 @@ public class SendSmsCode {
 		return false;
 	}
 
+	public String getIsvOrgId() {
+		return isvOrgId;
+	}
+
+	public void setIsvOrgId(String isvOrgId) {
+		this.isvOrgId = isvOrgId;
+	}
+	
+	public String getBizType() {
+		return bizType;
+	}
+
+	public void setBizType(String bizType) {
+		this.bizType = bizType;
+	}
+
+	public String getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getOutTradeNo() {
+		return outTradeNo;
+	}
+
+	public void setOutTradeNo(String outTradeNo) {
+		this.outTradeNo = outTradeNo;
+	}
 }
