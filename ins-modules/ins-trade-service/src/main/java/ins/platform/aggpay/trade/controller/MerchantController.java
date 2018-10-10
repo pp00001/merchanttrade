@@ -80,7 +80,7 @@ public class MerchantController extends BaseController {
 	 */
 	@RequestMapping("/page")
 	public Page page(@RequestParam Map<String, Object> params) {
-        params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
+		params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
 		return merchantService.selectPage(new Query<>(params), new EntityWrapper<>());
 	}
 
@@ -106,94 +106,99 @@ public class MerchantController extends BaseController {
 		Merchant merchant = new Merchant();
 		merchant.setId(id);
 		merchant.setUpdateTime(new Date());
-        merchant.setDelFlag(CommonConstant.STATUS_DEL);
+		merchant.setDelFlag(CommonConstant.STATUS_DEL);
 		return new R<>(merchantService.updateById(merchant));
 	}
 
-    /**
-     * 编辑
-     * @param  merchant  实体
-     * @return success/false
-     */
-    @PutMapping
-    public R<Boolean> edit(@RequestBody Merchant merchant) {
-        merchant.setUpdateTime(new Date());
-        return new R<>(merchantService.updateById(merchant));
-    }
+	/**
+	 * 编辑
+	 *
+	 * @param merchant 实体
+	 * @return success/false
+	 */
+	@PutMapping
+	public R<Boolean> edit(@RequestBody Merchant merchant) {
+		merchant.setUpdateTime(new Date());
+		return new R<>(merchantService.updateById(merchant));
+	}
 
-    /**
-     * 5.1.1	短信验证码发送接口
-     * @param sendSmsCode
-     * @return
-     */
-    @PostMapping("/sendSmsCode")
-    public R<Object> sendsmscode(@RequestBody SendSmsCode sendSmsCode) {
-    	return new R<>(merchantService.sendsmscode(sendSmsCode));
-    }
+	/**
+	 * 5.1.1	短信验证码发送接口
+	 *
+	 * @param sendSmsCode
+	 * @return
+	 */
+	@PostMapping("/sendSmsCode")
+	public R<Object> sendsmscode(@RequestBody SendSmsCode sendSmsCode) {
+		return new R<>(merchantService.sendsmscode(sendSmsCode));
+	}
 
-    /**
-     * 5.1.2	图片上传接口
-     * @param uploadPhoto
-     * @return
-     */
-    @PostMapping("/uploadphoto")
-    public R<Object> uploadphoto(@RequestBody UploadPhoto uploadPhoto) {
-    	return new R<>(merchantService.uploadphoto(uploadPhoto));
-    }
+	/**
+	 * 5.1.2	图片上传接口
+	 *
+	 * @param uploadPhoto
+	 * @return
+	 */
+	@PostMapping("/uploadphoto")
+	public R<Object> uploadphoto(@RequestBody UploadPhoto uploadPhoto) {
+		return new R<>(merchantService.uploadphoto(uploadPhoto));
+	}
 
-    /**
-     * 5.2.2	商户入驻申请接口（不开银行账户）
-     * @param register
-     * @return
-     */
-    @PostMapping("/regist")
-    public R<Object> regist(@RequestBody Register register) {
-    	return new R<>(merchantService.regist(register));
-    }
+	/**
+	 * 5.2.2	商户入驻申请接口（不开银行账户）
+	 *
+	 * @param register
+	 * @return
+	 */
+	@PostMapping("/regist")
+	public R<Object> regist(@RequestBody Register register) {
+		return new R<>(merchantService.regist(register));
+	}
 
-    /**
-     * 5.2.3	商户入驻结果查询
-     * @param isvOrgId
-     * @param orderNo
-     * @return
-     */
-    @GetMapping("/{isvOrgId}/{orderNo}")
-    public R<RegisterQueryVo> registerQuery(@PathVariable String isvOrgId,@PathVariable String orderNo) {
-    	return new R<>(merchantService.registerQuery(isvOrgId,orderNo));
-    }
+	/**
+	 * 5.2.3	商户入驻结果查询
+	 *
+	 * @param isvOrgId
+	 * @param orderNo
+	 * @return
+	 */
+	@GetMapping("/{isvOrgId}/{orderNo}")
+	public R<RegisterQueryVo> registerQuery(@PathVariable String isvOrgId, @PathVariable String orderNo) {
+		return new R<>(merchantService.registerQuery(isvOrgId, orderNo));
+	}
 
-    /**
-     * 5.2.5	商户信息修改
-     */
-    @PostMapping("/updateMerchant")
-    public R<Object> updateMerchant(UpdateMerchant updateMerchant){
-    	return new R<>(merchantService.updateMerchant(updateMerchant));
-    }
+	/**
+	 * 5.2.5	商户信息修改
+	 */
+	@PostMapping("/updateMerchant")
+	public R<Object> updateMerchant(UpdateMerchant updateMerchant) {
+		return new R<>(merchantService.updateMerchant(updateMerchant));
+	}
 
-    /**
-     * 5.2.6	商户信息查询
-     */
-    @GetMapping("/{isvOrgId}/{merchantId}")
-    public R<Object> merchantQuery(@PathVariable String isvOrgId,@PathVariable String merchantId){
-    	return new R<>(merchantService.merchantQuery(isvOrgId,merchantId));
-    }
+	/**
+	 * 5.2.6	商户信息查询
+	 */
+	@GetMapping("/{isvOrgId}/{merchantId}")
+	public R<Object> merchantQuery(@PathVariable String isvOrgId, @PathVariable String merchantId) {
+		return new R<>(merchantService.merchantQuery(isvOrgId, merchantId));
+	}
 
-    /**
-     * 5.2.7	商户关闭接口
-     */
-    @GetMapping("/{isvOrgId}/{merchantId}/{freezeReason}/{outTradeNo}")
-    public R<Object> merchantFreeze(@PathVariable String isvOrgId,@PathVariable String merchantId
-    		,@PathVariable String freezeReason,@PathVariable String outTradeNo){
-    	return new R<>(merchantService.merchantFreeze(isvOrgId,merchantId,freezeReason,outTradeNo));
-    }
+	/**
+	 * 5.2.7	商户关闭接口
+	 */
+	@GetMapping("/{isvOrgId}/{merchantId}/{freezeReason}/{outTradeNo}")
+	public R<Object> merchantFreeze(@PathVariable String isvOrgId, @PathVariable String merchantId, @PathVariable String freezeReason, @PathVariable
+			String outTradeNo) {
+		return new R<>(merchantService.merchantFreeze(isvOrgId, merchantId, freezeReason, outTradeNo));
+	}
 
-    /**
-     * 5.2.8	商户开启接口
-     */
-    @GetMapping("/{isvOrgId}/{merchantId}/{unfreezeReason}/{outTradeNo}")
-    public R<Object> merchantUnfreeze(@PathVariable String isvOrgId,@PathVariable String merchantId
-    		,@PathVariable String unfreezeReason,@PathVariable String outTradeNo){
-    	return new R<>(merchantService.merchantUnfreeze(isvOrgId,merchantId,unfreezeReason,outTradeNo));
-    }
+	/**
+	 * 5.2.8	商户开启接口
+	 */
+	@GetMapping("/{isvOrgId}/{merchantId}/{unfreezeReason}/{outTradeNo}")
+	public R<Object> merchantUnfreeze(@PathVariable String isvOrgId, @PathVariable String merchantId, @PathVariable String unfreezeReason,
+	                                  @PathVariable String outTradeNo) {
+		return new R<>(merchantService.merchantUnfreeze(isvOrgId, merchantId, unfreezeReason, outTradeNo));
+	}
 
 }
