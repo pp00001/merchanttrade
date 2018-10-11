@@ -24,6 +24,8 @@ public class FeeParam {
     this.feeValue = feeValue;
   }
 
+  public FeeParam(){}
+  
   public PayChannelEnum getChannelType() {
     return channelType;
   }

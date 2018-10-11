@@ -21,7 +21,7 @@ import lombok.Data;
 @Data
 public class RegisterQueryVo {
 	
-	private RespInfoVo respInfoVo;//返回码组件。Result Status 返回S不代表入驻成功，只代表申请单据已经查询到，结果需要看RegisterStatus字段。
+	private RespInfoVo respInfo;//返回码组件。Result Status 返回S不代表入驻成功，只代表申请单据已经查询到，结果需要看RegisterStatus字段。
 	
 	private String merchantId;//商户号。网商为商户分配的商户号，通过商户入驻结果查询接口获取。
 	

@@ -28,11 +28,13 @@ import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.mybank.bkmerchant.constant.BizTypeEnum;
+import com.mybank.bkmerchant.constant.MerchantType;
 import com.mybank.bkmerchant.merchant.Freeze;
 import com.mybank.bkmerchant.merchant.MerchantQuery;
 import com.mybank.bkmerchant.merchant.Register;
@@ -60,17 +62,31 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	public RegistResVo regist(Register register) {
 
 		try {
-			Map<String, Object> call = register.call();
-			Object resultStatus = call.get("resultStatus");
-			if(resultStatus.equals("S")){
-
+			
+			Register c = new Register(register.getMerchantName(), register.getMerchantType(), register.getDealtype(), register.getSupportPrepayment()
+					, register.getSettleMode(),register.getMcc(), register.getMerchantDetail()
+					, register.getTradeTypeList(), register.getPayChannelList(), register.getDeniedPayToolList(), register.getFeeParamList()
+					, register.getBankCardParam(), register.getAuthCode(), register.getOutTradeNo(), register.getSupportStage()
+					, register.getPartnerType(), register.getAlipaySource(), register.getWechatChannel(), register.getRateVersion());
+			
+			Map<String, Object> call = c.call();
+			
+			RegistResVo rs = MapUtil.map2Obj(call,RegistResVo.class);
+//			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
 				//update merchant 入驻结果
-
-			}
+				Merchant insert = new Merchant();
+				BeanUtils.copyProperties(insert, register);
+				insert.setOutMerchantId(rs.getOutMerchantId());
+				insert.setMerchantType(register.getMerchantType().getMchCode());
+				insert.setSupportPrepayment(register.getSupportPrepayment().getSupCode());
+//				insert.setMerchantId(insert.getOutMerchantId());
+				System.out.println(insert.getOutMerchantId());
+				merchantMapper.insert(insert);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//		merchantMapper.
+
 
 		return null;
 	}
