@@ -74,14 +74,14 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 			RegistResVo rs = MapUtil.map2Obj(call,RegistResVo.class);
 //			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
 				//update merchant 入驻结果
-				Merchant insert = new Merchant();
+				GgMerchant insert = new GgMerchant();
 				BeanUtils.copyProperties(insert, register);
 				insert.setOutMerchantId(rs.getOutMerchantId());
 				insert.setMerchantType(register.getMerchantType().getMchCode());
 				insert.setSupportPrepayment(register.getSupportPrepayment().getSupCode());
 //				insert.setMerchantId(insert.getOutMerchantId());
 				System.out.println(insert.getOutMerchantId());
-				merchantMapper.insert(insert);
+				ggMerchantMapper.insert(insert);
 //			}
 		} catch (Exception e) {
 			e.printStackTrace();
