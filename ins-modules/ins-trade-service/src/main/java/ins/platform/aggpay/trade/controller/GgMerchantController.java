@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.mybank.bkmerchant.merchant.Register;
 import com.mybank.bkmerchant.merchant.UpdateMerchant;
 import com.mybank.bkmerchant.merchant.UploadPhoto;
 import com.mybank.bkmerchant.trade.SendSmsCode;

@@ -17,7 +17,6 @@ import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.mybank.bkmerchant.merchant.Register;
 import com.mybank.bkmerchant.merchant.UpdateMerchant;
 import com.mybank.bkmerchant.merchant.UploadPhoto;
 import com.mybank.bkmerchant.trade.SendSmsCode;

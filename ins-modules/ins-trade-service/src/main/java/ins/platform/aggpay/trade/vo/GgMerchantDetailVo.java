@@ -17,14 +17,12 @@
 package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
+import sun.misc.BASE64Encoder;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * @author RipinYan
@@ -140,7 +138,7 @@ public class GgMerchantDetailVo implements Serializable{
 	/**
 	 * 需关注的公众号appid
 	 */
-	private String subscribeAppiD;
+	private String subscribeAppId;
 	/**
 	 * 是否有效 - 1：有效，0：无效
 	 */

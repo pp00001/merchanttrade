@@ -45,7 +45,7 @@
     <result column="industry_license_photo" property="industryLicensePhoto"/>
     <result column="shop_photo" property="shopPhoto"/>
     <result column="other_photo" property="otherPhoto"/>
-    <result column="subscribe_appi_d" property="subscribeAppiD"/>
+    <result column="subscribe_app_id" property="subscribeAppId"/>
     <result column="valid_ind" property="validInd"/>
     <result column="del_flag" property="delFlag"/>
     <result column="creator_code" property="creatorCode"/>
@@ -56,7 +56,12 @@
 
   <!-- 通用查询结果列 -->
   <sql id="Base_Column_List">
-    id, out_merchant_id AS outMerchantId, alias, contact_mobile AS contactMobile, contact_name AS contactName, province, city, district, address, service_phone_no AS servicePhoneNo, email, legal_person AS legalPerson, principal_mobile AS principalMobile, principal_cert_type AS principalCertType, principal_cert_no AS principalCertNo, principal_person AS principalPerson, buss_auth_num AS bussAuthNum, cert_org_code AS certOrgCode, cert_photo_a AS certPhotoA, cert_photo_b AS certPhotoB, license_photo AS licensePhoto, prg_photo AS prgPhoto, industry_license_photo AS industryLicensePhoto, shop_photo AS shopPhoto, other_photo AS otherPhoto, subscribe_appi_d AS subscribeAppiD, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    id, out_merchant_id AS outMerchantId, alias, contact_mobile AS contactMobile, contact_name AS contactName, province, city, district, address,
+    service_phone_no AS servicePhoneNo, email, legal_person AS legalPerson, principal_mobile AS principalMobile, principal_cert_type AS
+    principalCertType, principal_cert_no AS principalCertNo, principal_person AS principalPerson, buss_auth_num AS bussAuthNum, cert_org_code AS
+    certOrgCode, cert_photo_a AS certPhotoA, cert_photo_b AS certPhotoB, license_photo AS licensePhoto, prg_photo AS prgPhoto,
+    industry_license_photo AS industryLicensePhoto, shop_photo AS shopPhoto, other_photo AS otherPhoto, subscribe_app_id AS subscribeAppId,
+    valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
   </sql>
 
 </mapper>
