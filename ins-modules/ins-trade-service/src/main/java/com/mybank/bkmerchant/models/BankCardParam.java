@@ -50,6 +50,8 @@ public class BankCardParam{
     obj.put("CertNo", certNo);
     obj.put("CardHolderAddress", cardHolderAddress);
 
+    System.out.println("BankCardParam：" + obj.toString());
+    
     return new BASE64Encoder().encode(obj.toString().getBytes());
   }
 }

@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import org.json.JSONException;
+
+import com.alibaba.fastjson.JSON;
 import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.constant.AccountType;
@@ -173,7 +176,13 @@ public class Register extends AbstractReq {
 
 
   private Map<String, String> body;
-
+  
+  
+  
+  public Register(){
+	  super("ant.mybank.merchantprod.merchant.register");
+  };
+  
   public Register(
     String merchantName,
     MerchantTypeEnum merchantType,
@@ -342,7 +351,9 @@ public class Register extends AbstractReq {
             "",
             "RS"
     );
-
+    
+    System.out.println("post Json: "+JSON.toJSONString(register));
+    
     Map<String, Object> call = register.call();
     System.out.println("#######" + call.toString());
   }
@@ -429,4 +440,179 @@ public class Register extends AbstractReq {
     Map<String, Object> call = register.call();
     System.out.println("#######" + call.toString());
   }
+
+	public String getIsvOrgId() {
+		return isvOrgId;
+	}
+	
+	public void setIsvOrgId(String isvOrgId) {
+		this.isvOrgId = isvOrgId;
+	}
+	
+	public String getOutMerchantId() {
+		return outMerchantId;
+	}
+	
+	public void setOutMerchantId(String outMerchantId) {
+		this.outMerchantId = outMerchantId;
+	}
+	
+	public String getMerchantName() {
+		return merchantName;
+	}
+	
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+	
+	public MerchantTypeEnum getMerchantType() {
+		return merchantType;
+	}
+	
+	public void setMerchantType(MerchantTypeEnum merchantType) {
+		this.merchantType = merchantType;
+	}
+	
+	public DealTypeEnum getDealtype() {
+		return dealtype;
+	}
+	
+	public void setDealtype(DealTypeEnum dealtype) {
+		this.dealtype = dealtype;
+	}
+	
+	public SupportPrepaymentEnum getSupportPrepayment() {
+		return supportPrepayment;
+	}
+	
+	public void setSupportPrepayment(SupportPrepaymentEnum supportPrepayment) {
+		this.supportPrepayment = supportPrepayment;
+	}
+	
+	public SettleModeEnum getSettleMode() {
+		return settleMode;
+	}
+	
+	public void setSettleMode(SettleModeEnum settleMode) {
+		this.settleMode = settleMode;
+	}
+	
+	public MccEnum getMcc() {
+		return mcc;
+	}
+	
+	public void setMcc(MccEnum mcc) {
+		this.mcc = mcc;
+	}
+	
+	public MerchantDetail getMerchantDetail() {
+		return merchantDetail;
+	}
+	
+	public void setMerchantDetail(MerchantDetail merchantDetail) {
+		this.merchantDetail = merchantDetail;
+	}
+	
+	public List<TradeTypeEnum> getTradeTypeList() {
+		return tradeTypeList;
+	}
+	
+	public void setTradeTypeList(List<TradeTypeEnum> tradeTypeList) {
+		this.tradeTypeList = tradeTypeList;
+	}
+	
+	public List<PayChannelEnum> getPayChannelList() {
+		return payChannelList;
+	}
+	
+	public void setPayChannelList(List<PayChannelEnum> payChannelList) {
+		this.payChannelList = payChannelList;
+	}
+	
+	public List<DeniedPayToolEnum> getDeniedPayToolList() {
+		return deniedPayToolList;
+	}
+	
+	public void setDeniedPayToolList(List<DeniedPayToolEnum> deniedPayToolList) {
+		this.deniedPayToolList = deniedPayToolList;
+	}
+	
+	public List<FeeParam> getFeeParamList() {
+		return feeParamList;
+	}
+	
+	public void setFeeParamList(List<FeeParam> feeParamList) {
+		this.feeParamList = feeParamList;
+	}
+	
+	public BankCardParam getBankCardParam() {
+		return bankCardParam;
+	}
+	
+	public void setBankCardParam(BankCardParam bankCardParam) {
+		this.bankCardParam = bankCardParam;
+	}
+	
+	public String getAuthCode() {
+		return authCode;
+	}
+	
+	public void setAuthCode(String authCode) {
+		this.authCode = authCode;
+	}
+	
+	public String getOutTradeNo() {
+		return outTradeNo;
+	}
+	
+	public void setOutTradeNo(String outTradeNo) {
+		this.outTradeNo = outTradeNo;
+	}
+	
+	public String getSupportStage() {
+		return supportStage;
+	}
+	
+	public void setSupportStage(String supportStage) {
+		this.supportStage = supportStage;
+	}
+	
+	public String getPartnerType() {
+		return partnerType;
+	}
+	
+	public void setPartnerType(String partnerType) {
+		this.partnerType = partnerType;
+	}
+	
+	public String getAlipaySource() {
+		return alipaySource;
+	}
+	
+	public void setAlipaySource(String alipaySource) {
+		this.alipaySource = alipaySource;
+	}
+	
+	public String getWechatChannel() {
+		return wechatChannel;
+	}
+	
+	public void setWechatChannel(String wechatChannel) {
+		this.wechatChannel = wechatChannel;
+	}
+	
+	public String getRateVersion() {
+		return rateVersion;
+	}
+	
+	public void setRateVersion(String rateVersion) {
+		this.rateVersion = rateVersion;
+	}
+	
+	public void setBody(Map<String, String> body) {
+		this.body = body;
+	}
+  
+  
+  
 }

@@ -1,17 +1,21 @@
 package com.mybank.bkmerchant.models;
 
+import java.io.Serializable;
+
 import lombok.Data;
-import sun.misc.BASE64Encoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import sun.misc.BASE64Encoder;
+
 import com.mybank.bkmerchant.constant.PrincipalCertTypeEnum;
 
 /**
  * Created by jingzhu.zr on 2017/8/15.
  */
 @Data
-public class MerchantDetail {
+public class MerchantDetail{
 	/**
 	 * 商户简称
 	 */
@@ -208,4 +212,7 @@ public class MerchantDetail {
 
 		return new BASE64Encoder().encode(obj.toString().getBytes());
 	}
+	
+	
+	
 }
