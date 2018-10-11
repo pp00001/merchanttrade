@@ -47,7 +47,7 @@ import com.baomidou.mybatisplus.plugins.Page;
  * @since 2018-10-11
  */
 @RestController
-@RequestMapping("/gpTradeOrder")
+@RequestMapping("/tradeOrder")
 public class GpTradeOrderController extends BaseController {
 	@Autowired
 	private GpTradeOrderService gpTradeOrderService;

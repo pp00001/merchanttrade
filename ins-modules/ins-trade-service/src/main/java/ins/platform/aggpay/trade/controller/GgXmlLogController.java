@@ -47,7 +47,7 @@ import com.baomidou.mybatisplus.plugins.Page;
  * @since 2018-10-11
  */
 @RestController
-@RequestMapping("/ggXmlLog")
+@RequestMapping("/xmlLog")
 public class GgXmlLogController extends BaseController {
     @Autowired private GgXmlLogService ggXmlLogService;
 
