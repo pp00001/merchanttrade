@@ -1,5 +1,9 @@
 package com.mybank.bkmerchant.merchant;
 
+import ins.platform.aggpay.trade.vo.GgBankCardParamVo;
+import ins.platform.aggpay.trade.vo.GgFeeParamVo;
+import ins.platform.aggpay.trade.vo.GgMerchantDetailVo;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,21 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import lombok.Data;
+
 import org.json.JSONException;
 
 import com.alibaba.fastjson.JSON;
 import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.constant.AccountType;
-import com.mybank.bkmerchant.constant.DealTypeEnum;
 import com.mybank.bkmerchant.constant.DeniedPayToolEnum;
 import com.mybank.bkmerchant.constant.FeeTypeEnum;
-import com.mybank.bkmerchant.constant.MccEnum;
-import com.mybank.bkmerchant.constant.MerchantTypeEnum;
 import com.mybank.bkmerchant.constant.PayChannelEnum;
 import com.mybank.bkmerchant.constant.PrincipalCertTypeEnum;
-import com.mybank.bkmerchant.constant.SettleModeEnum;
-import com.mybank.bkmerchant.constant.SupportPrepaymentEnum;
 import com.mybank.bkmerchant.constant.TradeTypeEnum;
 import com.mybank.bkmerchant.models.BankCardParam;
 import com.mybank.bkmerchant.models.FeeParam;
@@ -56,6 +57,7 @@ import com.xiaoleilu.hutool.util.RandomUtil;
  *
  *  @author jingzhu.zr
  */
+@Data
 public class Register extends AbstractReq {
 
   /**
@@ -101,7 +103,7 @@ public class Register extends AbstractReq {
   /**
    * 商户详情
    */
-  private MerchantDetail merchantDetail;
+  private GgMerchantDetailVo merchantDetail;
 
   /**
    * 支持交易类型列表
@@ -121,12 +123,12 @@ public class Register extends AbstractReq {
   /**
    * 手续费列表
    */
-  private List<FeeParam> feeParamList;
+  private List<GgFeeParamVo> feeParamList;
 
   /**
    * 清算卡参数
    */
-  private BankCardParam bankCardParam;
+  private GgBankCardParamVo bankCardParam;
 
   /**
    * 手机验证码。
@@ -194,12 +196,12 @@ public class Register extends AbstractReq {
     String supportPrepayment,
     String settleMode,
     String mcc,
-    MerchantDetail merchantDetail,
+    GgMerchantDetailVo merchantDetail,
     String tradeTypeList,
     String payChannelList,
     String deniedPayToolList,
-    List<FeeParam> feeParamList,
-    BankCardParam bankCardParam,
+    List<GgFeeParamVo> feeParamList,
+    GgBankCardParamVo bankCardParam,
     String authCode,
     String outTradeNo,
     String supportStage,
@@ -243,7 +245,7 @@ public class Register extends AbstractReq {
     this.body.put("TradeTypeList", this.tradeTypeList);
     this.body.put("PayChannelList", this.payChannelList);
     this.body.put("DeniedPayToolList", this.deniedPayToolList);
-    this.body.put("FeeParamList", FeeParam.genJsonBase64(this.feeParamList));
+    this.body.put("FeeParamList", GgFeeParamVo.genJsonBase64(this.feeParamList));
     this.body.put("BankCardParam", this.bankCardParam.genJsonBase64());
     this.body.put("AuthCode", this.authCode);
     this.body.put("OutTradeNo", this.outTradeNo);
@@ -279,96 +281,96 @@ public class Register extends AbstractReq {
    * @throws Exception
    */
   private static void company() throws Exception {
-    MerchantDetail merchantDetail = new MerchantDetail(
-            "中科软-企业1号",
-            "17620358925",
-            "严水平",
-            "", "", "", "",
-            "01040304230",
-            "yanshuiping925@163.com",
-            "名称",
-            "",
-            PrincipalCertTypeEnum.IdentityCard,
-            "430723198809102650",
-            "海南新视线人力资源服务有限公司",
-            "123232322111112",
-            "",
-            "d9a8f406-b3ee-44f5-be5e-78cbfafd77e3",
-            "5b80e0d2-728f-43a8-ba50-1e76e9796b73",
-            "e63f55bc-8d87-4b98-818c-9f87e1f3bc0e", "ff8a44ca-cc1d-4fc9-a51e-9e6ad0509883", "b9467b2e-a095-4d0e-8c21-f63503fe356e", "", "",""
-    );
-
-    List<TradeTypeEnum> tradeTypeEnumList = new ArrayList<TradeTypeEnum>();
-    tradeTypeEnumList.add(TradeTypeEnum.Forward);
-    tradeTypeEnumList.add(TradeTypeEnum.Backward);
-    tradeTypeEnumList.add(TradeTypeEnum.Refund);
-
-    List<PayChannelEnum> payChannelEnumList = new ArrayList<PayChannelEnum>();
-    payChannelEnumList.add(PayChannelEnum.Ali);
-    payChannelEnumList.add(PayChannelEnum.WX);
-
-    List<DeniedPayToolEnum> deniedPayToolEnumList = new ArrayList<DeniedPayToolEnum>();
-    deniedPayToolEnumList.add(DeniedPayToolEnum.Huabei);
-
-    List<FeeParam> feeParamList = new ArrayList<FeeParam>();
-    feeParamList.add(new FeeParam(PayChannelEnum.Ali, FeeTypeEnum.T1, "0.0035"));
-    feeParamList.add(new FeeParam(PayChannelEnum.WX, FeeTypeEnum.T1, "0.0035"));
-
-    BankCardParam bankCardParam = new BankCardParam(
-            "6212261202002415210",
-            "名称",
-            AccountType.ORIENTED_PUBLIC,
-            "102331022094", "工商银行", "330000", "330100",
-            "01",
-            "202436199402060494",
-            "杭州"
-    );
-
-    // 订单号：2018091811150710010000000000000000165092
-    bankCardParam = new BankCardParam(
-            "6212261202002415210",
-            "名称",
-            AccountType.ORIENTED_PUBLIC,
-            "102331022094", "", "", "",
-            "01",
-            "202436199402060494",
-            "12"
-    );
-
-    Register register = new Register(
-            "名称",
-            //MerchantTypeEnum.Enterprising
-            "03",
-            //DealTypeEnum.Entity,
-            "01",
-            //SupportPrepaymentEnum.NotSupport,
-            "N",
-            //SettleModeEnum.BankCard,
-            "01",
-//            MccEnum.Cate,
-            "2015050700000000",
-            merchantDetail,
-//            tradeTypeEnumList,
-            "01,02,06",
-//            payChannelEnumList,
-            "01,02",
-//            deniedPayToolEnumList,
-            "03",
-            feeParamList,
-            bankCardParam,
-            "888888",
-            RandomUtil.simpleUUID(),
-            "N",
-            "03",
-            "2018090700000286",
-            "",
-            "RS"
-    );
-    
-    System.out.println("post Json: "+JSON.toJSONString(register));
-    
-    Map<String, Object> call = register.call();
-    System.out.println("#######" + call.toString());
+//    MerchantDetail merchantDetail = new MerchantDetail(
+//            "中科软-企业1号",
+//            "17620358925",
+//            "严水平",
+//            "", "", "", "",
+//            "01040304230",
+//            "yanshuiping925@163.com",
+//            "名称",
+//            "",
+//            PrincipalCertTypeEnum.IdentityCard,
+//            "430723198809102650",
+//            "海南新视线人力资源服务有限公司",
+//            "123232322111112",
+//            "",
+//            "d9a8f406-b3ee-44f5-be5e-78cbfafd77e3",
+//            "5b80e0d2-728f-43a8-ba50-1e76e9796b73",
+//            "e63f55bc-8d87-4b98-818c-9f87e1f3bc0e", "ff8a44ca-cc1d-4fc9-a51e-9e6ad0509883", "b9467b2e-a095-4d0e-8c21-f63503fe356e", "", "",""
+//    );
+//
+//    List<TradeTypeEnum> tradeTypeEnumList = new ArrayList<TradeTypeEnum>();
+//    tradeTypeEnumList.add(TradeTypeEnum.Forward);
+//    tradeTypeEnumList.add(TradeTypeEnum.Backward);
+//    tradeTypeEnumList.add(TradeTypeEnum.Refund);
+//
+//    List<PayChannelEnum> payChannelEnumList = new ArrayList<PayChannelEnum>();
+//    payChannelEnumList.add(PayChannelEnum.Ali);
+//    payChannelEnumList.add(PayChannelEnum.WX);
+//
+//    List<DeniedPayToolEnum> deniedPayToolEnumList = new ArrayList<DeniedPayToolEnum>();
+//    deniedPayToolEnumList.add(DeniedPayToolEnum.Huabei);
+//
+//    List<FeeParam> feeParamList = new ArrayList<FeeParam>();
+//    feeParamList.add(new FeeParam(PayChannelEnum.Ali, FeeTypeEnum.T1, "0.0035"));
+//    feeParamList.add(new FeeParam(PayChannelEnum.WX, FeeTypeEnum.T1, "0.0035"));
+//
+//    BankCardParam bankCardParam = new BankCardParam(
+//            "6212261202002415210",
+//            "名称",
+//            AccountType.ORIENTED_PUBLIC,
+//            "102331022094", "工商银行", "330000", "330100",
+//            "01",
+//            "202436199402060494",
+//            "杭州"
+//    );
+//
+//    // 订单号：2018091811150710010000000000000000165092
+//    bankCardParam = new BankCardParam(
+//            "6212261202002415210",
+//            "名称",
+//            AccountType.ORIENTED_PUBLIC,
+//            "102331022094", "", "", "",
+//            "01",
+//            "202436199402060494",
+//            "12"
+//    );
+//
+//    Register register = new Register(
+//            "名称",
+//            //MerchantTypeEnum.Enterprising
+//            "03",
+//            //DealTypeEnum.Entity,
+//            "01",
+//            //SupportPrepaymentEnum.NotSupport,
+//            "N",
+//            //SettleModeEnum.BankCard,
+//            "01",
+////            MccEnum.Cate,
+//            "2015050700000000",
+//            merchantDetail,
+////            tradeTypeEnumList,
+//            "01,02,06",
+////            payChannelEnumList,
+//            "01,02",
+////            deniedPayToolEnumList,
+//            "03",
+//            feeParamList,
+//            bankCardParam,
+//            "888888",
+//            RandomUtil.simpleUUID(),
+//            "N",
+//            "03",
+//            "2018090700000286",
+//            "",
+//            "RS"
+//    );
+//    
+//    System.out.println("post Json: "+JSON.toJSONString(register));
+//    
+//    Map<String, Object> call = register.call();
+//    System.out.println("#######" + call.toString());
   }
 
 
@@ -380,262 +382,86 @@ public class Register extends AbstractReq {
    * @throws Exception
    */
   private static void nature() throws Exception {
-    MerchantDetail merchantDetail = new MerchantDetail(
-      "中科软1号",
-      "17620358925",
-      "严水平",
-      "", "", "", "",
-      "01040304230",
-      "yanshuiping925@163.com",
-      "",
-      "17620358925",
-      PrincipalCertTypeEnum.IdentityCard,
-      "202436199402060494",
-      "名称",
-      "",
-	  "",
-      "d9a8f406-b3ee-44f5-be5e-78cbfafd77e3",
-      "5b80e0d2-728f-43a8-ba50-1e76e9796b73",
-      "", "", "", "", "",""
-    );
-
-    List<TradeTypeEnum> tradeTypeEnumList = new ArrayList<TradeTypeEnum>();
-    tradeTypeEnumList.add(TradeTypeEnum.Forward);
-    tradeTypeEnumList.add(TradeTypeEnum.Backward);
-    tradeTypeEnumList.add(TradeTypeEnum.Refund);
-
-    List<PayChannelEnum> payChannelEnumList = new ArrayList<PayChannelEnum>();
-    payChannelEnumList.add(PayChannelEnum.Ali);
-    payChannelEnumList.add(PayChannelEnum.WX);
-
-    List<DeniedPayToolEnum> deniedPayToolEnumList = new ArrayList<DeniedPayToolEnum>();
-    deniedPayToolEnumList.add(DeniedPayToolEnum.Huabei);
-
-    List<FeeParam> feeParamList = new ArrayList<FeeParam>();
-    feeParamList.add(new FeeParam(PayChannelEnum.Ali, FeeTypeEnum.T1, "0.0035"));
-    feeParamList.add(new FeeParam(PayChannelEnum.WX, FeeTypeEnum.T1, "0.0035"));
-
-    BankCardParam bankCardParam = new BankCardParam(
-      "6212261202002415210",
-      "名称",
-      AccountType.ORIENTED_PRIVATE,
-      "",
-            "",
-            "",
-            "",
-      PrincipalCertTypeEnum.IdentityCard.getCertCode(),
-      "202436199402060494",
-      "杭州"
-    );
-
-    Register register = new Register(
-      "中科软1号",
-//      MerchantTypeEnum.Natural,
-      "01",
-//      DealTypeEnum.Entity,
-      "01",
-//      SupportPrepaymentEnum.NotSupport,
-      "N",
-//      SettleModeEnum.BankCard,
-      "01",
-//      MccEnum.Cate,
-      "2015050700000000",
-      merchantDetail,
-//      tradeTypeEnumList,
-      "01,02,06",
-//      payChannelEnumList,
-      "01,02",
-//      deniedPayToolEnumList,
-      "03",
-      feeParamList,
-      bankCardParam,
-		    "888888",
-      UUID.randomUUID().toString().replace("-",""),
-		    "N",
-		    "03",
-		    "2018090700000286",
-            "",
-            "RS"
-    );
-
-    Map<String, Object> call = register.call();
-    System.out.println("#######" + call.toString());
+//    MerchantDetail merchantDetail = new MerchantDetail(
+//      "中科软1号",
+//      "17620358925",
+//      "严水平",
+//      "", "", "", "",
+//      "01040304230",
+//      "yanshuiping925@163.com",
+//      "",
+//      "17620358925",
+//      PrincipalCertTypeEnum.IdentityCard,
+//      "202436199402060494",
+//      "名称",
+//      "",
+//	  "",
+//      "d9a8f406-b3ee-44f5-be5e-78cbfafd77e3",
+//      "5b80e0d2-728f-43a8-ba50-1e76e9796b73",
+//      "", "", "", "", "",""
+//    );
+//
+//    List<TradeTypeEnum> tradeTypeEnumList = new ArrayList<TradeTypeEnum>();
+//    tradeTypeEnumList.add(TradeTypeEnum.Forward);
+//    tradeTypeEnumList.add(TradeTypeEnum.Backward);
+//    tradeTypeEnumList.add(TradeTypeEnum.Refund);
+//
+//    List<PayChannelEnum> payChannelEnumList = new ArrayList<PayChannelEnum>();
+//    payChannelEnumList.add(PayChannelEnum.Ali);
+//    payChannelEnumList.add(PayChannelEnum.WX);
+//
+//    List<DeniedPayToolEnum> deniedPayToolEnumList = new ArrayList<DeniedPayToolEnum>();
+//    deniedPayToolEnumList.add(DeniedPayToolEnum.Huabei);
+//
+//    List<FeeParam> feeParamList = new ArrayList<FeeParam>();
+//    feeParamList.add(new FeeParam(PayChannelEnum.Ali, FeeTypeEnum.T1, "0.0035"));
+//    feeParamList.add(new FeeParam(PayChannelEnum.WX, FeeTypeEnum.T1, "0.0035"));
+//
+//    BankCardParam bankCardParam = new BankCardParam(
+//      "6212261202002415210",
+//      "名称",
+//      AccountType.ORIENTED_PRIVATE,
+//      "",
+//            "",
+//            "",
+//            "",
+//      PrincipalCertTypeEnum.IdentityCard.getCertCode(),
+//      "202436199402060494",
+//      "杭州"
+//    );
+//
+//    Register register = new Register(
+//      "中科软1号",
+////      MerchantTypeEnum.Natural,
+//      "01",
+////      DealTypeEnum.Entity,
+//      "01",
+////      SupportPrepaymentEnum.NotSupport,
+//      "N",
+////      SettleModeEnum.BankCard,
+//      "01",
+////      MccEnum.Cate,
+//      "2015050700000000",
+//      merchantDetail,
+////      tradeTypeEnumList,
+//      "01,02,06",
+////      payChannelEnumList,
+//      "01,02",
+////      deniedPayToolEnumList,
+//      "03",
+//      feeParamList,
+//      bankCardParam,
+//		    "888888",
+//      UUID.randomUUID().toString().replace("-",""),
+//		    "N",
+//		    "03",
+//		    "2018090700000286",
+//            "",
+//            "RS"
+//    );
+//
+//    Map<String, Object> call = register.call();
+//    System.out.println("#######" + call.toString());
   }
 
-	public String getIsvOrgId() {
-		return isvOrgId;
-	}
-	
-	public void setIsvOrgId(String isvOrgId) {
-		this.isvOrgId = isvOrgId;
-	}
-	
-	public String getOutMerchantId() {
-		return outMerchantId;
-	}
-	
-	public void setOutMerchantId(String outMerchantId) {
-		this.outMerchantId = outMerchantId;
-	}
-	
-	public String getMerchantName() {
-		return merchantName;
-	}
-	
-	public void setMerchantName(String merchantName) {
-		this.merchantName = merchantName;
-	}
-	
-	public String getMerchantType() {
-		return merchantType;
-	}
-	
-	public void setMerchantType(String merchantType) {
-		this.merchantType = merchantType;
-	}
-	
-	public String getDealtype() {
-		return dealtype;
-	}
-	
-	public void setDealtype(String dealtype) {
-		this.dealtype = dealtype;
-	}
-	
-	public String getSupportPrepayment() {
-		return supportPrepayment;
-	}
-	
-	public void setSupportPrepayment(String supportPrepayment) {
-		this.supportPrepayment = supportPrepayment;
-	}
-	
-	public String getSettleMode() {
-		return settleMode;
-	}
-	
-	public void setSettleMode(String settleMode) {
-		this.settleMode = settleMode;
-	}
-	
-	public String getMcc() {
-		return mcc;
-	}
-	
-	public void setMcc(String mcc) {
-		this.mcc = mcc;
-	}
-	
-	public MerchantDetail getMerchantDetail() {
-		return merchantDetail;
-	}
-	
-	public void setMerchantDetail(MerchantDetail merchantDetail) {
-		this.merchantDetail = merchantDetail;
-	}
-	
-	public String getTradeTypeList() {
-		return tradeTypeList;
-	}
-	
-	public void setTradeTypeList(String tradeTypeList) {
-		this.tradeTypeList = tradeTypeList;
-	}
-	
-	public String getPayChannelList() {
-		return payChannelList;
-	}
-	
-	public void setPayChannelList(String payChannelList) {
-		this.payChannelList = payChannelList;
-	}
-	
-	public String getDeniedPayToolList() {
-		return deniedPayToolList;
-	}
-	
-	public void setDeniedPayToolList(String deniedPayToolList) {
-		this.deniedPayToolList = deniedPayToolList;
-	}
-	
-	public List<FeeParam> getFeeParamList() {
-		return feeParamList;
-	}
-	
-	public void setFeeParamList(List<FeeParam> feeParamList) {
-		this.feeParamList = feeParamList;
-	}
-	
-	public BankCardParam getBankCardParam() {
-		return bankCardParam;
-	}
-	
-	public void setBankCardParam(BankCardParam bankCardParam) {
-		this.bankCardParam = bankCardParam;
-	}
-	
-	public String getAuthCode() {
-		return authCode;
-	}
-	
-	public void setAuthCode(String authCode) {
-		this.authCode = authCode;
-	}
-	
-	public String getOutTradeNo() {
-		return outTradeNo;
-	}
-	
-	public void setOutTradeNo(String outTradeNo) {
-		this.outTradeNo = outTradeNo;
-	}
-	
-	public String getSupportStage() {
-		return supportStage;
-	}
-	
-	public void setSupportStage(String supportStage) {
-		this.supportStage = supportStage;
-	}
-	
-	public String getPartnerType() {
-		return partnerType;
-	}
-	
-	public void setPartnerType(String partnerType) {
-		this.partnerType = partnerType;
-	}
-	
-	public String getAlipaySource() {
-		return alipaySource;
-	}
-	
-	public void setAlipaySource(String alipaySource) {
-		this.alipaySource = alipaySource;
-	}
-	
-	public String getWechatChannel() {
-		return wechatChannel;
-	}
-	
-	public void setWechatChannel(String wechatChannel) {
-		this.wechatChannel = wechatChannel;
-	}
-	
-	public String getRateVersion() {
-		return rateVersion;
-	}
-	
-	public void setRateVersion(String rateVersion) {
-		this.rateVersion = rateVersion;
-	}
-	
-	public void setBody(Map<String, String> body) {
-		this.body = body;
-	}
-
-  
-  
-  
-  
 }

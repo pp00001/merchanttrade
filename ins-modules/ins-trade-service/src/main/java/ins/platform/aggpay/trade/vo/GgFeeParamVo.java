@@ -16,10 +16,18 @@
 
 package ins.platform.aggpay.trade.vo;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Date;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sun.misc.BASE64Encoder;
 
 /**
  * @author RipinYan
@@ -76,5 +84,23 @@ public class GgFeeParamVo implements Serializable {
 	 * 更新时间
 	 */
 	private Date updateTime;
+	
+	public static String genJsonBase64(List<GgFeeParamVo> feeParamList) throws JSONException{
+	    List<JSONObject> arr = new ArrayList<JSONObject>();
+	    for (GgFeeParamVo param: feeParamList) {
+	      JSONObject obj = new JSONObject();
+	      obj.put("ChannelType", param.getChanneltype());
+	      obj.put("FeeType", param.getFeetype());
+	      obj.put("FeeValue", param.getFeevalue());
+
+	      arr.add(obj);
+
+	      System.out.println(obj.toString());
+	    }
+
+	    return new BASE64Encoder().encode(new JSONArray(arr).toString().getBytes());
+	}
+	
+	
 
 }

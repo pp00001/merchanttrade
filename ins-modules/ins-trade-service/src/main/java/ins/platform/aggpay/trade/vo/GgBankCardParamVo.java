@@ -21,6 +21,11 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sun.misc.BASE64Encoder;
+
 /**
  * @author RipinYan
  * @ClassName: GgBankCardParamVo
@@ -104,5 +109,24 @@ public class GgBankCardParamVo implements Serializable {
 	 * 更新时间
 	 */
 	private Date updateTime;
+	
+	public String genJsonBase64() throws JSONException {
+	    JSONObject obj = new JSONObject();
+	
+	    obj.put("BankCardNo", bankCardNo);
+	    obj.put("BankCertName", bankCertName);
+	    obj.put("AccountType", accountType);
+	    obj.put("ContactLine", contactLine);
+	    obj.put("BranchName", branchName);
+	    obj.put("BranchProvince", branchProvince);
+	    obj.put("BranchCity", branchCity);
+	    obj.put("CertType", certType);
+	    obj.put("CertNo", certNo);
+	    obj.put("CardHolderAddress", cardHolderAddress);
+	
+	    System.out.println("BankCardParam：" + obj.toString());
+	    
+	    return new BASE64Encoder().encode(obj.toString().getBytes());
+	}
 
 }

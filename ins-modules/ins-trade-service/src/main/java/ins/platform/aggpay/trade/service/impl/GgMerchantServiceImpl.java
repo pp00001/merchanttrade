@@ -71,11 +71,12 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		try {
 //			register.call();
 			
-			Register c = new Register(register.getMerchantName(), register.getMerchantType(), register.getDealtype(), register.getSupportPrepayment()
-					, register.getSettleMode(),register.getMcc(), register.getMerchantDetail()
-					, register.getTradeTypeList(), register.getPayChannelList(), register.getDeniedPayToolList(), register.getFeeParamList()
-					, register.getBankCardParam(), register.getAuthCode(), register.getOutTradeNo(), register.getSupportStage()
-					, register.getPartnerType(), register.getAlipaySource(), register.getWechatChannel(), register.getRateVersion());
+			Register c = new Register(register.getMerchantName(), register.getMerchantType(), register.getDealtype()
+					, register.getSupportPrepayment(), register.getSettleMode(), register.getMcc()
+					, register.getGgMerchantDetailVo(), register.getTradeTypeList(), register.getPayChannelList()
+					, register.getDeniedPayToolList(), register.getFeeParamList(), register.getGgBankCardParamVo()
+					, register.getAuthCode(), register.getOutTradeNo(), register.getSupportStage(), register.getPartnerType()
+					, register.getAlipaySource(), register.getWechatChannel(), register.getRateVersion());
 			
 			Map<String, Object> call = c.call();
 			

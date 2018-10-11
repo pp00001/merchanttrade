@@ -21,6 +21,11 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import sun.misc.BASE64Encoder;
+
 /**
  * @author RipinYan
  * @ClassName: GgMerchantDetailVo
@@ -160,5 +165,40 @@ public class GgMerchantDetailVo implements Serializable{
 	 * 更新时间
 	 */
 	private Date updateTime;
+	
+	public String genJsonBase64() throws JSONException {
+		JSONObject obj = new JSONObject();
+
+		obj.put("Alias", alias);
+		obj.put("ContactMobile", contactMobile);
+		obj.put("ContactName", contactName);
+		obj.put("Province", province);
+		obj.put("City", city);
+		obj.put("District", district);
+		obj.put("Address", address);
+		obj.put("ServicePhoneNo", servicePhoneNo);
+		obj.put("Email", email);
+		obj.put("LegalPerson", legalPerson);
+		obj.put("PrincipalMobile", principalMobile);
+		
+		obj.put("PrincipalCertType", principalCertType);
+		
+		obj.put("PrincipalCertNo", principalCertNo);
+		obj.put("PrincipalPerson", principalPerson);
+		obj.put("BussAuthNum", bussAuthNum);
+		obj.put("CertOrgCode", certOrgCode);
+		obj.put("CertPhotoA", certPhotoA);
+		obj.put("CertPhotoB", certPhotoB);
+		obj.put("LicensePhoto", licensePhoto);
+		obj.put("PrgPhoto", prgPhoto);
+		obj.put("IndustryLicensePhoto", industryLicensePhoto);
+		obj.put("ShopPhoto", shopPhoto);
+		obj.put("OtherPhoto", otherPhoto);
+		obj.put("SubscribeAppId", subscribeAppId);
+
+		System.out.println("商户详细信息：" + obj.toString());
+
+		return new BASE64Encoder().encode(obj.toString().getBytes());
+	}
 
 }

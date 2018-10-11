@@ -145,8 +145,4 @@ public class GgMerchantVo implements Serializable {
 	 */
 	private String rateVersion;
 
-	private MerchantDetail merchantDetail;
-	
-	private BankCardParam bankCardParam;
-	
 }
