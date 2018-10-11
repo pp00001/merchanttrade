@@ -11,7 +11,7 @@ package ins.platform.aggpay.trade.service;
 
 import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.vo.MerchantResVo;
-import ins.platform.aggpay.trade.vo.MerchantVo;
+import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
@@ -48,7 +48,7 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	MerchantResVo updateMerchant(UpdateMerchant updateMerchant);
 
 	//商户信息查询接口
-	MerchantVo merchantQuery(String isvOrgId, String orderNo);
+	GgMerchantVo merchantQuery(String isvOrgId, String orderNo);
 
 	//商户关闭接口
 	MerchantResVo merchantFreeze(String isvOrgId, String merchantId,

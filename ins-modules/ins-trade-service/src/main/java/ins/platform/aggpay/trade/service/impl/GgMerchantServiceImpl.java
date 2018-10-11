@@ -21,7 +21,7 @@ import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.mapper.GgMerchantMapper;
 import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.vo.MerchantResVo;
-import ins.platform.aggpay.trade.vo.MerchantVo;
+import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
@@ -34,7 +34,6 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.mybank.bkmerchant.constant.BizTypeEnum;
-import com.mybank.bkmerchant.constant.MerchantType;
 import com.mybank.bkmerchant.merchant.Freeze;
 import com.mybank.bkmerchant.merchant.MerchantQuery;
 import com.mybank.bkmerchant.merchant.Register;
@@ -143,13 +142,13 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	}
 
 	@Override
-	public MerchantVo merchantQuery(String isvOrgId, String merchantId) {
+	public GgMerchantVo merchantQuery(String isvOrgId, String merchantId) {
 		MerchantQuery merchantQuery = new MerchantQuery();
 		
-		MerchantVo rs = null;
+		GgMerchantVo rs = null;
 		try {
 			Map<String, Object> result = merchantQuery.call();
-			rs = MapUtil.map2Obj(result, MerchantVo.class);
+			rs = MapUtil.map2Obj(result, GgMerchantVo.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

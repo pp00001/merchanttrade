@@ -71,7 +71,7 @@ public class ResponseBodyVo {
 	/**
 	 * 商户信息
 	 */
-	private MerchantVo merchant;
+	private GgMerchantVo ggMerchantVo;
 
 	private String ChannelType;
 

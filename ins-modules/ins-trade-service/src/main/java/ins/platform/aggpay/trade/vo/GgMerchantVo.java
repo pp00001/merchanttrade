@@ -10,20 +10,20 @@ package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 import com.mybank.bkmerchant.base.HttpsMain;
-import com.mybank.bkmerchant.models.BankCardParam;
-import com.mybank.bkmerchant.models.MerchantDetail;
 
 /**
  * @author RipinYan
- * @ClassName: MerchantVo
+ * @ClassName: GgMerchantVo
  * @Description: TODO
  * @date 2018/9/18 下午2:32
  */
 @Data
-public class MerchantVo {
+public class GgMerchantVo implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 合作方机构号（网商银行分配）
 	 */
@@ -67,32 +67,32 @@ public class MerchantVo {
 	/**
 	 * 商户详情
 	 */
-	private MerchantDetail merchantDetail;
+	private GgMerchantDetailVo ggMerchantDetailVo;
 
 	/**
 	 * 支持交易类型列表
 	 */
-	private List<String> tradeTypeList;
+	private String tradeTypeList;
 
 	/**
 	 * 支持支付渠道列表
 	 */
-	private List<String> payChannelList;
+	private String payChannelList;
 
 	/**
 	 * 禁用支付方式
 	 */
-	private List<String> deniedPayToolList;
+	private String deniedPayToolList;
 
 	/**
 	 * 手续费列表
 	 */
-	private List<String> feeParamList;
+	private List<GgFeeParamVo> feeParamList;
 
 	/**
 	 * 清算卡参数
 	 */
-	private BankCardParam bankCardParam;
+	private GgBankCardParamVo ggBankCardParamVo;
 
 	/**
 	 * 手机验证码。
