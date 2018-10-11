@@ -22,10 +22,12 @@ import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.service.GgMerchantService;
+import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import java.util.Date;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.mybank.bkmerchant.merchant.Register;
@@ -147,20 +150,19 @@ public class GgMerchantController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/regist")
-	public R<Object> regist(@RequestBody Register register) {
+	public R<Object> regist(@RequestBody GgMerchantVo register) {
 		return new R<>(ggMerchantService.regist(register));
 	}
 
 	/**
 	 * 5.2.3	商户入驻结果查询
 	 *
-	 * @param isvOrgId
 	 * @param orderNo
 	 * @return
 	 */
-	@GetMapping("/{isvOrgId}/{orderNo}")
-	public R<RegisterQueryVo> registerQuery(@PathVariable String isvOrgId, @PathVariable String orderNo) {
-		return new R<>(ggMerchantService.registerQuery(isvOrgId, orderNo));
+	@GetMapping("registerQuery/{orderNo}")
+	public R<RegisterQueryVo> registerQuery(@PathVariable String orderNo) {
+		return new R<>(ggMerchantService.registerQuery(orderNo));
 	}
 
 	/**

@@ -18,10 +18,12 @@ package ins.platform.aggpay.trade.service.impl;
 
 import ins.platform.aggpay.trade.common.util.MapUtil;
 import ins.platform.aggpay.trade.entity.GgMerchant;
+import ins.platform.aggpay.trade.entity.GgMerchantDetail;
+import ins.platform.aggpay.trade.mapper.GgMerchantDetailMapper;
 import ins.platform.aggpay.trade.mapper.GgMerchantMapper;
 import ins.platform.aggpay.trade.service.GgMerchantService;
-import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
+import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
@@ -31,6 +33,8 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.mybank.bkmerchant.constant.BizTypeEnum;
@@ -57,10 +61,15 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	@Autowired
 	private GgMerchantMapper ggMerchantMapper;
 	
+	@Autowired
+	private GgMerchantDetailMapper ggMerchantDetailMapper;
+	
 	@Override
-	public RegistResVo regist(Register register) {
+	@Transactional(propagation=Propagation.REQUIRED)
+	public RegistResVo regist(GgMerchantVo register) {
 
 		try {
+//			register.call();
 			
 			Register c = new Register(register.getMerchantName(), register.getMerchantType(), register.getDealtype(), register.getSupportPrepayment()
 					, register.getSettleMode(),register.getMcc(), register.getMerchantDetail()
@@ -76,11 +85,20 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 				GgMerchant insert = new GgMerchant();
 				BeanUtils.copyProperties(insert, register);
 				insert.setOutMerchantId(rs.getOutMerchantId());
-				insert.setMerchantType(register.getMerchantType().getMchCode());
-				insert.setSupportPrepayment(register.getSupportPrepayment().getSupCode());
+//				insert.setMerchantType(register.getMerchantType().getMchCode());
+				insert.setOrderNo(rs.getOrderNo());
+//				insert.setSupportPrepayment(register.getSupportPrepayment().getSupCode());
 //				insert.setMerchantId(insert.getOutMerchantId());
 				System.out.println(insert.getOutMerchantId());
 				ggMerchantMapper.insert(insert);
+
+				
+				GgMerchantDetail detail = new GgMerchantDetail();
+				BeanUtils.copyProperties(detail,register.getMerchantDetail());
+				detail.setPrincipalCertType(register.getMerchantDetail().getPrincipalCertType().getCertCode());;
+				ggMerchantDetailMapper.insert(detail);
+					
+				
 //			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,7 +109,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	}
 
 	@Override
-	public RegisterQueryVo registerQuery(String isvOrgId, String orderNo) {
+	public RegisterQueryVo registerQuery(String orderNo) {
 		RegisterQuery rq = new RegisterQuery(orderNo);
 		RegisterQueryVo vo = null;
 		try {

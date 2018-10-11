@@ -12,7 +12,10 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
+
 import com.mybank.bkmerchant.base.HttpsMain;
+import com.mybank.bkmerchant.models.BankCardParam;
+import com.mybank.bkmerchant.models.MerchantDetail;
 
 /**
  * @author RipinYan
@@ -142,4 +145,8 @@ public class GgMerchantVo implements Serializable {
 	 */
 	private String rateVersion;
 
+	private MerchantDetail merchantDetail;
+	
+	private BankCardParam bankCardParam;
+	
 }

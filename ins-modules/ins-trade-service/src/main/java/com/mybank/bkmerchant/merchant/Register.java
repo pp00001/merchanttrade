@@ -76,27 +76,27 @@ public class Register extends AbstractReq {
   /**
    * 商户类型
    */
-  private MerchantTypeEnum merchantType;
+  private String merchantType;
 
   /**
    * 商户经营类型
    */
-  private DealTypeEnum dealtype;
+  private String dealtype;
 
   /**
    * 商户清算资金是否支持T+0到账
    */
-  private SupportPrepaymentEnum supportPrepayment;
+  private String supportPrepayment;
 
   /**
    * 结算方式
    */
-  private SettleModeEnum settleMode;
+  private String settleMode;
 
   /**
    * 经营类目
    */
-  private MccEnum mcc;
+  private String mcc;
 
   /**
    * 商户详情
@@ -106,17 +106,17 @@ public class Register extends AbstractReq {
   /**
    * 支持交易类型列表
    */
-  private List<TradeTypeEnum> tradeTypeList;
+  private String tradeTypeList;
 
   /**
    * 支持支付渠道列表
    */
-  private List<PayChannelEnum> payChannelList;
+  private String payChannelList;
 
   /**
    * 禁用支付方式
    */
-  private List<DeniedPayToolEnum> deniedPayToolList;
+  private String deniedPayToolList;
 
   /**
    * 手续费列表
@@ -189,15 +189,15 @@ public class Register extends AbstractReq {
   
   public Register(
     String merchantName,
-    MerchantTypeEnum merchantType,
-    DealTypeEnum dealtype,
-    SupportPrepaymentEnum supportPrepayment,
-    SettleModeEnum settleMode,
-    MccEnum mcc,
+    String merchantType,
+    String dealtype,
+    String supportPrepayment,
+    String settleMode,
+    String mcc,
     MerchantDetail merchantDetail,
-    List<TradeTypeEnum> tradeTypeList,
-    List<PayChannelEnum> payChannelList,
-    List<DeniedPayToolEnum> deniedPayToolList,
+    String tradeTypeList,
+    String payChannelList,
+    String deniedPayToolList,
     List<FeeParam> feeParamList,
     BankCardParam bankCardParam,
     String authCode,
@@ -234,15 +234,15 @@ public class Register extends AbstractReq {
     this.body.put("IsvOrgId", this.isvOrgId);
     this.body.put("OutMerchantId", this.outMerchantId);
     this.body.put("MerchantName", this.merchantName);
-    this.body.put("MerchantType", this.merchantType.getMchCode());
-    this.body.put("DealType", this.dealtype.getDealCode());
-    this.body.put("SupportPrepayment", this.supportPrepayment.getSupCode());
-    this.body.put("SettleMode", this.settleMode.getSettleCode());
-    this.body.put("Mcc", this.mcc.getMccId());
+    this.body.put("MerchantType", this.merchantType);
+    this.body.put("DealType", this.dealtype);
+    this.body.put("SupportPrepayment", this.supportPrepayment);
+    this.body.put("SettleMode", this.settleMode);
+    this.body.put("Mcc", this.mcc);
     this.body.put("MerchantDetail", this.merchantDetail.genJsonBase64());
-    this.body.put("TradeTypeList", TradeTypeEnum.genTradeTypeList(this.tradeTypeList));
-    this.body.put("PayChannelList", PayChannelEnum.genPayChannelList(this.payChannelList));
-    this.body.put("DeniedPayToolList", DeniedPayToolEnum.genDenniedPayToolList(this.deniedPayToolList));
+    this.body.put("TradeTypeList", this.tradeTypeList);
+    this.body.put("PayChannelList", this.payChannelList);
+    this.body.put("DeniedPayToolList", this.deniedPayToolList);
     this.body.put("FeeParamList", FeeParam.genJsonBase64(this.feeParamList));
     this.body.put("BankCardParam", this.bankCardParam.genJsonBase64());
     this.body.put("AuthCode", this.authCode);
@@ -337,15 +337,23 @@ public class Register extends AbstractReq {
 
     Register register = new Register(
             "名称",
-            MerchantTypeEnum.Enterprising,
-            DealTypeEnum.Entity,
-            SupportPrepaymentEnum.NotSupport,
-            SettleModeEnum.BankCard,
-            MccEnum.Cate,
+            //MerchantTypeEnum.Enterprising
+            "03",
+            //DealTypeEnum.Entity,
+            "01",
+            //SupportPrepaymentEnum.NotSupport,
+            "N",
+            //SettleModeEnum.BankCard,
+            "01",
+//            MccEnum.Cate,
+            "2015050700000000",
             merchantDetail,
-            tradeTypeEnumList,
-            payChannelEnumList,
-            deniedPayToolEnumList,
+//            tradeTypeEnumList,
+            "01,02,06",
+//            payChannelEnumList,
+            "01,02",
+//            deniedPayToolEnumList,
+            "03",
             feeParamList,
             bankCardParam,
             "888888",
@@ -422,15 +430,23 @@ public class Register extends AbstractReq {
 
     Register register = new Register(
       "中科软1号",
-      MerchantTypeEnum.Natural,
-      DealTypeEnum.Entity,
-      SupportPrepaymentEnum.NotSupport,
-      SettleModeEnum.BankCard,
-      MccEnum.Cate,
+//      MerchantTypeEnum.Natural,
+      "01",
+//      DealTypeEnum.Entity,
+      "01",
+//      SupportPrepaymentEnum.NotSupport,
+      "N",
+//      SettleModeEnum.BankCard,
+      "01",
+//      MccEnum.Cate,
+      "2015050700000000",
       merchantDetail,
-      tradeTypeEnumList,
-      payChannelEnumList,
-      deniedPayToolEnumList,
+//      tradeTypeEnumList,
+      "01,02,06",
+//      payChannelEnumList,
+      "01,02",
+//      deniedPayToolEnumList,
+      "03",
       feeParamList,
       bankCardParam,
 		    "888888",
@@ -470,43 +486,43 @@ public class Register extends AbstractReq {
 		this.merchantName = merchantName;
 	}
 	
-	public MerchantTypeEnum getMerchantType() {
+	public String getMerchantType() {
 		return merchantType;
 	}
 	
-	public void setMerchantType(MerchantTypeEnum merchantType) {
+	public void setMerchantType(String merchantType) {
 		this.merchantType = merchantType;
 	}
 	
-	public DealTypeEnum getDealtype() {
+	public String getDealtype() {
 		return dealtype;
 	}
 	
-	public void setDealtype(DealTypeEnum dealtype) {
+	public void setDealtype(String dealtype) {
 		this.dealtype = dealtype;
 	}
 	
-	public SupportPrepaymentEnum getSupportPrepayment() {
+	public String getSupportPrepayment() {
 		return supportPrepayment;
 	}
 	
-	public void setSupportPrepayment(SupportPrepaymentEnum supportPrepayment) {
+	public void setSupportPrepayment(String supportPrepayment) {
 		this.supportPrepayment = supportPrepayment;
 	}
 	
-	public SettleModeEnum getSettleMode() {
+	public String getSettleMode() {
 		return settleMode;
 	}
 	
-	public void setSettleMode(SettleModeEnum settleMode) {
+	public void setSettleMode(String settleMode) {
 		this.settleMode = settleMode;
 	}
 	
-	public MccEnum getMcc() {
+	public String getMcc() {
 		return mcc;
 	}
 	
-	public void setMcc(MccEnum mcc) {
+	public void setMcc(String mcc) {
 		this.mcc = mcc;
 	}
 	
@@ -518,27 +534,27 @@ public class Register extends AbstractReq {
 		this.merchantDetail = merchantDetail;
 	}
 	
-	public List<TradeTypeEnum> getTradeTypeList() {
+	public String getTradeTypeList() {
 		return tradeTypeList;
 	}
 	
-	public void setTradeTypeList(List<TradeTypeEnum> tradeTypeList) {
+	public void setTradeTypeList(String tradeTypeList) {
 		this.tradeTypeList = tradeTypeList;
 	}
 	
-	public List<PayChannelEnum> getPayChannelList() {
+	public String getPayChannelList() {
 		return payChannelList;
 	}
 	
-	public void setPayChannelList(List<PayChannelEnum> payChannelList) {
+	public void setPayChannelList(String payChannelList) {
 		this.payChannelList = payChannelList;
 	}
 	
-	public List<DeniedPayToolEnum> getDeniedPayToolList() {
+	public String getDeniedPayToolList() {
 		return deniedPayToolList;
 	}
 	
-	public void setDeniedPayToolList(List<DeniedPayToolEnum> deniedPayToolList) {
+	public void setDeniedPayToolList(String deniedPayToolList) {
 		this.deniedPayToolList = deniedPayToolList;
 	}
 	
@@ -617,6 +633,8 @@ public class Register extends AbstractReq {
 	public void setBody(Map<String, String> body) {
 		this.body = body;
 	}
+
+  
   
   
   

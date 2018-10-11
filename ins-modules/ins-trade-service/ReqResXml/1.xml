@@ -1,0 +1,81 @@
+<document>
+	<request id="request">
+		<head>
+			<Version>1.0.0</Version>
+			<Appid>2018090700000286</Appid>
+			<Function>ant.mybank.merchantprod.merchant.register</Function>
+			<ReqTime>2018-10-11 16:43:02.913</ReqTime>
+			<ReqTimeZone>UTC+8</ReqTimeZone>
+			<ReqMsgId>81b6f8ac-0917-489b-b3da-917c5211b0dd</ReqMsgId>
+			<InputCharset>UTF-8</InputCharset>
+		</head>
+		<body>
+			<IsvOrgId>202210000000000001316</IsvOrgId>
+			<OutMerchantId>201810113129de984ace4f71b2c0156827065a86
+			</OutMerchantId>
+			<MerchantName>名称</MerchantName>
+			<MerchantType>03</MerchantType>
+			<DealType>01</DealType>
+			<SupportPrepayment>N</SupportPrepayment>
+			<SettleMode>01</SettleMode>
+			<Mcc>2015050700000000</Mcc>
+			<MerchantDetail>eyJDb250YWN0TW9iaWxlIjoiMTc2MjAzNTg5MjUiLCJMaWNlbnNlUGhvdG8iOiJlNjNmNTViYy04
+				ZDg3LTRiOTgtODE4Yy05Zjg3ZTFmM2JjMGUiLCJFbWFpbCI6InlhbnNodWlwaW5nOTI1QDE2My5j
+				b20iLCJBZGRyZXNzIjoiIiwiUHJpbmNpcGFsQ2VydE5vIjoiNDMwNzIzMTk4ODA5MTAyNjUwIiwi
+				UHJpbmNpcGFsUGVyc29uIjoi5rW35Y2X5paw6KeG57q/5Lq65Yqb6LWE5rqQ5pyN5Yqh5pyJ6ZmQ
+				5YWs5Y+4IiwiU2hvcFBob3RvIjoiIiwiQ2l0eSI6IiIsIkxlZ2FsUGVyc29uIjoi5ZCN56ewIiwi
+				UHJvdmluY2UiOiIiLCJCdXNzQXV0aE51bSI6IjEyMzIzMjMyMjExMTExMiIsIkNlcnRQaG90b0Ei
+				OiJkOWE4ZjQwNi1iM2VlLTQ0ZjUtYmU1ZS03OGNiZmFmZDc3ZTMiLCJQcmdQaG90byI6ImZmOGE0
+				NGNhLWNjMWQtNGZjOS1hNTFlLTllNmFkMDUwOTg4MyIsIkFsaWFzIjoi5Lit56eR6L2vLeS8geS4
+				mjHlj7ciLCJDZXJ0UGhvdG9CIjoiNWI4MGUwZDItNzI4Zi00M2E4LWJhNTAtMWU3NmU5Nzk2Yjcz
+				IiwiUHJpbmNpcGFsQ2VydFR5cGUiOiIwMSIsIlN1YnNjcmliZUFwcElkIjoiIiwiUHJpbmNpcGFs
+				TW9iaWxlIjoiIiwiQ2VydE9yZ0NvZGUiOiIiLCJDb250YWN0TmFtZSI6IuS4peawtOW5syIsIkRp
+				c3RyaWN0IjoiIiwiU2VydmljZVBob25lTm8iOiIwMTA0MDMwNDIzMCIsIk90aGVyUGhvdG8iOiIi
+				LCJJbmR1c3RyeUxpY2Vuc2VQaG90byI6ImI5NDY3YjJlLWEwOTUtNGQwZS04YzIxLWY2MzUwM2Zl
+				MzU2ZSJ9
+			</MerchantDetail>
+			<TradeTypeList>01,02,06,</TradeTypeList>
+			<PayChannelList>01,02,</PayChannelList>
+			<DeniedPayToolList>03,</DeniedPayToolList>
+			<FeeParamList>W3siRmVlVmFsdWUiOiIwLjAwMzUiLCJGZWVUeXBlIjoiMDIiLCJDaGFubmVsVHlwZSI6IjAxIn0s
+				eyJGZWVWYWx1ZSI6IjAuMDAzNSIsIkZlZVR5cGUiOiIwMiIsIkNoYW5uZWxUeXBlIjoiMDIifV0=
+			</FeeParamList>
+			<BankCardParam>eyJDb250YWN0TGluZSI6IjEwMjMzMTAyMjA5NCIsIkJhbmtDYXJkTm8iOiI2MjEyMjYxMjAyMDAy
+				NDE1MjEwIiwiQ2VydFR5cGUiOiIwMSIsIkJhbmtDZXJ0TmFtZSI6IuWQjeensCIsIkJyYW5jaE5h
+				bWUiOiIiLCJCcmFuY2hDaXR5IjoiIiwiQ2VydE5vIjoiMjAyNDM2MTk5NDAyMDYwNDk0IiwiQ2Fy
+				ZEhvbGRlckFkZHJlc3MiOiIxMiIsIkFjY291bnRUeXBlIjoiMDIiLCJCcmFuY2hQcm92aW5jZSI6
+				IiJ9
+			</BankCardParam>
+			<AuthCode>888888</AuthCode>
+			<OutTradeNo>872db37b41674a679a7e89067a57790e</OutTradeNo>
+			<SupportStage>N</SupportStage>
+			<PartnerType>03</PartnerType>
+			<AlipaySource>2018090700000286</AlipaySource>
+			<WechatChannel></WechatChannel>
+			<RateVersion>RS</RateVersion>
+		</body>
+	</request>
+	<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+		<ds:SignedInfo>
+			<ds:CanonicalizationMethod
+				Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+			<ds:SignatureMethod
+				Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></ds:SignatureMethod>
+			<ds:Reference URI="">
+				<ds:Transforms>
+					<ds:Transform
+						Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+				</ds:Transforms>
+				<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+				<ds:DigestValue>M380rEa5NOuXo7HqByb0Gbh+Z0c=</ds:DigestValue>
+			</ds:Reference>
+		</ds:SignedInfo>
+		<ds:SignatureValue>
+			how1wbpYSUaD38WQ1cXUrIkotGLQ2GPCn48vlEsGIU9QH7uWM24l5vSDCb3N0STCj9htWNtvYapx
+			U7Vx9HpxbNBltkkj0t8kzQaQSDucVw26nHTuBz4v1UaKHJsLU9R1Fd2IPIFdGHkeN4tR6s9WohZh
+			NXu0i/PY9bJRSr1KDcw6DA/+V4+V6XIgCQQGVaXyCPR2VaRphp86j/lq41vXtC45u74HiNpIL/HD
+			lOOEQwgbrU5KptgmFTkRdKu4Dn9jDj7RPfdjg1N1fxitsZdZff0oSOxDUOwpDHvU2W2ajDdk32/F
+			5ACqHsKhC+GeqUKitoct7OrUKgTfbn+ylKxZ0g==
+		</ds:SignatureValue>
+	</ds:Signature>
+</document>

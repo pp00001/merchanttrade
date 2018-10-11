@@ -1,5 +1,6 @@
 package com.mybank.bkmerchant.models;
 
+import lombok.Data;
 import sun.misc.BASE64Encoder;
 
 import org.json.JSONException;
@@ -8,6 +9,7 @@ import org.json.JSONObject;
 /**
  * Created by jingzhu.zr on 2017/8/15.
  */
+@Data
 public class BankCardParam{
   String bankCardNo;
   String bankCertName;

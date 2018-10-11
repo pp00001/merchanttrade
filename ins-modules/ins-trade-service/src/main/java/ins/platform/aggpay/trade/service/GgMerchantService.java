@@ -39,10 +39,10 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	UploadPhotoVo uploadphoto(UploadPhoto uploadPhoto);
 
 	//商户入驻申请接口
-	RegistResVo regist(Register register);
+	RegistResVo regist(GgMerchantVo register);
 	
 	//商户入驻结果查询
-	RegisterQueryVo registerQuery(String isvOrgId,String orderNo);
+	RegisterQueryVo registerQuery(String orderNo);
 
 	//商户信息修改
 	MerchantResVo updateMerchant(UpdateMerchant updateMerchant);
