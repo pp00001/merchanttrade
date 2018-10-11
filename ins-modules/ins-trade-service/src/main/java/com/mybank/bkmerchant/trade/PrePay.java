@@ -8,11 +8,6 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.request.AlipaySystemOauthTokenRequest;
-import com.alipay.api.response.AlipaySystemOauthTokenResponse;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.util.XmlSignUtil;
 import com.mybank.bkmerchant.util.XmlUtil;
@@ -33,7 +28,7 @@ public class PrePay {
 
 
 
-        String URL = "https://openapi.alipay.com/gateway.do";
+       /* String URL = "https://openapi.alipay.com/gateway.do";
         String APP_ID = "2018073160766860";
       //  APP_ID = "2018090700000286";
         String APP_PRIVATE_KEY = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCV3Ju7rfIehCjimtzIeMb8lrZszv2w0QDdbtjNmKcvl3yuzTMzKddSs7X+ESPyydnKITLphExpliP/smqP0nfJFg7qFaNJTQxXxq3lLTZW82Bh8pEN2ZcsLUgkstLiTDv+NoQjkDw7Kw9NcRcgOlZseeO1zlemIE6u4zM8QIHNQYXcrDq1uaOcyU3LG02pq1/du2XljdQIN8mEj7deFnfs4XFLlB/GbG+4HbiQGfD/nh75qWvqdOHGu9UZUwxgpkaBMIboKZXXPVSOt6HR0KvEQcKnmbf+Ozavbb005Y8mR3qrhtSWC5TzIt/wtfSVO2Vq5I223CgfyFMNy/fPxO8FAgMBAAECggEAfqUolrqxWkilpJrq6h/nSZ60G8/xZHO8H2WFonnXD8kdfTu8gQhjB2kH6+XgU1Vxz/euZtl/GdvgID5O/6wFvtH9WKVgkJmkTKmCW6KRwXl7gkrTerjfoF3EEf9taAC00miP0t4ZiIcjL3ba7Elgr9tyLDpsp9+1nuYybkC1cRcXNKz63euk+zhyBrYwMoROBzchFfyaTOHlGy1GXe2cLLz78t0PywWglHu/lHGTDHIBBZKHTrXM0AM3LVaigUVX82m9Cjo9+IW/uV+ckJzM/Vo0qpLUlgi90wQbGW8DcGljfK/efPQWuzohOgG7QMUQtwwd0fR+JbspFXRcBsEHAQKBgQDlTI+XOVY+5sR6y2B9pul3DyWacRSLmNkVqSm0POq9ziuW9A21ABg7Tj3I83A6mjCyVSwtGL7k0wtAs9okf+nhw/jo45EN/yQlOCqcVa+2ZwszUsMt8MOV2UFc67fvwguEKkQxeIJptJx7uX59v7OkaKMu4LzOoTs+uELGpi7OeQKBgQCnUAJi3yB8h7vqe+bI3uef6Bz8UQW5i2FIJzFZIEPTvCh7a2onSgUqa3Hev7/5x5TH6BsepHaEacLQTGlDxORcfU+mpwtY1QMSIR7WAPwtHgVoE1ClJ1PQx6tBykvZJ3Tto5j3cLmObENUVTqxp6ON/zNoPN/ImoAkfaHQCxfR7QKBgQCxWlBNxTliGZeq6pdNWMaHIh4RoJkliCmQSXFKSTu/ZzHr5gScFOCpLlE3lqMdkJlNtfcfQl6UGnA/sVxukslRqARkDW/qhYdtik3a8aOgz36oScFRTUHaK1oVBvUT6uCBbzejk/Q60kmeoNCnbpkB9zUQUx92KtrqHhb4Ex1s8QKBgC61b3UaxX7+hb+Yh31cfV1u92iZVffOqYHzLxuqnkTmKocKHcCKMZb+F/QPpBCfXzHP4oJTd6LPw8tTCbAZr4cClNH5oHlUPl85T9p+u+f8kZXUjpcMu6F1nKHpT/N3yHTvTy0FE0hngQRyJsih/E8QB9H57J+cQlntmNbzwdqhAoGANo/a54HZNsig31Qu6Ngls6eLMFxPB6Y61XxOb8+y2uoB4QYbnL+6as2NDEzZOmvlOlgPDF+eXsFMltWZnXvFQeNCvfu5a9/Gy8CbHGywXP4wyajV8IiXLVFqjCNwd62Mo6szxS1JkRUcstFdpfRhyupVzke/Yu9s/i9SBvV2liE=";
@@ -54,7 +49,7 @@ public class PrePay {
         } catch (AlipayApiException e) {
             //处理异常
             e.printStackTrace();
-        }
+        }*/
 
         //账户余额查询
         String function = "ant.mybank.bkmerchanttrade.prePay";
@@ -66,17 +61,17 @@ public class PrePay {
         //reqMsgId每次报文必须都不一样
         form.put("ReqMsgId", UUID.randomUUID().toString());
         form.put("OutTradeNo",UUID.randomUUID().toString().replace("-",""));
-        form.put("Body","主扫测试-无人机7");
+        form.put("Body","主扫测试-无人机8");
         form.put("GoodsTag","test");
         form.put("GoodsDetail","test");
-        form.put("TotalAmount","1");
+        form.put("TotalAmount","2");
         form.put("Currency","CNY");
         form.put("MerchantId",HttpsMain.merchantId);
         form.put("IsvOrgId", HttpsMain.IsvOrgId);
         form.put("ChannelType","WX");
         form.put("ChannelType","ALI");
         form.put("OpenId","otBP8wWRG63MS9IZkK27hhO0jYnM");
-        form.put("OpenId",userId);
+       // form.put("OpenId",userId);
         form.put("OpenId","2088412422162444");
 
         form.put("OperatorId","test");

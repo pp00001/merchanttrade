@@ -42,37 +42,37 @@ public class UpdateMerchant {
 	private String isvOrgId = HttpsMain.IsvOrgId;
 
 	private String outMerchantId;
-	
+
 	private DealTypeEnum dealtype;
-	
+
 	private SupportPrepaymentEnum supportPrepayment;
-	
+
 	private SettleModeEnum settleMode;
-	
+
 	private MccEnum mcc;
-	
+
 	private MerchantDetail merchantDetail;
-	
+
 	private List<TradeTypeEnum> tradeTypeList;
-	
+
 	private List<PayChannelEnum> payChannelList;
-	
+
 	private List<DeniedPayToolEnum> deniedPayToolList;
-	
+
 	private List<FeeParam> feeParamList;
-	
+
 	private BankCardParam bankCardParam;
-	
+
 	private String outTradeNo;
-	
+
 	private String supportStage;
-	
+
 	private String alipaySource;
-		
+
     /**
      * @author simon.xxm
      * @version $Id: BalanceQuery.java, v 0.1 2016年3月3日 下午6:33:49 simon.xxm Exp $
-     * @param args      
+     * @param args
      */
     public static void main(String[] args) throws Exception {
         updateMerchant(HttpsMain.merchantId, UUID.randomUUID().toString());

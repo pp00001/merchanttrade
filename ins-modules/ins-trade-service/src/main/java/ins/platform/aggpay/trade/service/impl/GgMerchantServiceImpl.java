@@ -17,9 +17,9 @@
 package ins.platform.aggpay.trade.service.impl;
 
 import ins.platform.aggpay.trade.common.util.MapUtil;
-import ins.platform.aggpay.trade.entity.Merchant;
-import ins.platform.aggpay.trade.mapper.MerchantMapper;
-import ins.platform.aggpay.trade.service.MerchantService;
+import ins.platform.aggpay.trade.entity.GgMerchant;
+import ins.platform.aggpay.trade.mapper.GgMerchantMapper;
+import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.MerchantVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
@@ -51,10 +51,10 @@ import com.mybank.bkmerchant.trade.SendSmsCode;
  * @since 2018-09-18
  */
 @Service
-public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> implements MerchantService {
+public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerchant> implements GgMerchantService {
 
 	@Autowired
-	private MerchantMapper merchantMapper;
+	private GgMerchantMapper ggMerchantMapper;
 	
 	@Override
 	public RegistResVo regist(Register register) {

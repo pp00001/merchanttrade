@@ -17,6 +17,7 @@
 package ins.platform.aggpay.trade.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,9 +35,10 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @author ripin
  * @since 2018-09-18
  */
-@TableName("merchant_detail")
 @Data
-public class MerchantDetail extends Model<MerchantDetail> {
+@Accessors(chain = true)
+@TableName("gg_merchant_detail")
+public class GgMerchantDetail extends Model<GgMerchantDetail> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -202,7 +204,7 @@ public class MerchantDetail extends Model<MerchantDetail> {
 
 	@Override
 	public String toString() {
-		return "MerchantDetail{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", alias=" + alias + ", contactMobile=" + contactMobile + ", " + "contactName=" + contactName + ", province=" + province + ", city=" + city + ", district=" + district + ", address=" + address + "," +
+		return "GgMerchantDetail{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", alias=" + alias + ", contactMobile=" + contactMobile + ", " + "contactName=" + contactName + ", province=" + province + ", city=" + city + ", district=" + district + ", address=" + address + "," +
                 " servicePhoneNo=" + servicePhoneNo + ", email=" + email + ", legalPerson=" + legalPerson + ", principalMobile=" + principalMobile
                 + ", principalCertType=" + principalCertType + ", principalCertNo=" + principalCertNo + ", principalPerson=" + principalPerson + "," +
                 " bussAuthNum=" + bussAuthNum + ", certOrgCode=" + certOrgCode + ", certPhotoA=" + certPhotoA + ", certPhotoB=" + certPhotoB + ", " +

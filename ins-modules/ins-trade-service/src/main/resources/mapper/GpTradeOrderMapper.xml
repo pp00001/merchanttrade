@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ins.platform.aggpay.trade.mapper.GpTradeOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GpTradeOrder">
+        <id column="id" property="id" />
+        <result column="order_no" property="orderNo" />
+        <result column="auth_code" property="authCode" />
+        <result column="out_trade_no" property="outTradeNo" />
+        <result column="body" property="body" />
+        <result column="goods_tag" property="goodsTag" />
+        <result column="goods_detail" property="goodsDetail" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="currency" property="currency" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="channel_type" property="channelType" />
+        <result column="open_id" property="openId" />
+        <result column="operator_id" property="operatorId" />
+        <result column="store_id" property="storeId" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_create_ip" property="deviceCreateIp" />
+        <result column="expire_express" property="expireExpress" />
+        <result column="settle_type" property="settleType" />
+        <result column="attach" property="attach" />
+        <result column="notify_url" property="notifyUrl" />
+        <result column="sub_app_id" property="subAppId" />
+        <result column="specify_sub_merch_id" property="specifySubMerchId" />
+        <result column="channel_id" property="channelId" />
+        <result column="sub_merch_id" property="subMerchId" />
+        <result column="pay_limit" property="payLimit" />
+        <result column="discountable_amount" property="discountableAmount" />
+        <result column="undiscountable_amount" property="undiscountableAmount" />
+        <result column="alipay_store_id" property="alipayStoreId" />
+        <result column="sys_service_provider_id" property="sysServiceProviderId" />
+        <result column="check_later_nm" property="checkLaterNm" />
+        <result column="pre_pay_id" property="prePayId" />
+        <result column="pay_info" property="payInfo" />
+        <result column="gmt_payment" property="gmtPayment" />
+        <result column="bank_type" property="bankType" />
+        <result column="pay_channel_order_no" property="payChannelOrderNo" />
+        <result column="merchant_order_no" property="merchantOrderNo" />
+        <result column="coupon_fee" property="couponFee" />
+        <result column="is_subscribe" property="isSubscribe" />
+        <result column="buyer_logon_id" property="buyerLogonId" />
+        <result column="buyer_user_id" property="buyerUserId" />
+        <result column="credit" property="credit" />
+        <result column="receipt_amount" property="receiptAmount" />
+        <result column="buyerpay_amount" property="buyerpayAmount" />
+        <result column="invoice_amount" property="invoiceAmount" />
+        <result column="valid_ind" property="validInd" />
+        <result column="del_flag" property="delFlag" />
+        <result column="creator_code" property="creatorCode" />
+        <result column="create_time" property="createTime" />
+        <result column="updater_code" property="updaterCode" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_no AS orderNo, auth_code AS authCode, out_trade_no AS outTradeNo, body, goods_tag AS goodsTag, goods_detail AS goodsDetail, total_amount AS totalAmount, currency, merchant_id AS merchantId, channel_type AS channelType, open_id AS openId, operator_id AS operatorId, store_id AS storeId, device_id AS deviceId, device_create_ip AS deviceCreateIp, expire_express AS expireExpress, settle_type AS settleType, attach, notify_url AS notifyUrl, sub_app_id AS subAppId, specify_sub_merch_id AS specifySubMerchId, channel_id AS channelId, sub_merch_id AS subMerchId, pay_limit AS payLimit, discountable_amount AS discountableAmount, undiscountable_amount AS undiscountableAmount, alipay_store_id AS alipayStoreId, sys_service_provider_id AS sysServiceProviderId, check_later_nm AS checkLaterNm, pre_pay_id AS prePayId, pay_info AS payInfo, gmt_payment AS gmtPayment, bank_type AS bankType, pay_channel_order_no AS payChannelOrderNo, merchant_order_no AS merchantOrderNo, coupon_fee AS couponFee, is_subscribe AS isSubscribe, buyer_logon_id AS buyerLogonId, buyer_user_id AS buyerUserId, credit, receipt_amount AS receiptAmount, buyerpay_amount AS buyerpayAmount, invoice_amount AS invoiceAmount, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    </sql>
+
+</mapper>

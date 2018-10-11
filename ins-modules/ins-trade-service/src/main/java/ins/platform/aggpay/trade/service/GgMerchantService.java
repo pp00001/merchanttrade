@@ -9,7 +9,7 @@
 package ins.platform.aggpay.trade.service;
 
 
-import ins.platform.aggpay.trade.entity.Merchant;
+import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.MerchantVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
@@ -26,11 +26,11 @@ import com.mybank.bkmerchant.trade.SendSmsCode;
 
 /**
  * @author RipinYan
- * @ClassName: MerchantService
+ * @ClassName: GgMerchantService
  * @Description: 商户入驻相关接口
  * @date 2018/9/18 下午4:11
  */
-public interface MerchantService extends IService<Merchant> {
+public interface GgMerchantService extends IService<GgMerchant> {
 
 	//短信验证码发送接口
 	MerchantResVo sendsmscode(SendSmsCode sendSmsCode);

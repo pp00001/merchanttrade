@@ -16,17 +16,17 @@
 
 package ins.platform.aggpay.trade.mapper;
 
-import ins.platform.aggpay.trade.entity.MerchantDetail;
+import ins.platform.aggpay.trade.entity.GgMerchant;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>
- * 商户详情表 Mapper 接口
+ * 商户信息主表 Mapper 接口
  * </p>
  *
  * @author ripin
  * @since 2018-09-18
  */
-public interface MerchantDetailMapper extends BaseMapper<MerchantDetail> {
+public interface GgMerchantMapper extends BaseMapper<GgMerchant> {
 
 }

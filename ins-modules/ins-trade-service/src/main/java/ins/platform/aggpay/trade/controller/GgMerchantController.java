@@ -20,8 +20,8 @@ import ins.platform.aggpay.common.constant.CommonConstant;
 import ins.platform.aggpay.common.util.Query;
 import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
-import ins.platform.aggpay.trade.entity.Merchant;
-import ins.platform.aggpay.trade.service.MerchantService;
+import ins.platform.aggpay.trade.entity.GgMerchant;
+import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 
 import java.util.Date;
@@ -55,20 +55,20 @@ import com.mybank.bkmerchant.trade.SendSmsCode;
  */
 @RestController
 @RequestMapping("/merchant")
-public class MerchantController extends BaseController {
+public class GgMerchantController extends BaseController {
 
 	@Autowired
-	private MerchantService merchantService;
+	private GgMerchantService ggMerchantService;
 
 	/**
 	 * 通过ID查询
 	 *
 	 * @param id ID
-	 * @return Merchant
+	 * @return GgMerchant
 	 */
 	@GetMapping("/{id}")
-	public R<Merchant> get(@PathVariable Integer id) {
-		return new R<>(merchantService.selectById(id));
+	public R<GgMerchant> get(@PathVariable Integer id) {
+        return new R<>(ggMerchantService.selectById(id));
 	}
 
 
@@ -81,18 +81,17 @@ public class MerchantController extends BaseController {
 	@RequestMapping("/page")
 	public Page page(@RequestParam Map<String, Object> params) {
 		params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
-		return merchantService.selectPage(new Query<>(params), new EntityWrapper<>());
+        return ggMerchantService.selectPage(new Query<>(params), new EntityWrapper<>());
 	}
 
 	/**
 	 * 添加
-	 *
-	 * @param merchant 实体
+     * @param  ggMerchant  实体
 	 * @return success/false
 	 */
 	@PostMapping
-	public R<Boolean> add(@RequestBody Merchant merchant) {
-		return new R<>(merchantService.insert(merchant));
+    public R<Boolean> add(@RequestBody GgMerchant ggMerchant) {
+        return new R<>(ggMerchantService.insert(ggMerchant));
 	}
 
 	/**
@@ -102,24 +101,23 @@ public class MerchantController extends BaseController {
 	 * @return success/false
 	 */
 	@DeleteMapping("/{id}")
-	public R<Boolean> delete(@PathVariable Long id) {
-		Merchant merchant = new Merchant();
-		merchant.setId(id);
-		merchant.setUpdateTime(new Date());
-		merchant.setDelFlag(CommonConstant.STATUS_DEL);
-		return new R<>(merchantService.updateById(merchant));
+    public R<Boolean> delete(@PathVariable Long id) {
+        GgMerchant ggMerchant = new GgMerchant();
+        ggMerchant.setId(id);
+        ggMerchant.setUpdateTime(new Date());
+        ggMerchant.setDelFlag(CommonConstant.STATUS_DEL);
+        return new R<>(ggMerchantService.updateById(ggMerchant));
 	}
 
 	/**
 	 * 编辑
-	 *
-	 * @param merchant 实体
+     * @param  ggMerchant  实体
 	 * @return success/false
 	 */
 	@PutMapping
-	public R<Boolean> edit(@RequestBody Merchant merchant) {
-		merchant.setUpdateTime(new Date());
-		return new R<>(merchantService.updateById(merchant));
+    public R<Boolean> edit(@RequestBody GgMerchant ggMerchant) {
+        ggMerchant.setUpdateTime(new Date());
+        return new R<>(ggMerchantService.updateById(ggMerchant));
 	}
 
 	/**
@@ -130,7 +128,7 @@ public class MerchantController extends BaseController {
 	 */
 	@PostMapping("/sendSmsCode")
 	public R<Object> sendsmscode(@RequestBody SendSmsCode sendSmsCode) {
-		return new R<>(merchantService.sendsmscode(sendSmsCode));
+		return new R<>(ggMerchantService.sendsmscode(sendSmsCode));
 	}
 
 	/**
@@ -141,7 +139,7 @@ public class MerchantController extends BaseController {
 	 */
 	@PostMapping("/uploadphoto")
 	public R<Object> uploadphoto(@RequestBody UploadPhoto uploadPhoto) {
-		return new R<>(merchantService.uploadphoto(uploadPhoto));
+		return new R<>(ggMerchantService.uploadphoto(uploadPhoto));
 	}
 
 	/**
@@ -152,7 +150,7 @@ public class MerchantController extends BaseController {
 	 */
 	@PostMapping("/regist")
 	public R<Object> regist(@RequestBody Register register) {
-		return new R<>(merchantService.regist(register));
+		return new R<>(ggMerchantService.regist(register));
 	}
 
 	/**
@@ -164,7 +162,7 @@ public class MerchantController extends BaseController {
 	 */
 	@GetMapping("/{isvOrgId}/{orderNo}")
 	public R<RegisterQueryVo> registerQuery(@PathVariable String isvOrgId, @PathVariable String orderNo) {
-		return new R<>(merchantService.registerQuery(isvOrgId, orderNo));
+		return new R<>(ggMerchantService.registerQuery(isvOrgId, orderNo));
 	}
 
 	/**
@@ -172,7 +170,7 @@ public class MerchantController extends BaseController {
 	 */
 	@PostMapping("/updateMerchant")
 	public R<Object> updateMerchant(UpdateMerchant updateMerchant) {
-		return new R<>(merchantService.updateMerchant(updateMerchant));
+		return new R<>(ggMerchantService.updateMerchant(updateMerchant));
 	}
 
 	/**
@@ -180,7 +178,7 @@ public class MerchantController extends BaseController {
 	 */
 	@GetMapping("/{isvOrgId}/{merchantId}")
 	public R<Object> merchantQuery(@PathVariable String isvOrgId, @PathVariable String merchantId) {
-		return new R<>(merchantService.merchantQuery(isvOrgId, merchantId));
+		return new R<>(ggMerchantService.merchantQuery(isvOrgId, merchantId));
 	}
 
 	/**
@@ -189,7 +187,7 @@ public class MerchantController extends BaseController {
 	@GetMapping("/{isvOrgId}/{merchantId}/{freezeReason}/{outTradeNo}")
 	public R<Object> merchantFreeze(@PathVariable String isvOrgId, @PathVariable String merchantId, @PathVariable String freezeReason, @PathVariable
 			String outTradeNo) {
-		return new R<>(merchantService.merchantFreeze(isvOrgId, merchantId, freezeReason, outTradeNo));
+		return new R<>(ggMerchantService.merchantFreeze(isvOrgId, merchantId, freezeReason, outTradeNo));
 	}
 
 	/**
@@ -198,7 +196,7 @@ public class MerchantController extends BaseController {
 	@GetMapping("/{isvOrgId}/{merchantId}/{unfreezeReason}/{outTradeNo}")
 	public R<Object> merchantUnfreeze(@PathVariable String isvOrgId, @PathVariable String merchantId, @PathVariable String unfreezeReason,
 	                                  @PathVariable String outTradeNo) {
-		return new R<>(merchantService.merchantUnfreeze(isvOrgId, merchantId, unfreezeReason, outTradeNo));
+		return new R<>(ggMerchantService.merchantUnfreeze(isvOrgId, merchantId, unfreezeReason, outTradeNo));
 	}
 
 }

@@ -17,12 +17,14 @@
 package ins.platform.aggpay.trade.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 /**
@@ -34,7 +36,9 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @since 2018-09-18
  */
 @Data
-public class Merchant extends Model<Merchant> {
+@Accessors(chain = true)
+@TableName("gg_merchant")
+public class GgMerchant extends Model<GgMerchant> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -207,15 +211,4 @@ public class Merchant extends Model<Merchant> {
 		return this.id;
 	}
 
-	@Override
-	public String toString() {
-		return "Merchant{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", orderNo=" + orderNo + ", merchantId=" + merchantId + ", " + "merchantName=" + merchantName + ", merchantType=" + merchantType + ", dealType=" + dealType + ", supportPrepayment=" +
-                supportPrepayment + ", settleMode=" + settleMode + ", mcc=" + mcc + ", tradeTypeList=" + tradeTypeList + ", payChannelList=" +
-                payChannelList + ", deniedPayToolList=" + deniedPayToolList + ", authCode=" + authCode + ", outTradeNo=" + outTradeNo + ", " +
-                "supportStage=" + supportStage + ", partnerType=" + partnerType + ", alipaySource=" + alipaySource + ", wechatChannel=" +
-                wechatChannel + ", rateVersion=" + rateVersion + ", registerStatus=" + registerStatus + ", failReason=" + failReason + ", smid=" +
-                smid + ", channelId=" + channelId + ", wechatMerchId=" + wechatMerchId + ", wechatStatus=" + wechatStatus + ", wechatFailReason=" +
-                wechatFailReason + ", validInd=" + validInd + ", delFlag=" + delFlag + ", creatorCode=" + creatorCode + ", createTime=" +
-                createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
-	}
 }

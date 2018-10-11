@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package ins.platform.aggpay.trade.service;
+package ins.platform.aggpay.trade.mapper;
 
-import ins.platform.aggpay.trade.entity.FeeParam;
+import ins.platform.aggpay.trade.entity.GgFeeParam;
 
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
  * <p>
- * 手续费信息表 服务类
+ * 手续费信息表 Mapper 接口
  * </p>
  *
  * @author ripin
  * @since 2018-09-18
  */
-public interface FeeParamService extends IService<FeeParam> {
+public interface GgFeeParamMapper extends BaseMapper<GgFeeParam> {
 
 }

@@ -20,8 +20,8 @@ import ins.platform.aggpay.common.constant.CommonConstant;
 import ins.platform.aggpay.common.util.Query;
 import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
-import ins.platform.aggpay.trade.entity.MerchantDetail;
-import ins.platform.aggpay.trade.service.MerchantDetailService;
+import ins.platform.aggpay.trade.entity.GgMerchantDetail;
+import ins.platform.aggpay.trade.service.GgMerchantDetailService;
 
 import java.util.Date;
 import java.util.Map;
@@ -48,19 +48,19 @@ import com.baomidou.mybatisplus.plugins.Page;
  */
 @RestController
 @RequestMapping("/merchantDetail")
-public class MerchantDetailController extends BaseController {
+public class GgMerchantDetailController extends BaseController {
 
 	@Autowired
-	private MerchantDetailService merchantDetailService;
+	private GgMerchantDetailService merchantDetailService;
 
 	/**
 	 * 通过ID查询
 	 *
 	 * @param id ID
-	 * @return MerchantDetail
+	 * @return GgMerchantDetail
 	 */
 	@GetMapping("/{id}")
-	public R<MerchantDetail> get(@PathVariable Integer id) {
+	public R<GgMerchantDetail> get(@PathVariable Integer id) {
 		return new R<>(merchantDetailService.selectById(id));
 	}
 
@@ -84,7 +84,7 @@ public class MerchantDetailController extends BaseController {
 	 * @return success/false
 	 */
 	@PostMapping
-	public R<Boolean> add(@RequestBody MerchantDetail merchantDetail) {
+	public R<Boolean> add(@RequestBody GgMerchantDetail merchantDetail) {
 		return new R<>(merchantDetailService.insert(merchantDetail));
 	}
 
@@ -96,7 +96,7 @@ public class MerchantDetailController extends BaseController {
 	 */
 	@DeleteMapping("/{id}")
 	public R<Boolean> delete(@PathVariable Long id) {
-		MerchantDetail merchantDetail = new MerchantDetail();
+		GgMerchantDetail merchantDetail = new GgMerchantDetail();
 		merchantDetail.setId(id);
 		merchantDetail.setUpdateTime(new Date());
 		merchantDetail.setDelFlag(CommonConstant.STATUS_DEL);
@@ -110,7 +110,7 @@ public class MerchantDetailController extends BaseController {
 	 * @return success/false
 	 */
 	@PutMapping
-	public R<Boolean> edit(@RequestBody MerchantDetail merchantDetail) {
+	public R<Boolean> edit(@RequestBody GgMerchantDetail merchantDetail) {
 		merchantDetail.setUpdateTime(new Date());
 		return new R<>(merchantDetailService.updateById(merchantDetail));
 	}

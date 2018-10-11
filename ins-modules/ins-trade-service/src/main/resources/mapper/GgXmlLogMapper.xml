@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ins.platform.aggpay.trade.mapper.GgXmlLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgXmlLog">
+        <id column="id" property="id" />
+        <result column="function" property="function" />
+        <result column="request_xml" property="requestXml" />
+        <result column="response_xml" property="responseXml" />
+        <result column="ResultStatus" property="ResultStatus" />
+        <result column="ResultCode" property="ResultCode" />
+        <result column="ResultMsg" property="ResultMsg" />
+        <result column="req_time" property="reqTime" />
+        <result column="resp_time" property="respTime" />
+        <result column="flag" property="flag" />
+        <result column="del_flag" property="delFlag" />
+        <result column="creator_code" property="creatorCode" />
+        <result column="create_time" property="createTime" />
+        <result column="updater_code" property="updaterCode" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, function, request_xml AS requestXml, response_xml AS responseXml, ResultStatus, ResultCode, ResultMsg, req_time AS reqTime, resp_time AS respTime, flag, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    </sql>
+
+</mapper>

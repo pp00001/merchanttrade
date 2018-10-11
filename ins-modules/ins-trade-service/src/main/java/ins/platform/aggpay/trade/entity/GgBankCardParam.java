@@ -17,6 +17,7 @@
 package ins.platform.aggpay.trade.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,9 +35,10 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @author ripin
  * @since 2018-09-18
  */
-@TableName("bank_card_param")
 @Data
-public class BankCardParam extends Model<BankCardParam> {
+@Accessors(chain = true)
+@TableName("gg_bank_card_param")
+public class GgBankCardParam extends Model<GgBankCardParam> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -136,12 +138,4 @@ public class BankCardParam extends Model<BankCardParam> {
 		return this.id;
 	}
 
-	@Override
-	public String toString() {
-		return "BankCardParam{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", bankCardNo=" + bankCardNo + ", bankCertName=" +
-				bankCertName + ", accountType=" + accountType + ", contactLine=" + contactLine + ", branchName=" + branchName + ", branchProvince="
-				+ branchProvince + ", branchCity=" + branchCity + ", certType=" + certType + ", certNo=" + certNo + ", cardHolderAddress=" +
-				cardHolderAddress + ", validInd=" + validInd + ", delFlag=" + delFlag + ", creatorCode=" + creatorCode + ", createTime=" +
-				createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
-	}
 }

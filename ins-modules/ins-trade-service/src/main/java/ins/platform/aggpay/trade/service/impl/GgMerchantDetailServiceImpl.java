@@ -16,9 +16,9 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.mapper.MerchantDetailMapper;
-import ins.platform.aggpay.trade.entity.MerchantDetail;
-import ins.platform.aggpay.trade.service.MerchantDetailService;
+import ins.platform.aggpay.trade.entity.GgMerchantDetail;
+import ins.platform.aggpay.trade.mapper.GgMerchantDetailMapper;
+import ins.platform.aggpay.trade.service.GgMerchantDetailService;
 
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -32,6 +32,7 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
  * @since 2018-09-18
  */
 @Service
-public class MerchantDetailServiceImpl extends ServiceImpl<MerchantDetailMapper, MerchantDetail> implements MerchantDetailService {
+public class GgMerchantDetailServiceImpl extends ServiceImpl<GgMerchantDetailMapper, GgMerchantDetail> implements GgMerchantDetailService {
+
 
 }

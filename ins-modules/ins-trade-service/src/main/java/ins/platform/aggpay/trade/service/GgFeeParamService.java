@@ -16,18 +16,18 @@
 
 package ins.platform.aggpay.trade.service;
 
-import ins.platform.aggpay.trade.entity.BankCardParam;
+import ins.platform.aggpay.trade.entity.GgFeeParam;
 
 import com.baomidou.mybatisplus.service.IService;
 
 /**
  * <p>
- * 清算卡信息表 服务类
+ * 手续费信息表 服务类
  * </p>
  *
  * @author ripin
  * @since 2018-09-18
  */
-public interface BankCardParamService extends IService<BankCardParam> {
+public interface GgFeeParamService extends IService<GgFeeParam> {
 
 }

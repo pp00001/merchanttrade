@@ -16,10 +16,10 @@
   -->
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ins.platform.aggpay.trade.mapper.MerchantMapper">
+<mapper namespace="ins.platform.aggpay.trade.mapper.GgMerchantMapper">
 
   <!-- 通用查询映射结果 -->
-  <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.Merchant">
+  <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgMerchant">
     <id column="id" property="id"/>
     <result column="out_merchant_id" property="outMerchantId"/>
     <result column="order_no" property="orderNo"/>

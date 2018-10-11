@@ -16,22 +16,22 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.mapper.FeeParamMapper;
-import ins.platform.aggpay.trade.entity.FeeParam;
-import ins.platform.aggpay.trade.service.FeeParamService;
+import ins.platform.aggpay.trade.entity.GgBankCardParam;
+import ins.platform.aggpay.trade.mapper.GgBankCardParamMapper;
+import ins.platform.aggpay.trade.service.GgBankCardParamService;
 
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 /**
  * <p>
- * 手续费信息表 服务实现类
+ * 清算卡信息表 服务实现类
  * </p>
  *
  * @author ripin
  * @since 2018-09-18
  */
 @Service
-public class FeeParamServiceImpl extends ServiceImpl<FeeParamMapper, FeeParam> implements FeeParamService {
+public class GgBankCardParamServiceImpl extends ServiceImpl<GgBankCardParamMapper, GgBankCardParam> implements GgBankCardParamService {
 
 }

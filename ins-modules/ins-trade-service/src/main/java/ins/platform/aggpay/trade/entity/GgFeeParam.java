@@ -17,6 +17,7 @@
 package ins.platform.aggpay.trade.entity;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -34,9 +35,10 @@ import com.baomidou.mybatisplus.enums.IdType;
  * @author ripin
  * @since 2018-09-18
  */
-@TableName("fee_param")
 @Data
-public class FeeParam extends Model<FeeParam> {
+@Accessors(chain = true)
+@TableName("gg_fee_param")
+public class GgFeeParam extends Model<GgFeeParam> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -98,9 +100,4 @@ public class FeeParam extends Model<FeeParam> {
 		return this.id;
 	}
 
-	@Override
-	public String toString() {
-		return "FeeParam{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", channeltype=" + channeltype + ", feetype=" + feetype + ", " + "feevalue=" + feevalue + ", validInd=" + validInd + ", delFlag=" + delFlag + ", creatorCode=" + creatorCode + ", createTime=" +
-                createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
-	}
 }

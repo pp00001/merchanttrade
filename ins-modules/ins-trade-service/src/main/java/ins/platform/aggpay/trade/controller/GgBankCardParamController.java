@@ -20,8 +20,8 @@ import ins.platform.aggpay.common.constant.CommonConstant;
 import ins.platform.aggpay.common.util.Query;
 import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
-import ins.platform.aggpay.trade.entity.FeeParam;
-import ins.platform.aggpay.trade.service.FeeParamService;
+import ins.platform.aggpay.trade.entity.GgBankCardParam;
+import ins.platform.aggpay.trade.service.GgBankCardParamService;
 
 import java.util.Date;
 import java.util.Map;
@@ -40,28 +40,28 @@ import com.baomidou.mybatisplus.plugins.Page;
 
 /**
  * <p>
- * 手续费信息表 前端控制器
+ * 清算卡信息表 前端控制器
  * </p>
  *
  * @author ripin
  * @since 2018-09-18
  */
 @RestController
-@RequestMapping("/feeParam")
-public class FeeParamController extends BaseController {
+@RequestMapping("/bankCardParam")
+public class GgBankCardParamController extends BaseController {
 
 	@Autowired
-	private FeeParamService feeParamService;
+	private GgBankCardParamService bankCardParamService;
 
 	/**
 	 * 通过ID查询
 	 *
 	 * @param id ID
-	 * @return FeeParam
+	 * @return GgBankCardParam
 	 */
 	@GetMapping("/{id}")
-	public R<FeeParam> get(@PathVariable Integer id) {
-		return new R<>(feeParamService.selectById(id));
+	public R<GgBankCardParam> get(@PathVariable Integer id) {
+		return new R<>(bankCardParamService.selectById(id));
 	}
 
 
@@ -74,18 +74,18 @@ public class FeeParamController extends BaseController {
 	@RequestMapping("/page")
 	public Page page(@RequestParam Map<String, Object> params) {
 		params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
-		return feeParamService.selectPage(new Query<>(params), new EntityWrapper<>());
+		return bankCardParamService.selectPage(new Query<>(params), new EntityWrapper<>());
 	}
 
 	/**
 	 * 添加
 	 *
-	 * @param feeParam 实体
+	 * @param bankCardParam 实体
 	 * @return success/false
 	 */
 	@PostMapping
-	public R<Boolean> add(@RequestBody FeeParam feeParam) {
-		return new R<>(feeParamService.insert(feeParam));
+	public R<Boolean> add(@RequestBody GgBankCardParam bankCardParam) {
+		return new R<>(bankCardParamService.insert(bankCardParam));
 	}
 
 	/**
@@ -96,22 +96,22 @@ public class FeeParamController extends BaseController {
 	 */
 	@DeleteMapping("/{id}")
 	public R<Boolean> delete(@PathVariable Long id) {
-		FeeParam feeParam = new FeeParam();
-		feeParam.setId(id);
-		feeParam.setUpdateTime(new Date());
-		feeParam.setDelFlag(CommonConstant.STATUS_DEL);
-		return new R<>(feeParamService.updateById(feeParam));
+		GgBankCardParam bankCardParam = new GgBankCardParam();
+		bankCardParam.setId(id);
+		bankCardParam.setUpdateTime(new Date());
+		bankCardParam.setDelFlag(CommonConstant.STATUS_DEL);
+		return new R<>(bankCardParamService.updateById(bankCardParam));
 	}
 
 	/**
 	 * 编辑
 	 *
-	 * @param feeParam 实体
+	 * @param bankCardParam 实体
 	 * @return success/false
 	 */
 	@PutMapping
-	public R<Boolean> edit(@RequestBody FeeParam feeParam) {
-		feeParam.setUpdateTime(new Date());
-		return new R<>(feeParamService.updateById(feeParam));
+	public R<Boolean> edit(@RequestBody GgBankCardParam bankCardParam) {
+		bankCardParam.setUpdateTime(new Date());
+		return new R<>(bankCardParamService.updateById(bankCardParam));
 	}
 }

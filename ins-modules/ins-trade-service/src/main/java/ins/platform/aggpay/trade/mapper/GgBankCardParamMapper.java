@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.mapper;
 
-import ins.platform.aggpay.trade.entity.BankCardParam;
+import ins.platform.aggpay.trade.entity.GgBankCardParam;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**
@@ -27,6 +27,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * @author ripin
  * @since 2018-09-18
  */
-public interface BankCardParamMapper extends BaseMapper<BankCardParam> {
+public interface GgBankCardParamMapper extends BaseMapper<GgBankCardParam> {
 
 }

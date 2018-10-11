@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package ins.platform.aggpay.trade.mapper;
+package ins.platform.aggpay.trade.service;
 
-import ins.platform.aggpay.trade.entity.Merchant;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import ins.platform.aggpay.trade.entity.GgBankCardParam;
+
+import com.baomidou.mybatisplus.service.IService;
 
 /**
  * <p>
- * 商户信息主表 Mapper 接口
+ * 清算卡信息表 服务类
  * </p>
  *
  * @author ripin
  * @since 2018-09-18
  */
-public interface MerchantMapper extends BaseMapper<Merchant> {
+public interface GgBankCardParamService extends IService<GgBankCardParam> {
 
 }
