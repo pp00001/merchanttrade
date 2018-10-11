@@ -50,63 +50,68 @@ import com.baomidou.mybatisplus.plugins.Page;
 @RequestMapping("/feeParam")
 public class FeeParamController extends BaseController {
 
-    @Autowired private FeeParamService feeParamService;
+	@Autowired
+	private FeeParamService feeParamService;
 
-    /**
-    * 通过ID查询
-    *
-    * @param id ID
-    * @return FeeParam
-    */
-    @GetMapping("/{id}")
-    public R<FeeParam> get(@PathVariable Integer id) {
-        return new R<>(feeParamService.selectById(id));
-    }
+	/**
+	 * 通过ID查询
+	 *
+	 * @param id ID
+	 * @return FeeParam
+	 */
+	@GetMapping("/{id}")
+	public R<FeeParam> get(@PathVariable Integer id) {
+		return new R<>(feeParamService.selectById(id));
+	}
 
 
-    /**
-    * 分页查询信息
-    *
-    * @param params 分页对象
-    * @return 分页对象
-    */
-    @RequestMapping("/page")
-    public Page page(@RequestParam Map<String, Object> params) {
-        params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
-        return feeParamService.selectPage(new Query<>(params), new EntityWrapper<>());
-    }
+	/**
+	 * 分页查询信息
+	 *
+	 * @param params 分页对象
+	 * @return 分页对象
+	 */
+	@RequestMapping("/page")
+	public Page page(@RequestParam Map<String, Object> params) {
+		params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
+		return feeParamService.selectPage(new Query<>(params), new EntityWrapper<>());
+	}
 
-    /**
-     * 添加
-     * @param  feeParam  实体
-     * @return success/false
-     */
-    @PostMapping
-    public R<Boolean> add(@RequestBody FeeParam feeParam) {
-        return new R<>(feeParamService.insert(feeParam));
-    }
+	/**
+	 * 添加
+	 *
+	 * @param feeParam 实体
+	 * @return success/false
+	 */
+	@PostMapping
+	public R<Boolean> add(@RequestBody FeeParam feeParam) {
+		return new R<>(feeParamService.insert(feeParam));
+	}
 
-    /**
-     * 删除
-     * @param id ID
-     * @return success/false
-     */
-    @DeleteMapping("/{id}")
-    public R<Boolean> delete(@PathVariable Long id) {
-        FeeParam feeParam = new FeeParam();
-        feeParam.setId(id);
-        feeParam.setUpdateTime(new Date());
-        return new R<>(feeParamService.updateById(feeParam));
-    }
+	/**
+	 * 删除
+	 *
+	 * @param id ID
+	 * @return success/false
+	 */
+	@DeleteMapping("/{id}")
+	public R<Boolean> delete(@PathVariable Long id) {
+		FeeParam feeParam = new FeeParam();
+		feeParam.setId(id);
+		feeParam.setUpdateTime(new Date());
+		feeParam.setDelFlag(CommonConstant.STATUS_DEL);
+		return new R<>(feeParamService.updateById(feeParam));
+	}
 
-    /**
-     * 编辑
-     * @param  feeParam  实体
-     * @return success/false
-     */
-    @PutMapping
-    public R<Boolean> edit(@RequestBody FeeParam feeParam) {
-        feeParam.setUpdateTime(new Date());
-        return new R<>(feeParamService.updateById(feeParam));
-    }
+	/**
+	 * 编辑
+	 *
+	 * @param feeParam 实体
+	 * @return success/false
+	 */
+	@PutMapping
+	public R<Boolean> edit(@RequestBody FeeParam feeParam) {
+		feeParam.setUpdateTime(new Date());
+		return new R<>(feeParamService.updateById(feeParam));
+	}
 }
