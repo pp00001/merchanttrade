@@ -17,19 +17,20 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
-DROP TABLE IF EXISTS merchant;
-DROP TABLE IF EXISTS merchant_detail;
-DROP TABLE IF EXISTS fee_param;
-DROP TABLE IF EXISTS bank_card_param;
-
+DROP TABLE IF EXISTS gg_merchant;
+DROP TABLE IF EXISTS gg_merchant_detail;
+DROP TABLE IF EXISTS gg_fee_param;
+DROP TABLE IF EXISTS gg_bank_card_param;
+DROP TABLE IF EXISTS gg_xml_log;
+DROP TABLE IF EXISTS gp_trade_order;
 /*==============================================================*/
-/* Table: merchant                                              */
+/* Table: gg_merchant                                           */
 /*==============================================================*/
-CREATE TABLE merchant (
+CREATE TABLE gg_merchant (
   id                   BIGINT (20) NOT NULL auto_increment COMMENT '主键',
-  out_merchant_id      VARCHAR(64) COMMENT '外部商户号',
-  order_no             VARCHAR(64) COMMENT '申请单号',
-  merchant_id          VARCHAR(64) COMMENT '商户号',
+  out_merchant_id      VARCHAR(64)  DEFAULT NULL COMMENT '外部商户号',
+  order_no             VARCHAR(64)  DEFAULT NULL COMMENT '申请单号',
+  merchant_id          VARCHAR(64)  DEFAULT NULL COMMENT '商户号',
   merchant_name        VARCHAR(50)  DEFAULT NULL COMMENT '商户名称',
   merchant_type        VARCHAR(8)   DEFAULT NULL COMMENT '商户类型 - 01:自然人,02:个体工商户,03:企业商户',
   deal_type            VARCHAR(8)   DEFAULT NULL COMMENT '商户经营类型 - 01:实体特约商户, 02:网络特约商户, 03:实体兼网络特约商户',
@@ -63,9 +64,9 @@ CREATE TABLE merchant (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '商户信息主表';
 
 /*==============================================================*/
-/* Table: Merchant_Detail                                       */
+/* Table: gg_merchant_detail                                    */
 /*==============================================================*/
-CREATE TABLE merchant_detail
+CREATE TABLE gg_merchant_detail
 (
   id                     BIGINT (20) NOT NULL auto_increment COMMENT '主键',
   out_merchant_id        VARCHAR(64) NOT NULL COMMENT '外部商户号',
@@ -92,7 +93,7 @@ CREATE TABLE merchant_detail
   industry_license_photo VARCHAR(64)  DEFAULT NULL COMMENT '开户许可证照片',
   shop_photo             VARCHAR(64)  DEFAULT NULL COMMENT '门头照',
   other_photo            VARCHAR(64)  DEFAULT NULL COMMENT '其他图片',
-  subscribe_appi_d       VARCHAR(256) DEFAULT NULL COMMENT '需关注的公众号appid',
+  subscribe_app_id       VARCHAR(256) DEFAULT NULL COMMENT '需关注的公众号appid',
   valid_ind              VARCHAR(1)   DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
   del_flag               CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
   creator_code           VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
@@ -103,9 +104,9 @@ CREATE TABLE merchant_detail
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '商户详情表';
 
 /*==============================================================*/
-/* Table: fee_param                                             */
+/* Table: gg_fee_param                                          */
 /*==============================================================*/
-CREATE TABLE fee_param
+CREATE TABLE gg_fee_param
 (
   id              BIGINT (20) NOT NULL auto_increment COMMENT '主键',
   out_merchant_id VARCHAR(64) NOT NULL COMMENT '外部商户号',
@@ -123,9 +124,9 @@ CREATE TABLE fee_param
 
 
 /*==============================================================*/
-/* Table: bank_card_param                                       */
+/* Table: gg_bank_card_param                                    */
 /*==============================================================*/
-CREATE TABLE bank_card_param
+CREATE TABLE gg_bank_card_param
 (
   id                  BIGINT (20) NOT NULL auto_increment COMMENT '主键',
   out_merchant_id     VARCHAR(64) NOT NULL COMMENT '外部商户号',
@@ -147,6 +148,89 @@ CREATE TABLE bank_card_param
   update_time         TIMESTAMP   NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '清算卡信息表';
+
+
+/*==============================================================*/
+/* Table: gg_xml_log                                       */
+/*==============================================================*/
+CREATE TABLE gg_xml_log (
+  id           BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  function     VARCHAR(128) DEFAULT NULL COMMENT '接口代码',
+  request_xml  TEXT         DEFAULT NULL COMMENT '请求报文',
+  response_xml TEXT         DEFAULT NULL COMMENT '响应报文',
+  ResultStatus VARCHAR(2)   DEFAULT NULL COMMENT '处理状态',
+  ResultCode   VARCHAR(6)   DEFAULT NULL COMMENT '返回码 - S：成功，F：失败，U：未知',
+  ResultMsg    VARCHAR(255) DEFAULT NULL COMMENT '返回码信息',
+  req_time     TIMESTAMP NULL DEFAULT NULL COMMENT '请求时间',
+  resp_time    TIMESTAMP NULL  DEFAULT NULL COMMENT '响应时间',
+  flag         VARCHAR(1)   DEFAULT '1' COMMENT '调用状态 - 1：成功，0：失败',
+  del_flag     CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
+  creator_code VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
+  create_time  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updater_code VARCHAR(32)  DEFAULT NULL COMMENT '更新人代码',
+  update_time  TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '报文往来日志表';
+
+
+/*==============================================================*/
+/* Table: gp_trade_order                                       */
+/*==============================================================*/
+CREATE TABLE gp_trade_order (
+  id                      BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  order_type              VARCHAR(16)   DEFAULT NULL COMMENT '支付单类型 - create：主扫，pay：被扫，create_dynamic：动态扫码',
+  order_no                VARCHAR(64)   DEFAULT NULL COMMENT '订单号',
+  auth_code               VARCHAR(64)   DEFAULT NULL COMMENT '第三方支付授权码',
+  out_trade_no            VARCHAR(64)   DEFAULT NULL COMMENT '外部交易号',
+  body                    VARCHAR(128)  DEFAULT NULL COMMENT '商品描述',
+  goods_tag               VARCHAR(32)   DEFAULT NULL COMMENT '商品标记',
+  goods_detail            VARCHAR(256)  DEFAULT NULL COMMENT '商品详情列表',
+  total_amount            INT           DEFAULT NULL COMMENT '交易总金额',
+  currency                VARCHAR(16)   DEFAULT NULL COMMENT '币种',
+  merchant_id             VARCHAR(64)   DEFAULT NULL COMMENT '商户号',
+  channel_type            VARCHAR(16)   DEFAULT NULL COMMENT '支付渠道类型',
+  open_id                 VARCHAR(128)  DEFAULT NULL COMMENT '消费者用户标识',
+  operator_id             VARCHAR(32)   DEFAULT NULL COMMENT '操作员ID',
+  store_id                VARCHAR(32)   DEFAULT NULL COMMENT '门店ID',
+  device_id               VARCHAR(32)   DEFAULT NULL COMMENT '终端设备号',
+  device_create_ip        VARCHAR(16)   DEFAULT NULL COMMENT '终端IP',
+  expire_express          INT           DEFAULT NULL COMMENT '订单有效期（分钟1-1440）',
+  settle_type             VARCHAR(32)   DEFAULT NULL COMMENT '清算方式 - T0，T1',
+  attach                  VARCHAR(128)  DEFAULT NULL COMMENT '附加信息',
+  notify_url              VARCHAR(256)  DEFAULT NULL COMMENT '支付异步通知回调地址',
+  sub_app_id              VARCHAR(32)   DEFAULT NULL COMMENT '商户微信支付时需要指定的微信支付公众号appid',
+  specify_sub_merch_id    VARCHAR(1)    DEFAULT NULL COMMENT '是否指定微信支付请求的SubMerchIdY:指定N:不指定',
+  channel_id              VARCHAR(64)   DEFAULT NULL COMMENT '微信支付渠道号',
+  sub_merch_id            VARCHAR(64)   DEFAULT NULL COMMENT '微信交易子商户号',
+  pay_limit               VARCHAR(32)   DEFAULT NULL COMMENT '禁用支付方式',
+  discountable_amount     INT           DEFAULT NULL COMMENT '可打折金额',
+  undiscountable_amount   INT           DEFAULT NULL COMMENT '不可打折金额',
+  alipay_store_id         VARCHAR(32)   DEFAULT NULL COMMENT '支付宝的店铺编号',
+  sys_service_provider_id VARCHAR(64)   DEFAULT NULL COMMENT '返佣PID',
+  check_later_nm          VARCHAR(8)    DEFAULT NULL COMMENT '花呗交易分期数',
+  pre_pay_id              VARCHAR(1024) DEFAULT NULL COMMENT '预付单信息',
+  pay_info                VARCHAR(512)  DEFAULT NULL COMMENT '原生态js支付信息',
+  gmt_payment             TIMESTAMP NULL DEFAULT NULL COMMENT '支付完成时间',
+  bank_type               VARCHAR(16)   DEFAULT NULL COMMENT '付款银行',
+  pay_channel_order_no    VARCHAR(64)   DEFAULT NULL COMMENT '支付宝或微信端的订单号',
+  merchant_order_no       VARCHAR(64)   DEFAULT NULL COMMENT '商户订单号',
+  coupon_fee              INT           DEFAULT NULL COMMENT '现金券金额',
+  is_subscribe            VARCHAR(1)    DEFAULT NULL COMMENT '是否关注公众账号 - 1：关注，2：未关注',
+  buyer_logon_id          VARCHAR(128)  DEFAULT NULL COMMENT '买家支付宝登录账号',
+  buyer_user_id           VARCHAR(128)  DEFAULT NULL COMMENT '买家支付宝用户id',
+  credit                  VARCHAR(16)   DEFAULT NULL COMMENT '借贷标识 - credit：信用卡，pcredit：花呗（仅支付宝），debit：借记卡，balance：余额，unknown：未知',
+  receipt_amount          INT           DEFAULT NULL COMMENT '实收金额',
+  buyer_pay_amount        INT           DEFAULT NULL COMMENT '用户实付金额',
+  invoice_amount          INT           DEFAULT NULL COMMENT '开票金额',
+  trade_status            VARCHAR(16)   DEFAULT '1' COMMENT '支付状态 - succ：支付成功，fail：失败，paying：支付中，closed：已关单，cancel：已撤消',
+  valid_ind               VARCHAR(1)    DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
+  del_flag                CHAR(1)       DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
+  creator_code            VARCHAR(32)   DEFAULT NULL COMMENT '创建人代码',
+  create_time             TIMESTAMP     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updater_code            VARCHAR(32)   DEFAULT NULL COMMENT '更新人代码',
+  update_time             TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '交易订单表';
 
 
 SET FOREIGN_KEY_CHECKS = 1;
