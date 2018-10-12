@@ -61,13 +61,18 @@ public class MerchantQuery extends AbstractReq {
   private String merchantId = HttpsMain.merchantId;
   private Map<String, String> body;
 
-  public MerchantQuery() {
+  public MerchantQuery(String merchantId) {
     super("ant.mybank.merchantprod.merchant.query");
 
     this.body = new HashMap<String, String>();
     this.body.put("IsvOrgId", isvOrgId);
     this.body.put("MerchantId", merchantId);
   }
+  
+  public MerchantQuery(){
+	  super("ant.mybank.merchantprod.merchant.query");
+  }
+  
 
   @Override
   public Map<String, String> getBody() {
@@ -76,7 +81,7 @@ public class MerchantQuery extends AbstractReq {
 
   public static void main(String[] args) throws Exception {
     BASE64Decoder decoder = new BASE64Decoder();
-    MerchantQuery merchantQuery = new MerchantQuery();
+    MerchantQuery merchantQuery = new MerchantQuery("226801000000142576686");
     Map<String, Object> rst = merchantQuery.call();
 
     //将base加密的相关字段解密

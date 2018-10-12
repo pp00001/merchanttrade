@@ -48,14 +48,14 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	MerchantResVo updateMerchant(UpdateMerchant updateMerchant);
 
 	//商户信息查询接口
-	GgMerchantVo merchantQuery(String isvOrgId, String orderNo);
+	GgMerchantVo merchantQuery(String orderNo);
 
 	//商户关闭接口
-	MerchantResVo merchantFreeze(String isvOrgId, String merchantId,
+	MerchantResVo merchantFreeze(String merchantId,
 			String freezeReason, String outTradeNo);
 
 	//商户开启接口
-	MerchantResVo merchantUnfreeze(String isvOrgId, String merchantId,
+	MerchantResVo merchantUnfreeze(String merchantId,
 			String unfreezeReason, String outTradeNo);
 	
 	

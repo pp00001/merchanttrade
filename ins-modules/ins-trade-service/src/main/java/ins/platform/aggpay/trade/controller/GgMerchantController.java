@@ -157,7 +157,7 @@ public class GgMerchantController extends BaseController {
 	/**
 	 * 5.2.3	商户入驻结果查询
 	 *
-	 * @param orderNo
+	 * @param orderNo//2018091811150710010000000000000000165045
 	 * @return
 	 */
 	@GetMapping("registerQuery/{orderNo}")
@@ -176,27 +176,27 @@ public class GgMerchantController extends BaseController {
 	/**
 	 * 5.2.6	商户信息查询
 	 */
-	@GetMapping("/{isvOrgId}/{merchantId}")
-	public R<Object> merchantQuery(@PathVariable String isvOrgId, @PathVariable String merchantId) {
-		return new R<>(ggMerchantService.merchantQuery(isvOrgId, merchantId));
+	@GetMapping("/merchantQuery/{merchantId}")
+	public R<Object> merchantQuery(@PathVariable String merchantId) {
+		return new R<>(ggMerchantService.merchantQuery(merchantId));
 	}
 
 	/**
 	 * 5.2.7	商户关闭接口
 	 */
-	@GetMapping("/{isvOrgId}/{merchantId}/{freezeReason}/{outTradeNo}")
-	public R<Object> merchantFreeze(@PathVariable String isvOrgId, @PathVariable String merchantId, @PathVariable String freezeReason, @PathVariable
+	@GetMapping("/merchantFreeze/{merchantId}/{freezeReason}/{outTradeNo}")
+	public R<Object> merchantFreeze(@PathVariable String merchantId, @PathVariable String freezeReason, @PathVariable
 			String outTradeNo) {
-		return new R<>(ggMerchantService.merchantFreeze(isvOrgId, merchantId, freezeReason, outTradeNo));
+		return new R<>(ggMerchantService.merchantFreeze(merchantId, freezeReason, outTradeNo));
 	}
 
 	/**
 	 * 5.2.8	商户开启接口
 	 */
-	@GetMapping("/{isvOrgId}/{merchantId}/{unfreezeReason}/{outTradeNo}")
-	public R<Object> merchantUnfreeze(@PathVariable String isvOrgId, @PathVariable String merchantId, @PathVariable String unfreezeReason,
+	@GetMapping("/merchantUnfreeze/{merchantId}/{unfreezeReason}/{outTradeNo}")
+	public R<Object> merchantUnfreeze(@PathVariable String merchantId, @PathVariable String unfreezeReason,
 	                                  @PathVariable String outTradeNo) {
-		return new R<>(ggMerchantService.merchantUnfreeze(isvOrgId, merchantId, unfreezeReason, outTradeNo));
+		return new R<>(ggMerchantService.merchantUnfreeze(merchantId, unfreezeReason, outTradeNo));
 	}
 
 }
