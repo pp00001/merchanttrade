@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright (c) 2018-2020, Ripin Yan. All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<document>
+  <request id="request">
+    <head>
+      <Version>1.0.0</Version>
+      <Appid>2018090700000286</Appid>
+      <Function>ant.mybank.bkmerchanttrade.prePayNotice</Function>
+      <ReqTime>20181012102504</ReqTime>
+      <ReqTimeZone>UTC+8</ReqTimeZone>
+      <ReqMsgId>2018101210250472720166</ReqMsgId>
+      <Reserve></Reserve>
+      <SignType>RSA</SignType>
+      <InputCharset>UTF-8</InputCharset>
+    </head>
+    <body>
+      <IsvOrgId>202210000000000001316</IsvOrgId>
+      <OutTradeNo>993edfe6a2844edb854cb845be3019ba</OutTradeNo>
+      <OrderNo>2018101210152010020001680000513971</OrderNo>
+      <ChannelType>WX</ChannelType>
+      <TotalAmount>1</TotalAmount>
+      <Currency>CNY</Currency>
+      <MerchantId>226801000000142576686</MerchantId>
+      <Attach>test</Attach>
+      <GmtPayment>2018-10-12 10:25:02</GmtPayment>
+      <BankType>CFT</BankType>
+      <IsSubscribe>Y</IsSubscribe>
+      <PayChannelOrderNo>4200000176201810124653436344</PayChannelOrderNo>
+      <MerchantOrderNo>MYBKJHZF2018101210103518252606</MerchantOrderNo>
+      <SubAppId>wx62a55dbdd041bb1d</SubAppId>
+      <CouponFee></CouponFee>
+      <OpenId>otBP8wWRG63MS9IZkK27hhO0jYnM</OpenId>
+      <SubOpenId></SubOpenId>
+      <BuyerLogonId></BuyerLogonId>
+      <BuyerUserId></BuyerUserId>
+      <Credit>BALANCE</Credit>
+      <ReceiptAmount></ReceiptAmount>
+      <BuyerPayAmount></BuyerPayAmount>
+      <InvoiceAmount></InvoiceAmount>
+    </body>
+  </request>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+        <DigestValue>Fk61q/4P0aZ1aGhpxxutIQJA1qo=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>
+      WLOAG4EE7Q18OstjHyqc3XR5Ys9zm2hZD6tNejD0GF82Uh/MdkhalTdJv79uNpfmdfwTvbOGrKVa
+      JKGHUmmSnQdiLxv9QbqoqJxTNF9OcgqPDP5KZRthsfa9u/Acfd3pO6KgzF/KyXYz3C1Ny4eeevhp
+      uFDyDSkZ7/pdjd9bR4M=
+    </SignatureValue>
+  </Signature>
+</document>

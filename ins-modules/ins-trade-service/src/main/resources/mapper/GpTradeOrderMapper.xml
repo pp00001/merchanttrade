@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GpTradeOrder">
         <id column="id" property="id" />
+        <result column="order_type" property="orderType" />
         <result column="order_no" property="orderNo" />
         <result column="auth_code" property="authCode" />
         <result column="out_trade_no" property="outTradeNo" />
@@ -46,8 +47,9 @@
         <result column="buyer_user_id" property="buyerUserId" />
         <result column="credit" property="credit" />
         <result column="receipt_amount" property="receiptAmount" />
-        <result column="buyerpay_amount" property="buyerpayAmount" />
+        <result column="buyer_pay_amount" property="buyerPayAmount" />
         <result column="invoice_amount" property="invoiceAmount" />
+        <result column="trade_status" property="tradeStatus" />
         <result column="valid_ind" property="validInd" />
         <result column="del_flag" property="delFlag" />
         <result column="creator_code" property="creatorCode" />
@@ -58,7 +60,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, order_no AS orderNo, auth_code AS authCode, out_trade_no AS outTradeNo, body, goods_tag AS goodsTag, goods_detail AS goodsDetail, total_amount AS totalAmount, currency, merchant_id AS merchantId, channel_type AS channelType, open_id AS openId, operator_id AS operatorId, store_id AS storeId, device_id AS deviceId, device_create_ip AS deviceCreateIp, expire_express AS expireExpress, settle_type AS settleType, attach, notify_url AS notifyUrl, sub_app_id AS subAppId, specify_sub_merch_id AS specifySubMerchId, channel_id AS channelId, sub_merch_id AS subMerchId, pay_limit AS payLimit, discountable_amount AS discountableAmount, undiscountable_amount AS undiscountableAmount, alipay_store_id AS alipayStoreId, sys_service_provider_id AS sysServiceProviderId, check_later_nm AS checkLaterNm, pre_pay_id AS prePayId, pay_info AS payInfo, gmt_payment AS gmtPayment, bank_type AS bankType, pay_channel_order_no AS payChannelOrderNo, merchant_order_no AS merchantOrderNo, coupon_fee AS couponFee, is_subscribe AS isSubscribe, buyer_logon_id AS buyerLogonId, buyer_user_id AS buyerUserId, credit, receipt_amount AS receiptAmount, buyerpay_amount AS buyerpayAmount, invoice_amount AS invoiceAmount, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+        id, order_type AS orderType, order_no AS orderNo, auth_code AS authCode, out_trade_no AS outTradeNo, body, goods_tag AS goodsTag, goods_detail AS goodsDetail, total_amount AS totalAmount, currency, merchant_id AS merchantId, channel_type AS channelType, open_id AS openId, operator_id AS operatorId, store_id AS storeId, device_id AS deviceId, device_create_ip AS deviceCreateIp, expire_express AS expireExpress, settle_type AS settleType, attach, notify_url AS notifyUrl, sub_app_id AS subAppId, specify_sub_merch_id AS specifySubMerchId, channel_id AS channelId, sub_merch_id AS subMerchId, pay_limit AS payLimit, discountable_amount AS discountableAmount, undiscountable_amount AS undiscountableAmount, alipay_store_id AS alipayStoreId, sys_service_provider_id AS sysServiceProviderId, check_later_nm AS checkLaterNm, pre_pay_id AS prePayId, pay_info AS payInfo, gmt_payment AS gmtPayment, bank_type AS bankType, pay_channel_order_no AS payChannelOrderNo, merchant_order_no AS merchantOrderNo, coupon_fee AS couponFee, is_subscribe AS isSubscribe, buyer_logon_id AS buyerLogonId, buyer_user_id AS buyerUserId, credit, receipt_amount AS receiptAmount, buyer_pay_amount AS buyerPayAmount, invoice_amount AS invoiceAmount, trade_status AS tradeStatus, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
     </sql>
 
 </mapper>

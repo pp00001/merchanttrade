@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface GgXmlLogService extends IService<GgXmlLog> {
 
+
+	@Override
+	boolean insert(GgXmlLog ggXmlLog);
 }

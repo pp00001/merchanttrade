@@ -31,7 +31,8 @@ public class PayQuery {
         //微信成功
         // payQuery(HttpsMain.merchantId, "0651e38c0fa243dfab6f99a4f7ed21e5");
         // payQuery(HttpsMain.merchantId, "a64ae87aba43413f9e4b78584c3dfc4f");
-        payQuery(HttpsMain.merchantId, "3db6ec42abd142b98377a681b944b8bf");
+        // 微信主扫成功-993edfe6a2844edb854cb845be3019ba
+        payQuery(HttpsMain.merchantId, "993edfe6a2844edb854cb845be3019ba");
 
     }
 

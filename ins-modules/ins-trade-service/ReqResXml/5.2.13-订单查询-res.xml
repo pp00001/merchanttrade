@@ -70,3 +70,77 @@
     </SignatureValue>
   </Signature>
 </document>
+
+<!-- 微信主扫订单-->
+<document>
+<response id="response">
+  <head>
+    <Version>1.0.0</Version>
+    <Appid>2018090700000286</Appid>
+    <Function>ant.mybank.bkmerchanttrade.payQuery</Function>
+    <RespTime>20181012102707</RespTime>
+    <RespTimeZone>UTC+8</RespTimeZone>
+    <ReqMsgId>a2f8946b-79e9-4d01-8081-772d52d1d688</ReqMsgId>
+    <Reserve></Reserve>
+    <SignType>RSA</SignType>
+    <InputCharset>UTF-8</InputCharset>
+  </head>
+  <body>
+    <RespInfo>
+      <ResultStatus>S</ResultStatus>
+      <ResultCode>0000</ResultCode>
+      <ResultMsg></ResultMsg>
+    </RespInfo>
+    <OutTradeNo>993edfe6a2844edb854cb845be3019ba</OutTradeNo>
+    <OrderNo>2018101210152010020001680000513971</OrderNo>
+    <OrderType>create</OrderType>
+    <TradeStatus>succ</TradeStatus>
+    <ChannelType>WX</ChannelType>
+    <TotalAmount>1</TotalAmount>
+    <Currency>CNY</Currency>
+    <MerchantId>226801000000142576686</MerchantId>
+    <IsvOrgId>202210000000000001316</IsvOrgId>
+    <Body>主扫测试-无人机10</Body>
+    <GoodsTag>test</GoodsTag>
+    <GoodsDetail>test</GoodsDetail>
+    <OpenId>otBP8wWRG63MS9IZkK27hhO0jYnM</OpenId>
+    <OperatorId>test</OperatorId>
+    <StoreId>test</StoreId>
+    <DeviceId>test</DeviceId>
+    <SettleType>T1</SettleType>
+    <Attach>test</Attach>
+    <GmtPayment>2018-10-12 10:25:02</GmtPayment>
+    <BankType>CFT</BankType>
+    <IsSubscribe>N</IsSubscribe>
+    <PayChannelOrderNo>4200000176201810124653436344</PayChannelOrderNo>
+    <MerchantOrderNo>MYBKJHZF2018101210103518252606</MerchantOrderNo>
+    <SubAppId>wx62a55dbdd041bb1d</SubAppId>
+    <CouponFee></CouponFee>
+    <SubOpenId></SubOpenId>
+    <BuyerLogonId></BuyerLogonId>
+    <BuyerUserId></BuyerUserId>
+    <Credit>BALANCE</Credit>
+    <ReceiptAmount></ReceiptAmount>
+    <BuyerPayAmount></BuyerPayAmount>
+    <InvoiceAmount></InvoiceAmount>
+  </body>
+</response>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+  <SignedInfo>
+    <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+    <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
+    <Reference URI="">
+      <Transforms>
+        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+      </Transforms>
+      <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+      <DigestValue>QnQ+9fPsxhS0syxEoaBsgHpJgxU=</DigestValue>
+    </Reference>
+  </SignedInfo>
+  <SignatureValue>
+    G/YUCSMzB8aUN9pJhWBgTD+C9yWF9hlcGMhR3GA1PX0pJwphMijH3k5UN7SaRGOaOTd5nzbwvMoy
+    Mas53qknVsRLm6i1iATLlMzsZFr7YkYUX8JsM0Bn9QT4UTh9SdFtZwC5hBiQ7BgmTPLm1yoSjnKd
+    bC5sCRlIuaMaaukcfdU=
+  </SignatureValue>
+</Signature>
+</document>

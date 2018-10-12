@@ -61,24 +61,24 @@ public class PrePay {
         //reqMsgId每次报文必须都不一样
         form.put("ReqMsgId", UUID.randomUUID().toString());
         form.put("OutTradeNo",UUID.randomUUID().toString().replace("-",""));
-        form.put("Body","主扫测试-无人机8");
+        form.put("Body","主扫测试-无人机12");
         form.put("GoodsTag","test");
         form.put("GoodsDetail","test");
-        form.put("TotalAmount","2");
+        form.put("TotalAmount","1");
         form.put("Currency","CNY");
         form.put("MerchantId",HttpsMain.merchantId);
         form.put("IsvOrgId", HttpsMain.IsvOrgId);
-        form.put("ChannelType","WX");
         form.put("ChannelType","ALI");
-        form.put("OpenId","otBP8wWRG63MS9IZkK27hhO0jYnM");
+        form.put("ChannelType","WX");
        // form.put("OpenId",userId);
-        form.put("OpenId","2088412422162444");
+	    form.put("OpenId","2088412422162444");
+	    form.put("OpenId","otBP8wWRG63MS9IZkK27hhO0jYnM");
 
         form.put("OperatorId","test");
         form.put("StoreId","test");
         form.put("DeviceId","test");
         form.put("DeviceCreateIp","112.97.59.21");
-        form.put("ExpireExpress","60");
+        form.put("ExpireExpress","1440");
         form.put("SettleType","T1");
         form.put("Attach","test");
 
