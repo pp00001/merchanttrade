@@ -21,6 +21,8 @@ import lombok.Data;
 @Data
 public class RegisterQueryVo {
 	
+	private Integer a;
+	
 	private RespInfoVo respInfo;//返回码组件。Result Status 返回S不代表入驻成功，只代表申请单据已经查询到，结果需要看RegisterStatus字段。
 	
 	private String merchantId;//商户号。网商为商户分配的商户号，通过商户入驻结果查询接口获取。
@@ -38,5 +40,7 @@ public class RegisterQueryVo {
 	private String wechatChannelList;//标识进驻的微信渠道号、进驻结果、微信子商户号信息、进驻失败原因 注：该字段2017.11月16日上线
 	
 	private String smid;//支付宝进驻后的Smid 注：该字段2017.11月16日上线
+	
+	
 
 }

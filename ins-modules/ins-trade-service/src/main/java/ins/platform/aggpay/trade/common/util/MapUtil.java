@@ -30,7 +30,11 @@ public class MapUtil {
 				if(map.get(field.getName()) instanceof Map<?, ?>){
 					field.set(obj,map2Obj((Map<?, ?>)map.get(field.getName()),field.getType()));
 				}else{
-					field.set(obj, map.get(field.getName()));
+					Object value = map.get(field.getName());
+					if(field.getType().equals(Integer.class)){
+						value = Integer.parseInt((String) value);
+					}
+					field.set(obj, value);
 				}
 			}
 		} catch (Exception e) {
@@ -70,16 +74,12 @@ public class MapUtil {
 	
 	public static void main(String[] args) {
 		RegisterQueryVo a = new RegisterQueryVo();
-		a.setAccountNo("232");
+
 		Map<String,Object> map1 = new HashMap<String, Object>();
-		map1.put("accountNo", "1111");
-		map1.put("resultMsg", "dsdsadsa");
-		Map<String,Object> map2 = new HashMap<String, Object>();
-		map2.put("accountNo", "2222");
-		map1.put("a", map2);
-		
+		map1.put("a", "1111");
+
 		RegisterQueryVo b = map2Obj(map1,RegisterQueryVo.class);
-		map2Obj(map1,a);
+
 		System.out.println(a.toString());
 		System.out.println(b.toString());
 	}

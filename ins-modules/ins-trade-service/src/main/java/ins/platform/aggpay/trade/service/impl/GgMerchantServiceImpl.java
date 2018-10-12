@@ -22,6 +22,7 @@ import ins.platform.aggpay.trade.entity.GgMerchantDetail;
 import ins.platform.aggpay.trade.mapper.GgMerchantDetailMapper;
 import ins.platform.aggpay.trade.mapper.GgMerchantMapper;
 import ins.platform.aggpay.trade.service.GgMerchantService;
+import ins.platform.aggpay.trade.vo.GgFeeParamVo;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.PublicCall;
@@ -29,10 +30,13 @@ import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import sun.misc.BASE64Decoder;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +51,9 @@ import com.mybank.bkmerchant.merchant.RegisterQuery;
 import com.mybank.bkmerchant.merchant.UpdateMerchant;
 import com.mybank.bkmerchant.merchant.UploadPhoto;
 import com.mybank.bkmerchant.trade.SendSmsCode;
+import com.xiaoleilu.hutool.date.DatePattern;
+import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.util.RandomUtil;
 
 /**
  * <p>
@@ -72,13 +79,41 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		try {
 			//			register.call();
 
-			Register c = new Register(register.getMerchantName(), register.getMerchantType(), register.getDealtype(), register.getSupportPrepayment
-					(), register.getSettleMode(), register.getMcc(), register.getGgMerchantDetailVo(), register.getTradeTypeList(), register
-					.getPayChannelList(), register.getDeniedPayToolList(), register.getFeeParamList(), register.getGgBankCardParamVo(), register
-					.getAuthCode(), register.getOutTradeNo(), register.getSupportStage(), register.getPartnerType(), register.getAlipaySource(),
-					register.getWechatChannel(), register.getRateVersion());
+//			Register c = new Register(register.getMerchantName(), register.getMerchantType(), register.getDealtype(), register.getSupportPrepayment
+//					(), register.getSettleMode(), register.getMcc(), register.getGgMerchantDetailVo(), register.getTradeTypeList(), register
+//					.getPayChannelList(), register.getDeniedPayToolList(), register.getFeeParamList(), register.getGgBankCardParamVo(), register
+//					.getAuthCode(), register.getOutTradeNo(), register.getSupportStage(), register.getPartnerType(), register.getAlipaySource(),
+//					register.getWechatChannel(), register.getRateVersion());
 
-			Map<String, Object> call = c.call();
+			PublicCall pc = new PublicCall(PublicCall.FUNCTION_REGISTER);
+			pc.setBody(new HashMap<String,String>() {
+				{
+				    put("IsvOrgId", HttpsMain.IsvOrgId);
+				    put("OutMerchantId", DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT) + RandomUtil.simpleUUID());
+				    put("MerchantName", register.getMerchantName());
+				    put("MerchantType", register.getMerchantType());
+				    put("DealType", register.getDealtype());
+				    put("SupportPrepayment", register.getSupportPrepayment());
+				    put("SettleMode", register.getSettleMode());
+				    put("Mcc", register.getMcc());
+				    put("MerchantDetail", register.getGgMerchantDetailVo().genJsonBase64());
+				    put("TradeTypeList", register.getTradeTypeList());
+				    put("PayChannelList", register.getPayChannelList());
+				    put("DeniedPayToolList", register.getDeniedPayToolList());
+				    put("FeeParamList", GgFeeParamVo.genJsonBase64(register.getFeeParamList()));
+				    put("BankCardParam", register.getGgBankCardParamVo().genJsonBase64());
+				    put("AuthCode", register.getAuthCode());
+				    put("OutTradeNo", register.getOutTradeNo());
+				    put("SupportStage", register.getSupportStage());
+				    put("PartnerType", register.getPartnerType());
+				    put("AlipaySource", register.getAlipaySource());
+				    put("WechatChannel", register.getWechatChannel());
+				    put("RateVersion", register.getRateVersion());
+				}
+			});
+			
+			
+			Map<String, Object> call = pc.call();
 			
 			RegistResVo rs = MapUtil.map2Obj(call,RegistResVo.class);
 //			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
@@ -86,17 +121,14 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 				GgMerchant insert = new GgMerchant();
 				BeanUtils.copyProperties(insert, register);
 				insert.setOutMerchantId(rs.getOutMerchantId());
-//				insert.setMerchantType(register.getMerchantType().getMchCode());
 				insert.setOrderNo(rs.getOrderNo());
-//				insert.setSupportPrepayment(register.getSupportPrepayment().getSupCode());
-//				insert.setMerchantId(insert.getOutMerchantId());
+
 				System.out.println(insert.getOutMerchantId());
 				ggMerchantMapper.insert(insert);
 
 				
 				GgMerchantDetail detail = new GgMerchantDetail();
 				BeanUtils.copyProperties(detail,register.getGgMerchantDetailVo());
-//				detail.setPrincipalCertType(register.getGgMerchantDetailVo().getPrincipalCertType().getCertCode());;
 				ggMerchantDetailMapper.insert(detail);
 					
 				
