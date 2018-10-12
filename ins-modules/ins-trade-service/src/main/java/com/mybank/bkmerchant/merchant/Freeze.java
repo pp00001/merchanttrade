@@ -49,7 +49,11 @@ public class Freeze extends AbstractReq {
     this.body.put("FreezeReason", freezeReason);
     this.body.put("OutTradeNo", outTradeNo);
   }
-
+  
+  public Freeze(){
+	  super("ant.mybank.merchantprod.merchant.freeze");
+  }
+  
   @Override
   public Map<String, String> getBody() {
     return this.body;
