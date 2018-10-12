@@ -164,8 +164,8 @@ public class GgMerchantDetail extends Model<GgMerchantDetail> {
 	/**
 	 * 需关注的公众号appid
 	 */
-	@TableField("subscribe_appi_d")
-	private String subscribeAppiD;
+	@TableField("subscribe_app_id")
+	private String subscribeAppId;
 	/**
 	 * 是否有效 - 1：有效，0：无效
 	 */
@@ -202,14 +202,4 @@ public class GgMerchantDetail extends Model<GgMerchantDetail> {
 		return this.id;
 	}
 
-	@Override
-	public String toString() {
-		return "GgMerchantDetail{" + ", id=" + id + ", outMerchantId=" + outMerchantId + ", alias=" + alias + ", contactMobile=" + contactMobile + ", " + "contactName=" + contactName + ", province=" + province + ", city=" + city + ", district=" + district + ", address=" + address + "," +
-                " servicePhoneNo=" + servicePhoneNo + ", email=" + email + ", legalPerson=" + legalPerson + ", principalMobile=" + principalMobile
-                + ", principalCertType=" + principalCertType + ", principalCertNo=" + principalCertNo + ", principalPerson=" + principalPerson + "," +
-                " bussAuthNum=" + bussAuthNum + ", certOrgCode=" + certOrgCode + ", certPhotoA=" + certPhotoA + ", certPhotoB=" + certPhotoB + ", " +
-                "licensePhoto=" + licensePhoto + ", prgPhoto=" + prgPhoto + ", industryLicensePhoto=" + industryLicensePhoto + ", shopPhoto=" +
-                shopPhoto + ", otherPhoto=" + otherPhoto + ", subscribeAppiD=" + subscribeAppiD + ", validInd=" + validInd + ", delFlag=" + delFlag
-                + ", creatorCode=" + creatorCode + ", createTime=" + createTime + ", updaterCode=" + updaterCode + ", updateTime=" + updateTime + "}";
-	}
 }

@@ -3,30 +3,15 @@ package com.mybank.bkmerchant.merchant;
 import ins.platform.aggpay.trade.vo.GgBankCardParamVo;
 import ins.platform.aggpay.trade.vo.GgFeeParamVo;
 import ins.platform.aggpay.trade.vo.GgMerchantDetailVo;
+import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import lombok.Data;
-
 import org.json.JSONException;
-
-import com.alibaba.fastjson.JSON;
 import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
-import com.mybank.bkmerchant.constant.AccountType;
-import com.mybank.bkmerchant.constant.DeniedPayToolEnum;
-import com.mybank.bkmerchant.constant.FeeTypeEnum;
-import com.mybank.bkmerchant.constant.PayChannelEnum;
-import com.mybank.bkmerchant.constant.PrincipalCertTypeEnum;
-import com.mybank.bkmerchant.constant.TradeTypeEnum;
-import com.mybank.bkmerchant.models.BankCardParam;
-import com.mybank.bkmerchant.models.FeeParam;
-import com.mybank.bkmerchant.models.MerchantDetail;
 import com.xiaoleilu.hutool.date.DatePattern;
 import com.xiaoleilu.hutool.date.DateUtil;
 import com.xiaoleilu.hutool.util.RandomUtil;
