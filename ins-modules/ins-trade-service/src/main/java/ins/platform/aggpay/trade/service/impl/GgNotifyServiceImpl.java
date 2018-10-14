@@ -29,7 +29,6 @@ import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Service;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.util.XmlSignUtil;
 import com.mybank.bkmerchant.util.XmlUtil;
-import com.xiaoleilu.hutool.date.DatePattern;
 
 /**
  * @author RipinYan

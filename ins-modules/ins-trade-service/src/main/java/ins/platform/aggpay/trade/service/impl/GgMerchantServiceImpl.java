@@ -29,24 +29,22 @@ import ins.platform.aggpay.trade.vo.PublicCall;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
+import sun.misc.BASE64Decoder;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import sun.misc.BASE64Decoder;
-
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.constant.BizTypeEnum;
-import com.mybank.bkmerchant.merchant.Register;
 import com.mybank.bkmerchant.merchant.RegisterQuery;
 import com.mybank.bkmerchant.merchant.UpdateMerchant;
 import com.mybank.bkmerchant.merchant.UploadPhoto;
@@ -66,6 +64,9 @@ import com.xiaoleilu.hutool.util.RandomUtil;
 @Service
 public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerchant> implements GgMerchantService {
 
+
+	private static final Logger logger = LoggerFactory.getLogger(GgMerchantServiceImpl.class);
+
 	@Autowired
 	private GgMerchantMapper ggMerchantMapper;
 
@@ -83,56 +84,56 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 //					(), register.getSettleMode(), register.getMcc(), register.getGgMerchantDetailVo(), register.getTradeTypeList(), register
 //					.getPayChannelList(), register.getDeniedPayToolList(), register.getFeeParamList(), register.getGgBankCardParamVo(), register
 //					.getAuthCode(), register.getOutTradeNo(), register.getSupportStage(), register.getPartnerType(), register.getAlipaySource(),
-//					register.getWechatChannel(), register.getRateVersion());
+			//					register.getWechatChannel(), register.getRateVersion());
 
 			PublicCall pc = new PublicCall(PublicCall.FUNCTION_REGISTER);
-			pc.setBody(new HashMap<String,String>() {
+			pc.setBody(new HashMap<String, String>() {
 				{
-				    put("IsvOrgId", HttpsMain.IsvOrgId);
-				    put("OutMerchantId", DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT) + RandomUtil.simpleUUID());
-				    put("MerchantName", register.getMerchantName());
-				    put("MerchantType", register.getMerchantType());
-				    put("DealType", register.getDealtype());
-				    put("SupportPrepayment", register.getSupportPrepayment());
-				    put("SettleMode", register.getSettleMode());
-				    put("Mcc", register.getMcc());
-				    put("MerchantDetail", register.getGgMerchantDetailVo().genJsonBase64());
-				    put("TradeTypeList", register.getTradeTypeList());
-				    put("PayChannelList", register.getPayChannelList());
-				    put("DeniedPayToolList", register.getDeniedPayToolList());
-				    put("FeeParamList", GgFeeParamVo.genJsonBase64(register.getFeeParamList()));
-				    put("BankCardParam", register.getGgBankCardParamVo().genJsonBase64());
-				    put("AuthCode", register.getAuthCode());
-				    put("OutTradeNo", register.getOutTradeNo());
-				    put("SupportStage", register.getSupportStage());
-				    put("PartnerType", register.getPartnerType());
-				    put("AlipaySource", register.getAlipaySource());
-				    put("WechatChannel", register.getWechatChannel());
-				    put("RateVersion", register.getRateVersion());
+					put("IsvOrgId", HttpsMain.IsvOrgId);
+					put("OutMerchantId", DateUtil.format(new Date(), DatePattern.PURE_DATE_FORMAT) + RandomUtil.simpleUUID());
+					put("MerchantName", register.getMerchantName());
+					put("MerchantType", register.getMerchantType());
+					put("DealType", register.getDealtype());
+					put("SupportPrepayment", register.getSupportPrepayment());
+					put("SettleMode", register.getSettleMode());
+					put("Mcc", register.getMcc());
+					put("MerchantDetail", register.getGgMerchantDetailVo().genJsonBase64());
+					put("TradeTypeList", register.getTradeTypeList());
+					put("PayChannelList", register.getPayChannelList());
+					put("DeniedPayToolList", register.getDeniedPayToolList());
+					put("FeeParamList", GgFeeParamVo.genJsonBase64(register.getFeeParamList()));
+					put("BankCardParam", register.getGgBankCardParamVo().genJsonBase64());
+					put("AuthCode", register.getAuthCode());
+					put("OutTradeNo", register.getOutTradeNo());
+					put("SupportStage", register.getSupportStage());
+					put("PartnerType", register.getPartnerType());
+					put("AlipaySource", register.getAlipaySource());
+					put("WechatChannel", register.getWechatChannel());
+					put("RateVersion", register.getRateVersion());
 				}
 			});
-			
-			
+
+
 			Map<String, Object> call = pc.call();
-			
-			RegistResVo rs = MapUtil.map2Obj(call,RegistResVo.class);
-//			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
-				//update merchant 入驻结果
-				GgMerchant insert = new GgMerchant();
-				BeanUtils.copyProperties(insert, register);
-				insert.setOutMerchantId(rs.getOutMerchantId());
-				insert.setOrderNo(rs.getOrderNo());
 
-				System.out.println(insert.getOutMerchantId());
-				ggMerchantMapper.insert(insert);
+			RegistResVo rs = MapUtil.map2Obj(call, RegistResVo.class);
+			//			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
+			//update merchant 入驻结果
+			GgMerchant insert = new GgMerchant();
+			BeanUtils.copyProperties(insert, register);
+			insert.setOutMerchantId(rs.getOutMerchantId());
+			insert.setOrderNo(rs.getOrderNo());
 
-				
-				GgMerchantDetail detail = new GgMerchantDetail();
-				BeanUtils.copyProperties(detail,register.getGgMerchantDetailVo());
-				ggMerchantDetailMapper.insert(detail);
-					
-				
-//			}
+			System.out.println(insert.getOutMerchantId());
+			ggMerchantMapper.insert(insert);
+
+
+			GgMerchantDetail detail = new GgMerchantDetail();
+			BeanUtils.copyProperties(detail, register.getGgMerchantDetailVo());
+			ggMerchantDetailMapper.insert(detail);
+
+
+			//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -145,12 +146,12 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		RegisterQueryVo vo = null;
 		try {
 			Map<String, Object> call = rq.call();
-			vo = MapUtil.map2Obj(call,RegisterQueryVo.class);
-			if(vo.getRespInfo()!=null && "S".equals(vo.getRespInfo().getResultStatus())){
+			vo = MapUtil.map2Obj(call, RegisterQueryVo.class);
+			if (vo.getRespInfo() != null && "S".equals(vo.getRespInfo().getResultStatus())) {
 				GgMerchant query = new GgMerchant();
 				query.setOrderNo(orderNo);
 				GgMerchant update = ggMerchantMapper.selectOne(query);
-//				ggMerchantMapper.selectList(new EntityWrapper<GgMerchant>().isNotNull("order_no"));
+				//				ggMerchantMapper.selectList(new EntityWrapper<GgMerchant>().isNotNull("order_no"));
 				System.out.println();
 				update.setMerchantId(vo.getMerchantId());
 				update.setRegisterStatus(vo.getRegisterStatus());
@@ -164,6 +165,22 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		}
 
 		return vo;
+	}
+
+	@Override
+	public GgMerchantVo findMerchantByMerchentId(String merchantId) {
+		GgMerchantVo merchantVo = null;
+		try {
+			GgMerchant merchant = new GgMerchant().setMerchantId(merchantId);
+			merchant = ggMerchantMapper.selectOne(merchant);
+			if (merchant != null) {
+				merchantVo = new GgMerchantVo();
+				BeanUtils.copyProperties(merchantVo, merchant);
+			}
+		} catch (Exception e) {
+			logger.error("查询商户信息异常！" + e.getMessage(), e);
+		}
+		return merchantVo;
 	}
 
 	@Override
@@ -202,10 +219,10 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	@Override
 	public GgMerchantVo merchantQuery(String merchantId) {
 		PublicCall pc = new PublicCall(PublicCall.FUNCTION_MERCHANTQUERY);
-		pc.setBody(new HashMap<String,String>() {
+		pc.setBody(new HashMap<String, String>() {
 			{
-				put("IsvOrgId",HttpsMain.IsvOrgId);
-				put("MerchantId",merchantId);
+				put("IsvOrgId", HttpsMain.IsvOrgId);
+				put("MerchantId", merchantId);
 			}
 		});
 		BASE64Decoder decoder = new BASE64Decoder();
@@ -217,10 +234,10 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 			result.put("feeParamList", new String(decoder.decodeBuffer((String) result.get("feeParamList"))));
 			result.put("bankCardParam", new String(decoder.decodeBuffer((String) result.get("bankCardParam"))));
 			result.put("wechatChannelList", new String(decoder.decodeBuffer((String) result.get("wechatChannelList"))));
-		    System.out.println((String) result.get("merchantDetail"));
-		    System.out.println((String) result.get("feeParamList"));
-		    System.out.println((String) result.get("bankCardParam"));
-		    System.out.println((String) result.get("wechatChannelList"));
+			System.out.println((String) result.get("merchantDetail"));
+			System.out.println((String) result.get("feeParamList"));
+			System.out.println((String) result.get("bankCardParam"));
+			System.out.println((String) result.get("wechatChannelList"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -228,15 +245,14 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	}
 
 	@Override
-	public MerchantResVo merchantFreeze(String merchantId,
-			String freezeReason, String outTradeNo) {
+	public MerchantResVo merchantFreeze(String merchantId, String freezeReason, String outTradeNo) {
 		PublicCall pc = new PublicCall(PublicCall.FUNCTION_FREEZE);
-		pc.setBody(new HashMap<String,String>() {
+		pc.setBody(new HashMap<String, String>() {
 			{
-				put("IsvOrgId",HttpsMain.IsvOrgId);
-				put("MerchantId",merchantId);
-				put("FreezeReason",freezeReason);
-				put("OutTradeNo",UUID.randomUUID().toString());
+				put("IsvOrgId", HttpsMain.IsvOrgId);
+				put("MerchantId", merchantId);
+				put("FreezeReason", freezeReason);
+				put("OutTradeNo", UUID.randomUUID().toString());
 			}
 		});
 		Map<String, Object> result = null;
@@ -250,16 +266,15 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	}
 
 	@Override
-	public MerchantResVo merchantUnfreeze(String merchantId,
-			String unfreezeReason, String outTradeNo) {
+	public MerchantResVo merchantUnfreeze(String merchantId, String unfreezeReason, String outTradeNo) {
 
 		PublicCall pc = new PublicCall(PublicCall.FUNCTION_UNFREEZE);
-		pc.setBody(new HashMap<String,String>() {
+		pc.setBody(new HashMap<String, String>() {
 			{
-				put("IsvOrgId",HttpsMain.IsvOrgId);
-				put("MerchantId",merchantId);
-				put("UnfreezeReason",unfreezeReason);
-				put("OutTradeNo",UUID.randomUUID().toString());
+				put("IsvOrgId", HttpsMain.IsvOrgId);
+				put("MerchantId", merchantId);
+				put("UnfreezeReason", unfreezeReason);
+				put("OutTradeNo", UUID.randomUUID().toString());
 			}
 		});
 		Map<String, Object> result = null;
@@ -271,5 +286,6 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		MerchantResVo rs = MapUtil.map2Obj(result, MerchantResVo.class);
 		return rs;
 	}
+
 
 }

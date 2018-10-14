@@ -10,8 +10,8 @@ package ins.platform.aggpay.trade.service;
 
 
 import ins.platform.aggpay.trade.entity.GgMerchant;
-import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
+import ins.platform.aggpay.trade.vo.MerchantResVo;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
@@ -30,6 +30,8 @@ import com.mybank.bkmerchant.trade.SendSmsCode;
  * @date 2018/9/18 下午4:11
  */
 public interface GgMerchantService extends IService<GgMerchant> {
+
+	GgMerchantVo findMerchantByMerchentId(String merchantId);
 
 	//短信验证码发送接口
 	MerchantResVo sendsmscode(SendSmsCode sendSmsCode);
@@ -56,7 +58,6 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	//商户开启接口
 	MerchantResVo merchantUnfreeze(String merchantId,
 			String unfreezeReason, String outTradeNo);
-	
-	
+
 
 }
