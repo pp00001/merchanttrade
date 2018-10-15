@@ -47,7 +47,7 @@ public class RegisterQuery extends AbstractReq {
     this.orderNo = orderNo;
 
     //build body
-    this.body = new HashMap<String, String>();
+    this.body = new HashMap<>();
     this.body.put("IsvOrgId", this.isvOrgId);
     this.body.put("OrderNo", this.orderNo);
   }

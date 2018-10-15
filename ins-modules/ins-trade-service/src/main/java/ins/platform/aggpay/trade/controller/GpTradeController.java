@@ -26,6 +26,7 @@ import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.mybank.bkmerchant.constant.DeniedPayTool;
 
 /**
@@ -65,6 +67,7 @@ public class GpTradeController extends BaseController {
 	 */
 	@RequestMapping(value = "/pay/scanPay", method = RequestMethod.POST)
 	public String scanPay(@RequestBody GpTradeOrderVo tradeOrderVo) {
+		String logPrefix = "【移动刷卡支付-被扫】";
 
 		String result;
 		try {
@@ -122,14 +125,42 @@ public class GpTradeController extends BaseController {
 
 	/**
 	 * @Title: notifyPayResult
-	 * @Description: 打款结果通知接口
+	 * @Description: H5支付（主扫）
 	 * @param requestXml 请求报文
 	 * @throws
 	 * @author Ripin Yan
 	 * @return java.lang.String 响应报文
 	 */
 	@RequestMapping(value = "/pay/prePay", method = RequestMethod.POST)
-	public String prePay(@RequestBody GpTradeOrderVo tradeOrderVo) {
+	public String prePay(@RequestBody GpTradeOrderVo tradeOrderVo, HttpServletRequest request) {
+		String logPrefix = "【H5支付-主扫】";
+		JSONObject jo = new JSONObject();
+		String userAgent = request.getHeader("User-Agent");
+		String client = "alipay";
+		String channelId = "ALIPAY_WAP";
+        if(StringUtils.isBlank(userAgent)) {
+            String errorMessage = "User-Agent为空！";
+            logger.info("{}信息：{}", logPrefix, errorMessage);
+	        jo.put("result", "failed");
+	        jo.put("resMsg", errorMessage);
+            return jo.toJSONString();
+        }else {
+            if(userAgent.contains("Alipay")) {
+                client = "alipay";
+                channelId = "ALI";
+            }else if(userAgent.contains("MicroMessenger")) {
+                client = "wx";
+                channelId = "WX";
+            }
+        }
+
+		if(client == null) {
+			String errorMessage = "请使用微信或支付宝扫码";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("result", "failed");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
 
 		String result;
 		try {
