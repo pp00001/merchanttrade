@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package ins.platform.aggpay.trade.common.util;
+package ins.platform.aggpay.trade.util;
 
 import java.io.File;
 import java.io.IOException;

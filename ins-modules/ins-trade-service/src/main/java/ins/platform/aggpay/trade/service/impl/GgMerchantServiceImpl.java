@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.common.util.MapUtil;
+import ins.platform.aggpay.trade.util.MapUtil;
 import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.entity.GgMerchantDetail;
 import ins.platform.aggpay.trade.mapper.GgMerchantDetailMapper;
@@ -25,7 +25,7 @@ import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.vo.GgFeeParamVo;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.MerchantResVo;
-import ins.platform.aggpay.trade.vo.PublicCall;
+import ins.platform.aggpay.trade.util.PublicCall;
 import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
@@ -177,6 +177,8 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 				merchantVo = new GgMerchantVo();
 				BeanUtils.copyProperties(merchantVo, merchant);
 			}
+
+			
 		} catch (Exception e) {
 			logger.error("查询商户信息异常！" + e.getMessage(), e);
 		}

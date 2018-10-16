@@ -16,8 +16,8 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.common.config.IsvConfig;
-import ins.platform.aggpay.trade.common.util.MapUtil;
+import ins.platform.aggpay.trade.config.IsvConfig;
+import ins.platform.aggpay.trade.util.MapUtil;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import ins.platform.aggpay.trade.entity.GgXmlLog;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;

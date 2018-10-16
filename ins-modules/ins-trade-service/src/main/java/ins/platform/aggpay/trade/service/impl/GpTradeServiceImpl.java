@@ -16,8 +16,13 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
+import ins.platform.aggpay.trade.entity.GpTradeOrder;
+import ins.platform.aggpay.trade.mapper.GpTradeOrderMapper;
 import ins.platform.aggpay.trade.service.GpTradeService;
+import ins.platform.aggpay.trade.util.MapUtil;
+import ins.platform.aggpay.trade.util.PublicCall;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
+import ins.platform.aggpay.trade.vo.RegistResVo;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -25,6 +30,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.util.XmlSignUtil;
@@ -43,6 +50,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(GpTradeServiceImpl.class);
 
+	@Autowired
+	private GpTradeOrderMapper gpTradeOrderMapper;
 
 	@Override
 	public GpTradeOrderVo scanPay(GpTradeOrderVo tradeOrderVo) {
@@ -170,7 +179,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 			XmlUtil xmlUtil = new XmlUtil();
 			Map<String, String> form = new HashMap<String, String>();
-			form.put("Function", function);
+			form.put("Function", PublicCall.FUNCTION_PREPAY);
 			form.put("ReqTime", new Timestamp(System.currentTimeMillis()).toString());
 			//reqMsgId每次报文必须都不一样
 			form.put("ReqMsgId", UUID.randomUUID().toString());
@@ -191,8 +200,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 			form.put("OperatorId", "test");
 			form.put("StoreId", "test");
 			form.put("DeviceId", "test");
-			form.put("DeviceCreateIp", "112.97.59.21");
-			form.put("ExpireExpress", "1440");
+			form.put("DeviceCreateIp", "112.97.224.145");
+			form.put("ExpireExpress", "120");
 			form.put("SettleType", "T1");
 			form.put("Attach", "test");
 
@@ -233,13 +242,37 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 			//解析报文
 			Map<String, Object> resMap = xmlUtil.parse(response, function);
-			//结果消息
-			String b = (String) resMap.get("OutTradeNo");
-			System.out.println(b);
+
+			GpTradeOrderVo rs = MapUtil.map2Obj(resMap, GpTradeOrderVo.class);
+			GpTradeOrder gpTradeOrder = new GpTradeOrder();
+			BeanUtils.copyProperties(rs, gpTradeOrder);
+			gpTradeOrderMapper.insert(gpTradeOrder);
+
 		} catch (Exception e) {
 			logger.error("主扫支付异常！" + e.getMessage(), e);
 		}
 
+		/*switch (result.getTradeStatus()) {
+			case SUCCESS:
+				log.info("支付宝支付成功: )");
+				break;
+
+			case FAILED:
+				log.error("支付宝支付失败!!!");
+				break;
+
+			case UNKNOWN:
+				log.error("系统异常，订单状态未知!!!");
+				break;
+
+			default:
+				log.error("不支持的交易状态，交易返回异常!!!");
+				break;
+		}*/
+
 		return null;
 	}
+
+
+
 }

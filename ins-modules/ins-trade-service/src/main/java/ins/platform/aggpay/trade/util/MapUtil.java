@@ -1,4 +1,4 @@
-package ins.platform.aggpay.trade.common.util;
+package ins.platform.aggpay.trade.util;
 
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 

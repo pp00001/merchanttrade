@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package ins.platform.aggpay.trade.common.config;
+package ins.platform.aggpay.trade.config;
 
 import ins.platform.aggpay.common.constant.SecurityConstants;
 

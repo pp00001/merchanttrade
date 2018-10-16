@@ -17,7 +17,7 @@
 package ins.platform.aggpay.trade.controller;
 
 import ins.platform.aggpay.common.web.BaseController;
-import ins.platform.aggpay.trade.common.config.IsvConfig;
+import ins.platform.aggpay.trade.config.IsvConfig;
 import ins.platform.aggpay.trade.service.GgNotifyService;
 
 import org.springframework.beans.factory.annotation.Autowired;

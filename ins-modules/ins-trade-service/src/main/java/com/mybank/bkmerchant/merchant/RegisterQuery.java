@@ -1,6 +1,6 @@
 package com.mybank.bkmerchant.merchant;
 
-import ins.platform.aggpay.trade.common.util.MapUtil;
+import ins.platform.aggpay.trade.util.MapUtil;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 import sun.misc.BASE64Decoder;

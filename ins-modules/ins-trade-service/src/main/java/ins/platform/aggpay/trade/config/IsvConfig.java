@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ins.platform.aggpay.trade.common.config;
+package ins.platform.aggpay.trade.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -72,13 +72,46 @@ public class IsvConfig {
 	 */
 	private String uploadUrl;
 	/**
-	 * 获取用户id接口地址
+	 * 支付宝获取用户id接口地址
 	 */
 	private String getUserIdUrl;
+	/**
+	 * 微信获取用户openId
+	 */
+	private String getWxOpenIdUrl;
 	/**
 	 * 支付宝通用api地址
 	 */
 	private String openApiUrl;
+
+	/**
+	 * 主扫跳转页面url
+	 */
+	private String qrPayUrl;
+
+	public static final String APP_PRIVATE_KEY =
+			"MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCV3Ju7rfIehCjimtzIeMb8lrZszv2w0QDdbtjNmKcvl3yuzTMzKddSs7X" +
+			"+ESPyydnKITLphExpliP/smqP0nfJFg7qFaNJTQxXxq3lLTZW82Bh8pEN2ZcsLUgkstLiTDv+NoQjkDw7Kw9NcRcgOlZseeO1zlemIE6u4zM8QIHNQYXcrDq1uaOcyU3LG02pq1" +
+			"/du2XljdQIN8mEj7deFnfs4XFLlB/GbG+4HbiQGfD/nh75qWvqdOHGu9UZUwxgpkaBMIboKZXXPVSOt6HR0KvEQcKnmbf+Ozavbb005Y8mR3qrhtSWC5TzIt" +
+			"/wtfSVO2Vq5I223CgfyFMNy/fPxO8FAgMBAAECggEAfqUolrqxWkilpJrq6h/nSZ60G8/xZHO8H2WFonnXD8kdfTu8gQhjB2kH6+XgU1Vxz/euZtl/GdvgID5O" +
+			"/6wFvtH9WKVgkJmkTKmCW6KRwXl7gkrTerjfoF3EEf9taAC00miP0t4ZiIcjL3ba7Elgr9tyLDpsp9+1nuYybkC1cRcXNKz63euk" +
+			"+zhyBrYwMoROBzchFfyaTOHlGy1GXe2cLLz78t0PywWglHu/lHGTDHIBBZKHTrXM0AM3LVaigUVX82m9Cjo9+IW/uV+ckJzM/Vo0qpLUlgi90wQbGW8DcGljfK" +
+			"/efPQWuzohOgG7QMUQtwwd0fR+JbspFXRcBsEHAQKBgQDlTI+XOVY+5sR6y2B9pul3DyWacRSLmNkVqSm0POq9ziuW9A21ABg7Tj3I83A6mjCyVSwtGL7k0wtAs9okf+nhw" +
+			"/jo45EN/yQlOCqcVa+2ZwszUsMt8MOV2UFc67fvwguEKkQxeIJptJx7uX59v7OkaKMu4LzOoTs+uELGpi7OeQKBgQCnUAJi3yB8h7vqe" +
+			"+bI3uef6Bz8UQW5i2FIJzFZIEPTvCh7a2onSgUqa3Hev7/5x5TH6BsepHaEacLQTGlDxORcfU+mpwtY1QMSIR7WAPwtHgVoE1ClJ1PQx6tBykvZJ3Tto5j3cLmObENUVTqxp6ON" +
+			"/zNoPN/ImoAkfaHQCxfR7QKBgQCxWlBNxTliGZeq6pdNWMaHIh4RoJkliCmQSXFKSTu/ZzHr5gScFOCpLlE3lqMdkJlNtfcfQl6UGnA/sVxukslRqARkDW" +
+			"/qhYdtik3a8aOgz36oScFRTUHaK1oVBvUT6uCBbzejk/Q60kmeoNCnbpkB9zUQUx92KtrqHhb4Ex1s8QKBgC61b3UaxX7+hb" +
+			"+Yh31cfV1u92iZVffOqYHzLxuqnkTmKocKHcCKMZb+F/QPpBCfXzHP4oJTd6LPw8tTCbAZr4cClNH5oHlUPl85T9p+u+f8kZXUjpcMu6F1nKHpT/N3yHTvTy0FE0hngQRyJsih" +
+			"/E8QB9H57J+cQlntmNbzwdqhAoGANo/a54HZNsig31Qu6Ngls6eLMFxPB6Y61XxOb8+y2uoB4QYbnL+6as2NDEzZOmvlOlgPDF+eXsFMltWZnXvFQeNCvfu5a9" +
+			"/Gy8CbHGywXP4wyajV8IiXLVFqjCNwd62Mo6szxS1JkRUcstFdpfRhyupVzke/Yu9s/i9SBvV2liE=";
+	public static final String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoDyE8wbAUt4jwVkzp69Mv1uoxLa3at9y7ecFvq+ZpNOO0uTcAuYFNuWlegi" +
+			"/rlMPtZUBZ8quyRGKt87DcIfdqKeoEf7B62N759nj2yB5svfF7iRTgdzk6aipLa9C2PET/rg5akxg2cqA0lwBlLe7Np6ZgLmmYL" +
+			"+Ck6P4fqolUCuf9lxVdbAK0OCtb1iFi78VSBIEgUyYXvWVDNMcw83ow0YYZBRF/8KZhr0/4puIp6+XX50PGL/zZOwXWbgAaCa5OELo+Y/gwcFgo" +
+			"/YlhaEBGmu5kEzpYO4R1IhEjEtaWa0zuik8J0Cjpki4dosPCrKmUeciFEzEwB2wMEhAXpKQKQIDAQAB";
+
+
+	//private String redirectUri = "http://774bf666.ngrok.io/trade/pay/prePay";
+	private String redirectUri = "http://774bf666.ngrok.io/qrPay";
 
 	/**
 	 * 联调阶段使用1.0.0的版本，上线前需要根据情况重新配置
@@ -129,6 +162,10 @@ public class IsvConfig {
 		return isSign;
 	}
 
+	public void setSign(boolean sign) {
+		isSign = sign;
+	}
+
 	public String getReqUrl() {
 		return reqUrl;
 	}
@@ -161,12 +198,36 @@ public class IsvConfig {
 		this.getUserIdUrl = getUserIdUrl;
 	}
 
+	public String getGetWxOpenIdUrl() {
+		return getWxOpenIdUrl;
+	}
+
+	public void setGetWxOpenIdUrl(String getWxOpenIdUrl) {
+		this.getWxOpenIdUrl = getWxOpenIdUrl;
+	}
+
 	public String getOpenApiUrl() {
 		return openApiUrl;
 	}
 
 	public void setOpenApiUrl(String openApiUrl) {
 		this.openApiUrl = openApiUrl;
+	}
+
+	public String getQrPayUrl() {
+		return qrPayUrl;
+	}
+
+	public void setQrPayUrl(String qrPayUrl) {
+		this.qrPayUrl = qrPayUrl;
+	}
+
+	public String getRedirectUri() {
+		return redirectUri;
+	}
+
+	public void setRedirectUri(String redirectUri) {
+		this.redirectUri = redirectUri;
 	}
 
 	public String getVersion() {
