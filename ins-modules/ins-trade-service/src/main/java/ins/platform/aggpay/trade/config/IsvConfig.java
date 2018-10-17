@@ -111,8 +111,12 @@ public class IsvConfig {
 
 
 	//private String redirectUri = "http://774bf666.ngrok.io/trade/pay/prePay";
-	private String redirectUri = "http://774bf666.ngrok.io/qrPay";
+	private String redirectUri = "http://ripin925.ngrok.xiaomiqiu.cn/qrPay";
 
+	/**
+	 * 订单有效期（1-1440分钟）
+	 */
+	private String expireExpress = "60";
 	/**
 	 * 联调阶段使用1.0.0的版本，上线前需要根据情况重新配置
 	 */
@@ -228,6 +232,14 @@ public class IsvConfig {
 
 	public void setRedirectUri(String redirectUri) {
 		this.redirectUri = redirectUri;
+	}
+
+	public String getExpireExpress() {
+		return expireExpress;
+	}
+
+	public void setExpireExpress(String expireExpress) {
+		this.expireExpress = expireExpress;
 	}
 
 	public String getVersion() {

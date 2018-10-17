@@ -61,6 +61,6 @@ public class Freeze extends AbstractReq {
 
   public static void main(String[] args) throws Exception {
     Freeze freeze = new Freeze("存在欺诈风险", UUID.randomUUID().toString());
-    freeze.call();
+    freeze.call(HttpsMain.reqUrl);
   }
 }

@@ -11,11 +11,9 @@ package ins.platform.aggpay.trade.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
-
 import com.mybank.bkmerchant.base.HttpsMain;
-import com.mybank.bkmerchant.models.BankCardParam;
-import com.mybank.bkmerchant.models.MerchantDetail;
 
 /**
  * @author RipinYan
@@ -27,6 +25,8 @@ import com.mybank.bkmerchant.models.MerchantDetail;
 public class GgMerchantVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private Long id;
 	/**
 	 * 合作方机构号（网商银行分配）
 	 */
@@ -38,7 +38,15 @@ public class GgMerchantVo implements Serializable {
 	private String outMerchantId;
 
 	/**
-	 * 商户名称。有营业执照的，要求与营业执照上的名称一致
+	 * 申请单号
+	 */
+	private String orderNo;
+	/**
+	 * 商户号
+	 */
+	private String merchantId;
+	/**
+	 * 商户名称，有营业执照的，要求与营业执照上的名称一致
 	 */
 	private String merchantName;
 
@@ -50,7 +58,7 @@ public class GgMerchantVo implements Serializable {
 	/**
 	 * 商户经营类型
 	 */
-	private String dealtype;
+	private String dealType;
 
 	/**
 	 * 商户清算资金是否支持T+0到账
@@ -144,5 +152,58 @@ public class GgMerchantVo implements Serializable {
 	 * 联系网商银行先完成线下审核，才能进件；传递RBLUE时，为参加蓝海行动餐饮0费率报备
 	 */
 	private String rateVersion;
+	/**
+	 * 入驻状态 - 0：审核中，1：成功，2：失败
+	 */
+	private String registerStatus;
+	/**
+	 * 入驻失败原因
+	 */
+	private String failReason;
+	/**
+	 * Smid
+	 */
+	private String smid;
+	/**
+	 * 微信支付渠道号
+	 */
+	private String channelId;
+	/**
+	 * 微信商户号
+	 */
+	private String wechatMerchId;
+	/**
+	 * 微信入驻状态 - 0：处理中，1：成功，2：失败
+	 */
+	private String wechatStatus;
+	/**
+	 * 微信入驻失败原因
+	 */
+	private String wechatFailReason;
+	/**
+	 * 是否有效 - 1：有效，0：无效
+	 */
+	private String validInd;
+	/**
+	 * 是否删除  -1：已删除  0：正常
+	 */
+	private String delFlag;
+	/**
+	 * 创建人代码
+	 */
+	private String creatorCode;
+	/**
+	 * 创建时间
+	 */
+	private Date createTime;
+	/**
+	 * 更新人代码
+	 */
+	private String updaterCode;
+	/**
+	 * 更新时间
+	 */
+	private Date updateTime;
+
 
 }

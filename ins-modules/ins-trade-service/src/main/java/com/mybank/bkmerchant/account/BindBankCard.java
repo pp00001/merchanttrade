@@ -75,6 +75,6 @@ public class BindBankCard extends AbstractReq {
       UUID.randomUUID().toString()
     );
 
-    bindBankCard.call();
+    bindBankCard.call(HttpsMain.reqUrl);
   }
 }

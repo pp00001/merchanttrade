@@ -266,11 +266,6 @@ public class RegisterTest extends AbstractReq {
 
 	}
 
-	@Override
-	public Map<String, Object> call() throws Exception {
-		return super.call();
-	}
-
 	/**
 	 * 企业 - 226801000000142576686
 	 * WechatMerchId - 242972555
@@ -359,7 +354,7 @@ public class RegisterTest extends AbstractReq {
 
 		System.out.println("post Json: "+JSON.toJSONString(register));
 
-		Map<String, Object> call = register.call();
+		Map<String, Object> call = register.call(HttpsMain.reqUrl);
 		System.out.println("#######" + call.toString());
 	}
 
@@ -442,7 +437,7 @@ public class RegisterTest extends AbstractReq {
 				"RS"
 		);
 
-		Map<String, Object> call = register.call();
+		Map<String, Object> call = register.call(HttpsMain.reqUrl);
 		System.out.println("#######" + call.toString());
 	}
 

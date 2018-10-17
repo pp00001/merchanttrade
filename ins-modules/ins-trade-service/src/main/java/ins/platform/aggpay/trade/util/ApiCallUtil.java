@@ -16,12 +16,15 @@
 
 package ins.platform.aggpay.trade.util;
 
+import java.util.Date;
 import java.util.Map;
-
 import com.mybank.bkmerchant.base.AbstractReq;
+import com.xiaoleilu.hutool.date.DatePattern;
+import com.xiaoleilu.hutool.date.DateUtil;
+import com.xiaoleilu.hutool.util.RandomUtil;
 
 
-public class PublicCall extends AbstractReq{
+public class ApiCallUtil extends AbstractReq{
  
 	public final static String FUNCTION_REGISTER = "ant.mybank.merchantprod.merchant.register";
 	
@@ -30,10 +33,21 @@ public class PublicCall extends AbstractReq{
 	public final static String FUNCTION_UNFREEZE = "ant.mybank.merchantprod.merchant.unfreeze";
 	public final static String FUNCTION_PREPAY = "ant.mybank.bkmerchanttrade.prePay";
 
-	
+	/**
+	 * 外部交易号生成器
+	 * @return
+	 */
+	public static String generateOutTradeNo(){
+		StringBuffer sf = new StringBuffer();
+		sf.append("INS");
+		sf.append(DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN));
+		sf.append(RandomUtil.randomNumbers(7));
+		return sf.toString();
+	}
+
 	private Map<String, String> body;
 	
-	public PublicCall(String function) {
+	public ApiCallUtil(String function) {
 		super(function);
 		
 	}

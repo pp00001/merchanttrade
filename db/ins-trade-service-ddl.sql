@@ -154,21 +154,21 @@ CREATE TABLE gg_bank_card_param
 /* Table: gg_xml_log                                       */
 /*==============================================================*/
 CREATE TABLE gg_xml_log (
-  id           BIGINT (20) NOT NULL auto_increment COMMENT '主键',
-  function     VARCHAR(128) DEFAULT NULL COMMENT '接口代码',
-  request_xml  TEXT         DEFAULT NULL COMMENT '请求报文',
-  response_xml TEXT         DEFAULT NULL COMMENT '响应报文',
-  ResultStatus VARCHAR(2)   DEFAULT NULL COMMENT '处理状态',
-  ResultCode   VARCHAR(6)   DEFAULT NULL COMMENT '返回码 - S：成功，F：失败，U：未知',
-  ResultMsg    VARCHAR(255) DEFAULT NULL COMMENT '返回码信息',
-  req_time     TIMESTAMP NULL DEFAULT NULL COMMENT '请求时间',
-  resp_time    TIMESTAMP NULL  DEFAULT NULL COMMENT '响应时间',
-  flag         VARCHAR(1)   DEFAULT '1' COMMENT '调用状态 - 1：成功，0：失败',
-  del_flag     CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
-  creator_code VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
-  create_time  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  updater_code VARCHAR(32)  DEFAULT NULL COMMENT '更新人代码',
-  update_time  TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  id            BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  function      VARCHAR(128) DEFAULT NULL COMMENT '接口代码',
+  request_xml   TEXT         DEFAULT NULL COMMENT '请求报文',
+  response_xml  TEXT         DEFAULT NULL COMMENT '响应报文',
+  result_status VARCHAR(2)   DEFAULT NULL COMMENT '处理状态',
+  result_code   VARCHAR(64)  DEFAULT NULL COMMENT '返回码 - S：成功，F：失败，U：未知',
+  result_msg    VARCHAR(255) DEFAULT NULL COMMENT '返回码信息',
+  req_time      TIMESTAMP NULL DEFAULT NULL COMMENT '请求时间',
+  resp_time     TIMESTAMP NULL  DEFAULT NULL COMMENT '响应时间',
+  flag          VARCHAR(1)   DEFAULT '1' COMMENT '调用状态 - 1：成功，0：失败',
+  del_flag      CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
+  creator_code  VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
+  create_time   TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updater_code  VARCHAR(32)  DEFAULT NULL COMMENT '更新人代码',
+  update_time   TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '报文往来日志表';
 

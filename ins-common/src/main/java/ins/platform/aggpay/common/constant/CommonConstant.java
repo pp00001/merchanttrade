@@ -27,6 +27,14 @@ public interface CommonConstant {
      * 正常
      */
     String STATUS_NORMAL = "0";
+    /**
+     * 有效
+     */
+    String STATUS_VALID = "1";
+	/**
+	 * 无效
+	 */
+	String STATUS_INVALID = "0";
 
     /**
      * 锁定
@@ -47,6 +55,11 @@ public interface CommonConstant {
      * 删除标记
      */
     String DEL_FLAG = "del_flag";
+
+    /**
+     * 有效标识
+     */
+    String VALID_IND = "valid_ind";
 
     /**
      * 编码

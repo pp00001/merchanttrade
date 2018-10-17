@@ -253,11 +253,6 @@ public class Register extends AbstractReq {
 
   }
 
-  @Override
-  public Map<String, Object> call() throws Exception {
-    return super.call();
-  }
-
   /**
    * 企业 - 226801000000142576686
    * WechatMerchId - 242972555

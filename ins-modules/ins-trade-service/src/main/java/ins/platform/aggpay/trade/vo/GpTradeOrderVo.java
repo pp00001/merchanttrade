@@ -240,7 +240,10 @@ public class GpTradeOrderVo {
      */
     private Date updateTime;
 
-
+    /**
+     * 返回码对象
+     */
+    private RespInfoVo respInfo;
 
 
 }

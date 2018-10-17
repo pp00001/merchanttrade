@@ -43,6 +43,6 @@ public class AccountQuery extends AbstractReq {
 
   public static void main(String[] args) throws Exception {
     AccountQuery accountQuery = new AccountQuery();
-    accountQuery.call();
+    accountQuery.call(HttpsMain.reqUrl);
   }
 }

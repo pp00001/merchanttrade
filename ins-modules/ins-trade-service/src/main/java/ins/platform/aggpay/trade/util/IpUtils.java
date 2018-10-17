@@ -17,6 +17,7 @@
 package ins.platform.aggpay.trade.util;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 
 public class IpUtils {
     private IpUtils() {
@@ -43,6 +44,16 @@ public class IpUtils {
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
+
+        if (StringUtils.isNotBlank(ip)) {
+            String[] split = ip.split(",");
+            ip = split[0];
+            if (ip.length() > 16) {
+                ip = ip.substring(0, 16);
+            }
+        }
+
         return ip;
     }
+
 }

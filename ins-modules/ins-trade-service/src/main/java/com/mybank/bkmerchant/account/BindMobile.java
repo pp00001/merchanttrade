@@ -74,6 +74,6 @@ public class BindMobile extends AbstractReq {
       UUID.randomUUID().toString()
     );
 
-    bindMobile.call();
+    bindMobile.call(HttpsMain.reqUrl);
   }
 }

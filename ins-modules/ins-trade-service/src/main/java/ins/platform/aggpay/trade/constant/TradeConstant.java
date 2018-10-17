@@ -30,6 +30,8 @@ public class TradeConstant {
 
 	public static final String CHANNEL_TYPE_WX = "WX";
 	public static final String CHANNEL_TYPE_ALI = "ALI";
+	public static final String CHANNEL_TYPE_QQ = "QQ";
+	public static final String CHANNEL_TYPE_JD = "JD";
 	public static final String CHANNEL_TYPE_OTHER = "OTHER";
 
 
@@ -67,6 +69,37 @@ public class TradeConstant {
 		 */
 		public static final String CHARSET = "UTF-8";
 
+
+	}
+
+	public interface RespInfo {
+
+		public static final String RESULT_STATUS_SUCCESS = "S";
+		public static final String RESULT_STATUS_FAILURE = "F";
+		public static final String RESULT_STATUS_UNKNOWN = "U";
+
+
+		public static final String RESULT_CODE_SUCCESS = "0000";
+
+	}
+
+	/**
+	 * 支付单类型
+	 */
+	public interface OrderType {
+
+		/**
+		 * 主扫
+		 */
+		public static final String ORDER_TYPE_PREPAY = "create";
+		/**
+		 * 被扫
+		 */
+		public static final String ORDER_TYPE_PAY = "pay";
+		/**
+		 * 动态扫描
+		 */
+		public static final String ORDER_TYPE_DYNAMIC = "create_dynamic";
 
 	}
 

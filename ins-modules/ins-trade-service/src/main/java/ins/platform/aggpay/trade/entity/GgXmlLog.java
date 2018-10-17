@@ -64,15 +64,18 @@ public class GgXmlLog extends Model<GgXmlLog> {
     /**
      * 处理状态
      */
-    private String ResultStatus;
+    @TableField("result_status")
+    private String resultStatus;
     /**
      * 返回码 - S：成功，F：失败，U：未知
      */
-    private String ResultCode;
+    @TableField("result_code")
+    private String resultCode;
     /**
      * 返回码信息
      */
-    private String ResultMsg;
+    @TableField("result_msg")
+    private String resultMsg;
     /**
      * 请求时间
      */

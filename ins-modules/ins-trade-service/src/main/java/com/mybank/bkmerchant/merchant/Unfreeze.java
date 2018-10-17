@@ -57,6 +57,6 @@ public class Unfreeze extends AbstractReq {
 
   public static void main(String[] args) throws Exception {
     Unfreeze unfreeze = new Unfreeze("解除风险", UUID.randomUUID().toString());
-    unfreeze.call();
+    unfreeze.call(HttpsMain.reqUrl);
   }
 }

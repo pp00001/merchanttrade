@@ -31,7 +31,17 @@ import com.mybank.bkmerchant.trade.SendSmsCode;
  */
 public interface GgMerchantService extends IService<GgMerchant> {
 
-	GgMerchantVo findMerchantByMerchentId(String merchantId);
+	/**
+	 * findMerchantById(通过id查询商户信息)
+	 *
+	 * @Title: findMerchantById
+	 * @Description: 
+	 * @param merchantId
+	 * @throws 
+	 * @author Ripin Yan
+	 * @return ins.platform.aggpay.trade.vo.GgMerchantVo
+	 */
+	GgMerchantVo findMerchantById(Long merchantId);
 
 	//短信验证码发送接口
 	MerchantResVo sendsmscode(SendSmsCode sendSmsCode);

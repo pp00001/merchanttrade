@@ -4,6 +4,8 @@ import ins.platform.aggpay.common.util.UserUtils;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -13,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class BaseController {
     @Autowired
     private HttpServletRequest request;
-    protected org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+
+    protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 根据请求heard中的token获取用户角色

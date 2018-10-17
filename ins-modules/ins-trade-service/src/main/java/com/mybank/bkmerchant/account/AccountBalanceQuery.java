@@ -81,6 +81,6 @@ public class AccountBalanceQuery extends AbstractReq {
       "8888886531660936"
     );
 
-    accountBalanceQuery.call();
+    accountBalanceQuery.call(HttpsMain.reqUrl);
   }
 }

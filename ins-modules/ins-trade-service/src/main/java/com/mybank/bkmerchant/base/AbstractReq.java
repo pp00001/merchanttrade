@@ -1,12 +1,11 @@
 package com.mybank.bkmerchant.base;
 
-import com.mybank.bkmerchant.util.XmlSignUtil;
-import com.mybank.bkmerchant.util.XmlUtil;
-
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import com.mybank.bkmerchant.util.XmlSignUtil;
+import com.mybank.bkmerchant.util.XmlUtil;
 
 /**
  * Created by jingzhu.zr on 2017/7/27.
@@ -33,7 +32,7 @@ public abstract class AbstractReq {
     form.putAll(getBody());
   }
 
-  public Map<String, Object> call() throws Exception{
+  public Map<String, Object> call(String reqUrl) throws Exception{
     writeForm();
 
     //封装报文
@@ -46,18 +45,24 @@ public abstract class AbstractReq {
     System.out.println("-------------------------");
     System.out.println(param);
     //发送请求
-    String response = HttpsMain.httpsReq(HttpsMain.reqUrl, param);
+    String response = HttpsMain.httpsReq(reqUrl, param);
 
     System.out.println("-------------------------");
     System.out.println("---------RESPONSE--------");
     System.out.println("-------------------------");
     System.out.println(response);
+
     if (HttpsMain.isSign) {//生产环境需进行rsa验签
       if (!XmlSignUtil.verify(response)) {
         throw new Exception("验签失败");
       }
     }
+    Map<String, Object> resultMap = xmlUtil.parse(response, function);
+
+    resultMap.put("requestXml", param);
+    resultMap.put("responseXml", response);
+
     //解析报文
-    return xmlUtil.parse(response, function);
+    return resultMap;
   }
 }

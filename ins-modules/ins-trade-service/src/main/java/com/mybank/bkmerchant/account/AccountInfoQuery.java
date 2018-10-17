@@ -1,12 +1,15 @@
 package com.mybank.bkmerchant.account;
 
-import java.util.*;
-
-import com.mybank.bkmerchant.constant.TradeInStatusEnum;
 import sun.misc.BASE64Decoder;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import com.mybank.bkmerchant.base.AbstractReq;
 import com.mybank.bkmerchant.base.HttpsMain;
+import com.mybank.bkmerchant.constant.TradeInStatusEnum;
 
 
 /**
@@ -192,7 +195,7 @@ public class AccountInfoQuery extends AbstractReq {
       null
     );
 
-    Map<String, Object> rst = accountInfoQuery.call();
+    Map<String, Object> rst = accountInfoQuery.call(HttpsMain.reqUrl);
     //将base加密的相关字段解密
     rst.put("TranHisList", new String(decoder.decodeBuffer((String) rst.get("TranHisList")), "UTF-8"));
     System.out.println((String) rst.get("TranHisList"));

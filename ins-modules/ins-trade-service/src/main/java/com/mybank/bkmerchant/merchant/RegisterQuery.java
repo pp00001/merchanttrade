@@ -60,7 +60,7 @@ public class RegisterQuery extends AbstractReq {
   public static void main(String[] args) throws Exception {
     RegisterQuery registerQuery = new RegisterQuery("2018091311150710010000000000000000163746");
 
-    Map<String, Object> rst = registerQuery.call();
+    Map<String, Object> rst = registerQuery.call(HttpsMain.reqUrl);
     RegisterQueryVo vo = MapUtil.map2Obj(rst,RegisterQueryVo.class);
 	System.out.println(vo.toString());
     

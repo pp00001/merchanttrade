@@ -8,9 +8,9 @@
         <result column="function" property="function" />
         <result column="request_xml" property="requestXml" />
         <result column="response_xml" property="responseXml" />
-        <result column="ResultStatus" property="ResultStatus" />
-        <result column="ResultCode" property="ResultCode" />
-        <result column="ResultMsg" property="ResultMsg" />
+        <result column="result_status" property="resultStatus" />
+        <result column="result_code" property="resultCode" />
+        <result column="result_msg" property="resultMsg" />
         <result column="req_time" property="reqTime" />
         <result column="resp_time" property="respTime" />
         <result column="flag" property="flag" />
@@ -23,7 +23,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, function, request_xml AS requestXml, response_xml AS responseXml, ResultStatus, ResultCode, ResultMsg, req_time AS reqTime, resp_time AS respTime, flag, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+        id, function, request_xml AS requestXml, response_xml AS responseXml, result_status AS resultStatus, result_code AS resultCode, result_msg AS resultMsg, req_time AS reqTime, resp_time AS respTime, flag, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
     </sql>
 
 </mapper>

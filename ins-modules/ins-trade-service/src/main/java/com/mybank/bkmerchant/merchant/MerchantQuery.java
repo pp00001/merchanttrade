@@ -82,7 +82,7 @@ public class MerchantQuery extends AbstractReq {
   public static void main(String[] args) throws Exception {
     BASE64Decoder decoder = new BASE64Decoder();
     MerchantQuery merchantQuery = new MerchantQuery("226801000000142576686");
-    Map<String, Object> rst = merchantQuery.call();
+    Map<String, Object> rst = merchantQuery.call(HttpsMain.reqUrl);
 
     //将base加密的相关字段解密
     rst.put("merchantDetail", new String(decoder.decodeBuffer((String) rst.get("merchantDetail")), "UTF-8"));
