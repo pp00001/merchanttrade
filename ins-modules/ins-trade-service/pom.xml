@@ -136,6 +136,18 @@
       <artifactId>alipay-sdk-java</artifactId>
       <version>3.3.87.ALL</version>
     </dependency>
+    <!--写出excel文件依赖-->
+    <dependency>
+      <groupId>net.sourceforge.jexcelapi</groupId>
+      <artifactId>jxl</artifactId>
+      <version>2.6.12</version>
+    </dependency>
+    <!-- jsch 所依赖的jar包  -->
+    <dependency>
+    <groupId>com.jcraft</groupId>
+    <artifactId>jzlib</artifactId>
+    <version>1.0.7</version>
+    </dependency>
 
 
   </dependencies>
