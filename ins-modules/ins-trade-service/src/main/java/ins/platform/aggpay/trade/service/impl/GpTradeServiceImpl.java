@@ -309,6 +309,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 				TXT2ExcelUtil txt2ExcelUtil = new TXT2ExcelUtil();
 				txt2ExcelUtil.conversionExcel(saveBillFile, "E:\\" + sftpConfig.getExcelPath());
 
+
 			} catch (Exception e) {
 				logger.error("账单下载失败！异常信息：" + e.getMessage(), e);
 			}

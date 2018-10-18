@@ -45,7 +45,6 @@ public class TXT2ExcelUtil {
         Map<String, String> merchantMap = new LinkedHashMap<>();
 
         List<String> lineList = null;
-
         List<String> list = new ArrayList<>();
 
         if (file.exists() && file.isFile()) {

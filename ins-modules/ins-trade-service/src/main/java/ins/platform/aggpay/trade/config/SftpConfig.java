@@ -91,4 +91,5 @@ public class SftpConfig {
     public void setExcelPath(String excelPath) {
         this.excelPath = excelPath;
     }
+
 }
