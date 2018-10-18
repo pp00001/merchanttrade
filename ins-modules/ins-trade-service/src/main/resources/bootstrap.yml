@@ -39,3 +39,14 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://ripin:12345@eureka:8761/eureka
+
+---
+isvConfig:
+  isvOrgId: 226801000001181738033
+  sftp:
+    host: 47.106.91.233
+    port: 22
+    username: sinosoft
+    password: Sinosoft2018#
+    billPath: /sftp_root/isv/
+    excelPath:  /sftp_root/merchant/

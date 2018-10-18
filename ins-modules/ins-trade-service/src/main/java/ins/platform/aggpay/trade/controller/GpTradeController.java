@@ -16,6 +16,7 @@
 
 package ins.platform.aggpay.trade.controller;
 
+import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.config.IsvConfig;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_ALI;
@@ -23,6 +24,7 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_JD;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_QQ;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_WX;
 import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PREPAY;
+import ins.platform.aggpay.trade.service.impl.GpTradeServiceImpl;
 import ins.platform.aggpay.trade.util.OAuthManager;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import ins.platform.aggpay.trade.service.GgMerchantService;
@@ -50,7 +52,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
@@ -393,7 +394,15 @@ public class GpTradeController extends BaseController {
 		return url.toString();
 	}
 
+	@Autowired
+	private GpTradeServiceImpl gpTradeServiceImpl;
 
+	@RequestMapping(value = "/downLoadBill", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseBody
+	public R<String> downLoadBill(@RequestParam(value = "billDate") String billDate) {
+		return new R<>(gpTradeServiceImpl.downLoadBill(billDate));
+	}
 
 
 }
