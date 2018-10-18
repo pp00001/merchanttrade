@@ -1,20 +1,30 @@
 package ins.platform.aggpay.trade.util;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import ins.platform.aggpay.trade.config.IsvConfig;
+import ins.platform.aggpay.trade.config.TradeConfig;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 
 /**
  * 将对账txt文件转换成商户excel文件
@@ -80,9 +90,9 @@ public class TXTConversionExcel {
         String dateName = df.format(calendar.getTime());
         int dateNum = Integer.parseInt(dateName);
 
-        IsvConfig isvConfig = new IsvConfig();
+        TradeConfig tradeConfig = new TradeConfig();
         //获取合作方机构号
-        String isvOrgId = isvConfig.getIsvOrgId();
+        String isvOrgId = tradeConfig.getIsvOrgId();
 
         //txt文件地址
         String txt = MessageFormat.format(txtPath,isvOrgId, dateNum - 1 + "");

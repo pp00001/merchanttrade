@@ -24,10 +24,6 @@ package ins.platform.aggpay.trade.constant;
  */
 public class TradeConstant {
 
-	public static final String FUNCTION_PRE_PAY_NOTICE = "ant.mybank.bkmerchanttrade.prePayNotice";
-	public static final String FUNCTION_NOTIFY_PAY_RESULT = "ant.mybank.bkmerchantsettle.notifyPayResult";
-
-
 	public static final String CHANNEL_TYPE_WX = "WX";
 	public static final String CHANNEL_TYPE_ALI = "ALI";
 	public static final String CHANNEL_TYPE_QQ = "QQ";
@@ -35,6 +31,9 @@ public class TradeConstant {
 	public static final String CHANNEL_TYPE_OTHER = "OTHER";
 
 
+	/**
+	 * 支付宝配置
+	 */
 	public interface Ali {
 
 		/**
@@ -72,13 +71,60 @@ public class TradeConstant {
 
 	}
 
+	/**
+	 * 微信配置
+	 */
+	public interface Wx {
+
+		/**
+		 * 弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息
+		 */
+		public static final String SCOP_AUTH_USER = "snsapi_userinfo ";
+		/**
+		 * 不弹出授权页面，直接跳转，只能获取用户openid
+		 */
+		public static final String SCOP_AUTH_BASE = "snsapi_base";
+
+		/**
+		 * 授权码换取
+		 */
+		public static final String GRANT_TYPE_CODE = "authorization_code";
+		/**
+		 * 错误代码
+		 */
+		public static final String ERR_CODE = "errcode";
+		/**
+		 * 错误信息
+		 */
+		public static final String ERR_MSG = "errmsg";
+		/**
+		 * 公众号下唯一标识
+		 */
+		public static final String OPEN_ID = "openid";
+
+
+	}
+
+	/**
+	 * 返回码
+	 */
 	public interface RespInfo {
 
+		/**
+		 * 成功
+		 */
 		public static final String RESULT_STATUS_SUCCESS = "S";
+		/**
+		 * 失败
+		 */
 		public static final String RESULT_STATUS_FAILURE = "F";
+		/**
+		 * 未知
+		 */
 		public static final String RESULT_STATUS_UNKNOWN = "U";
-
-
+		/**
+		 * 接口调用成功返回码
+		 */
 		public static final String RESULT_CODE_SUCCESS = "0000";
 
 	}

@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.config.IsvConfig;
+import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
 import ins.platform.aggpay.trade.entity.GgXmlLog;
@@ -61,7 +61,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 	@Autowired
 	private GpTradeOrderMapper gpTradeOrderMapper;
 	@Autowired
-	private IsvConfig isvConfig;
+	private TradeConfig tradeConfig;
 	@Autowired
 	private GgXmlLogService ggXmlLogService;
 
@@ -166,7 +166,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 					put("TotalAmount", String.valueOf(tradeOrderVo.getTotalAmount()));
 					put("Currency", "CNY");
 					put("MerchantId", tradeOrderVo.getMerchantId());
-					put("IsvOrgId", isvConfig.getIsvOrgId());
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
 					put("ChannelType", tradeOrderVo.getChannelType());
 					put("OpenId", tradeOrderVo.getOpenId());
 					put("OperatorId", tradeOrderVo.getOperatorId());
@@ -176,7 +176,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 					if (tradeOrderVo.getExpireExpress() != null && tradeOrderVo.getExpireExpress() > 0) {
 						put("ExpireExpress", String.valueOf(tradeOrderVo.getExpireExpress()));
 					} else {
-						put("ExpireExpress", isvConfig.getExpireExpress());
+						put("ExpireExpress", tradeConfig.getExpireExpress());
 					}
 					put("SettleType", tradeOrderVo.getSettleType());
 					put("Attach", tradeOrderVo.getAttach());
@@ -200,7 +200,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 				}
 			});
 
-			Map<String, Object> resMap = prePay.call(isvConfig.getPayUrl());
+			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
 
 			// 插入报文日志表
 

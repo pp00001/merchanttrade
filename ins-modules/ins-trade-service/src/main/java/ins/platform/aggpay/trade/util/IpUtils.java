@@ -46,8 +46,8 @@ public class IpUtils {
         }
 
         if (StringUtils.isNotBlank(ip)) {
-            String[] split = ip.split(",");
-            ip = split[0];
+            String[] split = ip.trim().split(",");
+            ip = split[0].trim();
             if (ip.length() > 16) {
                 ip = ip.substring(0, 16);
             }
@@ -56,4 +56,13 @@ public class IpUtils {
         return ip;
     }
 
+    public static void main(String[] args) {
+        String ab = "112.97.224.145, 10.53.29.202";
+        String ip = ab.split(",")[0];
+        if(ip.length()>16){
+            ip = ip.substring(0, 16);
+        }
+        System.out.println(ip);
+
+    }
 }

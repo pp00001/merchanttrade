@@ -16,9 +16,9 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.config.IsvConfig;
+import ins.platform.aggpay.trade.config.TradeConfig;
+import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.util.MapUtil;
-import ins.platform.aggpay.trade.constant.TradeConstant;
 import ins.platform.aggpay.trade.entity.GgXmlLog;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.mapper.GpTradeOrderMapper;
@@ -53,12 +53,12 @@ public class GgNotifyServiceImpl implements GgNotifyService {
 	@Autowired
 	private GgXmlLogService ggXmlLogService;
 	@Autowired
-	private IsvConfig isvConfig;
+	private TradeConfig tradeConfig;
 
 	@Override
 	public String prePayNotice(String requestXml) throws Exception {
 
-		String function = TradeConstant.FUNCTION_PRE_PAY_NOTICE;
+		String function = ApiCallUtil.FUNCTION_PRE_PAY_NOTICE;
 		// 插入报文日志表
 		GgXmlLog xmlLog = new GgXmlLog();
 		xmlLog.setFunction(function);
@@ -106,7 +106,7 @@ public class GgNotifyServiceImpl implements GgNotifyService {
 		String resMsgId = (String) resMap.get("resMsgId");
 		StringBuffer sf = new StringBuffer();
 		sf.append("<document><response id=\"response\"><head><Version>1.0.0</Version><Appid>");
-		sf.append(isvConfig.getAppId());
+		sf.append(tradeConfig.getAppId());
 		sf.append("</Appid><Function>ant.mybank.bkmerchanttrade.prePayNotice</Function><ResTime>");
 		sf.append(new Timestamp(System.currentTimeMillis()));
 		sf.append("</ResTime><RespTimeZone>UTC+8</RespTimeZone><ResMsgId>");
@@ -126,7 +126,7 @@ public class GgNotifyServiceImpl implements GgNotifyService {
 
 	@Override
 	public String notifyPayResult(String requestXml) throws Exception {
-		String function = TradeConstant.FUNCTION_NOTIFY_PAY_RESULT;
+		String function = ApiCallUtil.FUNCTION_NOTIFY_PAY_RESULT;
 
 		// 插入报文日志表
 		GgXmlLog xmlLog = new GgXmlLog();

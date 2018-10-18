@@ -22,6 +22,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -49,6 +52,18 @@ public class SFTP {
      * @param args
      */
     public static void main(String[] args) {
+	    try {
+		    String encode = URLEncoder.encode("http://ripin925.ngrok.xiaomiqiu.cn/auth/ali", "UTF-8");
+		    String encode2 = URLEncoder.encode("https://hnxinshixian.com/auth/ali", "UTF-8");
+		    String decode = URLDecoder.decode("https%3A%2F%2Fchong.qq.com%2Fphp%2Findex" + "" +
+				    ".php%3Fd%3D%26c%3DwxAdapter%26m%3DmobileDeal%26showwxpaytitle%3D1%26vb2ctag%3D4_2030_5_1194_60", "UTF-8");
+
+		    System.out.println(encode);
+		    System.out.println(encode2);
+		    System.out.println(decode);
+	    } catch (UnsupportedEncodingException e) {
+		    e.printStackTrace();
+	    }
         
     	/*SFTP ftp = new SFTP();
         String host="200.31.154.19";

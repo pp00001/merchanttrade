@@ -22,20 +22,31 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author RipinYan
- * @ClassName: IsvConfig
+ * @ClassName: TradeConfig
  * @Description: TODO
  * @date 2018/10/11 上午11:53
  */
 @Configuration
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix = "isvConfig")
-public class IsvConfig {
+@ConfigurationProperties(prefix = "trade")
+public class TradeConfig {
 
+
+	public static class Sftp{
+		private String host;
+
+		public String getHost() {
+			return host;
+		}
+
+		public void setHost(String host) {
+			this.host = host;
+		}
+	}
 	/**
 	 * 合作方机构号（网商银行分配）
 	 */
 	private String isvOrgId;
-
 	/**
 	 * 网商appid
 	 */
@@ -48,6 +59,10 @@ public class IsvConfig {
 	 * 微信交易子商户号
 	 */
 	private String subMerchId;
+	/**
+	 * 微信公众号secret
+	 */
+	private String appSecret= "db103c301a738509947262c73b895615";
 	/**
 	 * 微信支付渠道号
 	 */
@@ -66,28 +81,18 @@ public class IsvConfig {
 	 * 支付相关接口地址
 	 */
 	private String payUrl;
-
 	/**
 	 * 图片上传接口地址
 	 */
 	private String uploadUrl;
 	/**
-	 * 支付宝获取用户id接口地址
-	 */
-	private String getUserIdUrl;
-	/**
 	 * 微信获取用户openId
 	 */
-	private String getWxOpenIdUrl;
+	private String wxOauthUrl;
 	/**
 	 * 支付宝通用api地址
 	 */
-	private String openApiUrl;
-
-	/**
-	 * 主扫跳转页面url
-	 */
-	private String qrPayUrl;
+	private String aliOauthUrl;
 
 	public static final String APP_PRIVATE_KEY =
 			"MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCV3Ju7rfIehCjimtzIeMb8lrZszv2w0QDdbtjNmKcvl3yuzTMzKddSs7X" +
@@ -110,8 +115,6 @@ public class IsvConfig {
 			"/YlhaEBGmu5kEzpYO4R1IhEjEtaWa0zuik8J0Cjpki4dosPCrKmUeciFEzEwB2wMEhAXpKQKQIDAQAB";
 
 
-	//private String redirectUri = "http://774bf666.ngrok.io/trade/pay/prePay";
-	private String redirectUri = "http://ripin925.ngrok.xiaomiqiu.cn/qrPay";
 
 	/**
 	 * 订单有效期（1-1440分钟）
@@ -154,6 +157,14 @@ public class IsvConfig {
 		this.subMerchId = subMerchId;
 	}
 
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
+	}
+
 	public String getChannelId() {
 		return channelId;
 	}
@@ -194,44 +205,28 @@ public class IsvConfig {
 		this.uploadUrl = uploadUrl;
 	}
 
-	public String getGetUserIdUrl() {
-		return getUserIdUrl;
+	public String getWxOauthUrl() {
+		return wxOauthUrl;
 	}
 
-	public void setGetUserIdUrl(String getUserIdUrl) {
-		this.getUserIdUrl = getUserIdUrl;
+	public void setWxOauthUrl(String wxOauthUrl) {
+		this.wxOauthUrl = wxOauthUrl;
 	}
 
-	public String getGetWxOpenIdUrl() {
-		return getWxOpenIdUrl;
+	public String getAliOauthUrl() {
+		return aliOauthUrl;
 	}
 
-	public void setGetWxOpenIdUrl(String getWxOpenIdUrl) {
-		this.getWxOpenIdUrl = getWxOpenIdUrl;
+	public void setAliOauthUrl(String aliOauthUrl) {
+		this.aliOauthUrl = aliOauthUrl;
 	}
 
-	public String getOpenApiUrl() {
-		return openApiUrl;
+	public String getAppPrivateKey() {
+		return APP_PRIVATE_KEY;
 	}
 
-	public void setOpenApiUrl(String openApiUrl) {
-		this.openApiUrl = openApiUrl;
-	}
-
-	public String getQrPayUrl() {
-		return qrPayUrl;
-	}
-
-	public void setQrPayUrl(String qrPayUrl) {
-		this.qrPayUrl = qrPayUrl;
-	}
-
-	public String getRedirectUri() {
-		return redirectUri;
-	}
-
-	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
+	public String getAlipayPublicKey() {
+		return ALIPAY_PUBLIC_KEY;
 	}
 
 	public String getExpireExpress() {

@@ -30,6 +30,18 @@ eureka:
       defaultZone: http://ripin:12345@47.106.91.233:8761/eureka
     registry-fetch-interval-seconds: 10
 
+trade:
+  IsvOrgId: 202210000000000001316
+  appId: 2018090700000286
+  subAppId: wx62a55dbdd041bb1d
+  subMerchId: 242972555
+  ChannelId: 240824008
+  isSign: true
+  reqUrl: https://fcsupergw.dl.alipaydev.com/open/api/common/request2.htm
+  payUrl: https://fcsupergw.dl.alipaydev.com/open/api/common/requestasync.htm
+  uploadUrl: https://fcsupergwlite.dl.alipaydev.com/ant/mybank/merchantprod/merchant/uploadphoto.htm
+  aliOauthUrl: https://openapi.alipay.com/gateway.do
+  wxOauthUrl: https://api.weixin.qq.com/sns/oauth2/access_token
 ---
 spring:
   profiles: prd

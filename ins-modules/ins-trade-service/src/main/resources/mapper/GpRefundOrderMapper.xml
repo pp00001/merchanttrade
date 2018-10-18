@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ins.platform.aggpay.trade.mapper.GpRefundOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GpRefundOrder">
+        <id column="id" property="id" />
+        <result column="order_no" property="orderNo" />
+        <result column="out_trade_no" property="outTradeNo" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="refund_order_no" property="refundOrderNo" />
+        <result column="out_refund_no" property="outRefundNo" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="currency" property="currency" />
+        <result column="channel_type" property="channelType" />
+        <result column="operator_id" property="operatorId" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_create_ip" property="deviceCreateIp" />
+        <result column="refund_amount" property="refundAmount" />
+        <result column="refund_reason" property="refundReason" />
+        <result column="receipt_amount" property="receiptAmount" />
+        <result column="buyer_pay_amount" property="buyerPayAmount" />
+        <result column="gmt_refundment" property="gmtRefundment" />
+        <result column="trade_status" property="tradeStatus" />
+        <result column="valid_ind" property="validInd" />
+        <result column="del_flag" property="delFlag" />
+        <result column="creator_code" property="creatorCode" />
+        <result column="create_time" property="createTime" />
+        <result column="updater_code" property="updaterCode" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_no AS orderNo, out_trade_no AS outTradeNo, merchant_id AS merchantId, refund_order_no AS refundOrderNo, out_refund_no AS outRefundNo, total_amount AS totalAmount, currency, channel_type AS channelType, operator_id AS operatorId, device_id AS deviceId, device_create_ip AS deviceCreateIp, refund_amount AS refundAmount, refund_reason AS refundReason, receipt_amount AS receiptAmount, buyer_pay_amount AS buyerPayAmount, gmt_refundment AS gmtRefundment, trade_status AS tradeStatus, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    </sql>
+
+</mapper>

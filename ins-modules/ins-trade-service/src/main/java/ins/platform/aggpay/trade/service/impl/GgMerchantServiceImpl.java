@@ -16,7 +16,7 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.config.IsvConfig;
+import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.entity.GgBankCardParam;
 import ins.platform.aggpay.trade.entity.GgFeeParam;
 import ins.platform.aggpay.trade.entity.GgMerchant;
@@ -86,7 +86,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	@Autowired
 	private GgFeeParamMapper ggFeeParamMapper;
 	@Autowired
-	private IsvConfig isvConfig;
+	private TradeConfig tradeConfig;
 
 
 	@Override
@@ -134,7 +134,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 			});
 
 
-			Map<String, Object> call = pc.call(isvConfig.getReqUrl());
+			Map<String, Object> call = pc.call(tradeConfig.getReqUrl());
 
 			RegistResVo rs = MapUtil.map2Obj(call, RegistResVo.class);
 			//			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
@@ -165,7 +165,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		RegisterQuery rq = new RegisterQuery(orderNo);
 		RegisterQueryVo vo = null;
 		try {
-			Map<String, Object> call = rq.call(isvConfig.getReqUrl());
+			Map<String, Object> call = rq.call(tradeConfig.getReqUrl());
 			vo = MapUtil.map2Obj(call, RegisterQueryVo.class);
 			if (vo.getRespInfo() != null && "S".equals(vo.getRespInfo().getResultStatus())) {
 				GgMerchant query = new GgMerchant();
@@ -275,7 +275,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		BASE64Decoder decoder = new BASE64Decoder();
 		GgMerchantVo rs = null;
 		try {
-			Map<String, Object> result = pc.call(isvConfig.getReqUrl());
+			Map<String, Object> result = pc.call(tradeConfig.getReqUrl());
 			rs = MapUtil.map2Obj(result, GgMerchantVo.class);
 			result.put("merchantDetail", new String(decoder.decodeBuffer((String) result.get("merchantDetail")), "UTF-8"));
 			result.put("feeParamList", new String(decoder.decodeBuffer((String) result.get("feeParamList"))));
@@ -304,7 +304,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		});
 		Map<String, Object> result = null;
 		try {
-			result = pc.call(isvConfig.getReqUrl());
+			result = pc.call(tradeConfig.getReqUrl());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -326,7 +326,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		});
 		Map<String, Object> result = null;
 		try {
-			result = pc.call(isvConfig.getReqUrl());
+			result = pc.call(tradeConfig.getReqUrl());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

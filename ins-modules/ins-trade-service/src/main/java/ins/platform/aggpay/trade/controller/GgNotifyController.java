@@ -17,7 +17,7 @@
 package ins.platform.aggpay.trade.controller;
 
 import ins.platform.aggpay.common.web.BaseController;
-import ins.platform.aggpay.trade.config.IsvConfig;
+import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.service.GgNotifyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class GgNotifyController extends BaseController {
 	@Autowired
 	private GgNotifyService ggNotifyService;
 	@Autowired
-	private IsvConfig isvConfig;
+	private TradeConfig tradeConfig;
 
 	/**
 	 * @Title: prePayNotice
@@ -53,7 +53,7 @@ public class GgNotifyController extends BaseController {
 	@RequestMapping(value = "/pay/paynotifyres", method = RequestMethod.POST)
 	public String prePayNotice(@RequestBody String requestXml) {
 
-		System.out.println("appId=" + isvConfig.getAppId());
+		System.out.println("appId=" + tradeConfig.getAppId());
 		String responseXml;
 		try {
 			responseXml = ggNotifyService.prePayNotice(requestXml);
