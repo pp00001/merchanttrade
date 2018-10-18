@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS gg_fee_param;
 DROP TABLE IF EXISTS gg_bank_card_param;
 DROP TABLE IF EXISTS gg_xml_log;
 DROP TABLE IF EXISTS gp_trade_order;
+DROP TABLE IF EXISTS gp_refund_order;
 /*==============================================================*/
 /* Table: gg_merchant                                           */
 /*==============================================================*/
@@ -231,6 +232,37 @@ CREATE TABLE gp_trade_order (
   update_time             TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '交易订单表';
+
+/*==============================================================*/
+/* Table: gp_refund_order                                       */
+/*==============================================================*/
+CREATE TABLE gp_refund_order (
+  id               BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  order_no         VARCHAR(64)  DEFAULT NULL COMMENT '支付返回的订单号',
+  out_trade_no     VARCHAR(64)  DEFAULT NULL COMMENT '外部交易号',
+  merchant_id      VARCHAR(64)  DEFAULT NULL COMMENT '商户号',
+  refund_order_no  VARCHAR(64)  DEFAULT NULL COMMENT '退款订单号',
+  out_refund_no      VARCHAR(64) DEFAULT NULL COMMENT '退款交易号',
+  total_amount     INT          DEFAULT NULL COMMENT '交易总金额',
+  currency         VARCHAR(16)  DEFAULT NULL COMMENT '币种',
+  channel_type     VARCHAR(16)  DEFAULT NULL COMMENT '支付渠道类型',
+  operator_id      VARCHAR(32)  DEFAULT NULL COMMENT '操作员ID',
+  device_id               VARCHAR(32)   DEFAULT NULL COMMENT '终端设备号',
+  device_create_ip VARCHAR(16)  DEFAULT NULL COMMENT '终端IP',
+  refund_amount    INT          DEFAULT NULL COMMENT '退款金额',
+  refund_reason    VARCHAR(256)  DEFAULT NULL COMMENT '退款原因',
+  receipt_amount   INT          DEFAULT NULL COMMENT '实收金额',
+  buyer_pay_amount INT          DEFAULT NULL COMMENT '用户实付金额',
+  gmt_refundment   TIMESTAMP NULL DEFAULT NULL COMMENT '退款完成时间',
+  trade_status     VARCHAR(16)  DEFAULT '1' COMMENT '支付状态 - succ：支付成功，fail：失败，refunding：退款中',
+  valid_ind        VARCHAR(1)   DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
+  del_flag         CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
+  creator_code     VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
+  create_time      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updater_code     VARCHAR(32)  DEFAULT NULL COMMENT '更新人代码',
+  update_time      TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '退款订单表';
 
 
 SET FOREIGN_KEY_CHECKS = 1;

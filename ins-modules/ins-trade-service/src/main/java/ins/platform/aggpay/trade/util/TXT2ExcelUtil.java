@@ -1,26 +1,30 @@
 package ins.platform.aggpay.trade.util;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import ins.platform.aggpay.trade.config.IsvConfig;
 import jxl.Workbook;
 import jxl.write.Label;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 将对账txt文件转换成商户excel文件
  * Created by ADD on 2018/10/11.
  */
 public class TXT2ExcelUtil {
-    @Autowired
-    private IsvConfig isvConfig;
+
     private static final Logger logger = LoggerFactory.getLogger(TXT2ExcelUtil.class);
 
     public static void main(String args[]) throws Exception {

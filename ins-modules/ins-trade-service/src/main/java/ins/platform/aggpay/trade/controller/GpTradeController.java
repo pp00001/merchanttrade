@@ -44,6 +44,7 @@ import ins.platform.aggpay.trade.vo.RefundVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +57,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
@@ -88,7 +90,7 @@ public class GpTradeController extends BaseController {
 	@Autowired
 	private GpTradeService gpTradeService;
 	@Autowired
-	private IsvConfig isvConfig;
+	private TradeConfig tradeConfig;
 
 	/**
 	 * @Title: pay
@@ -471,45 +473,11 @@ public class GpTradeController extends BaseController {
 	}
 
 
-	
-	public ModelAndView createRedirectURL(String channelType) {
-		if (CHANNEL_TYPE_WX.equals(channelType)) {// 来自微信
-			String redirectUrl = OAuthManager.generateRedirectURI(isvConfig.getRedirectUri(), "", "");
-			return new ModelAndView("redirect:" + redirectUrl);
-		} else if (CHANNEL_TYPE_ALI.equals(channelType)) {// 来自支付宝
-			String redirectUrl = this.generateAliRedirectURI("1221");
-			return new ModelAndView("redirect:" + redirectUrl);
-		}else {
-			ModelAndView mv = new ModelAndView();
-			mv.setViewName("view/index/unAllow");
-			return mv;
-		}
-	}
-
-	public String generateAliRedirectURI(String state) {
-
-		StringBuffer url = new StringBuffer();
-		try {
-			url.append(isvConfig.getGetUserIdUrl());
-			url.append("?app_id=").append("2018073160766860");
-			//url.append("?appid=").append(isvConfig.getAppId());
-			url.append("&scope=").append(TradeConstant.Ali.SCOP_AUTH_BASE);
-			url.append("&redirect_uri=").append(URLEncoder.encode(isvConfig.getRedirectUri(), TradeConstant.Ali.CHARSET));
-			url.append("&state=").append(state);
-		} catch (UnsupportedEncodingException e) {
-			logger.error("URLEncoder出错" + e.getMessage(), e);
-		}
-		return url.toString();
-	}
-
-	@Autowired
-	private GpTradeServiceImpl gpTradeServiceImpl;
-
 	@RequestMapping(value = "/downLoadBill", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public R<String> downLoadBill(@RequestParam(value = "billDate") String billDate) {
-		return new R<>(gpTradeServiceImpl.downLoadBill(billDate));
+		return new R<>(gpTradeService.downLoadBill(billDate));
 	}
 
 

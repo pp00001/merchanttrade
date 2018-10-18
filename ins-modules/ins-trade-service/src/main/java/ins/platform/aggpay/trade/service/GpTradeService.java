@@ -51,4 +51,6 @@ public interface GpTradeService {
 	 * @return ins.platform.aggpay.trade.vo.GpTradeOrderVo
 	 */
 	GpTradeOrderVo prePay(GpTradeOrderVo tradeOrderVo);
+
+	String downLoadBill(String billDate);
 }

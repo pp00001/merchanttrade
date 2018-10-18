@@ -289,7 +289,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 			try {
 				ChannelSftp sftp = (ChannelSftp) resultMap.get("sftp");//获取连接的sftp
 
-				String saveFile = isvConfig.getIsvOrgId() + "_" + billDate + ".txt";
+				String saveFile = tradeConfig.getIsvOrgId() + "_" + billDate + ".txt";
 				String savePath = "E:\\" + sftpConfig.getBillPath() + "/" + month + "/";
 				//要保存的对账文件
 				String saveBillFile = savePath + saveFile;
