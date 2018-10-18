@@ -16,6 +16,7 @@
 
 package ins.platform.aggpay.trade.controller;
 
+import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
@@ -87,15 +88,15 @@ public class GpTradeController extends BaseController {
 	@Autowired
 	private GpTradeService gpTradeService;
 	@Autowired
-	private TradeConfig tradeConfig;
+	private IsvConfig isvConfig;
 
 	/**
-	 * @param requestXml 请求报文
-	 * @return java.lang.String 响应报文
-	 * @throws
 	 * @Title: pay
 	 * @Description: 移动刷卡支付（被扫）接口
+	 * @param requestXml 请求报文
+	 * @throws
 	 * @author Ripin Yan
+	 * @return java.lang.String 响应报文
 	 */
 	@RequestMapping(value = "/trade/pay/scanPay", method = RequestMethod.POST)
 	public String scanPay(@RequestBody GpTradeOrderVo tradeOrderVo) {
@@ -158,12 +159,12 @@ public class GpTradeController extends BaseController {
 	}
 
 	/**
-	 * @param requestXml 请求报文
-	 * @return java.lang.String 响应报文
-	 * @throws
 	 * @Title: notifyPayResult
 	 * @Description: H5支付（主扫）
+	 * @param requestXml 请求报文
+	 * @throws
 	 * @author Ripin Yan
+	 * @return java.lang.String 响应报文
 	 */
 	@RequestMapping(value = "/trade/pay/prePay", method = RequestMethod.POST)
 	public String prePay(@RequestBody GpTradeOrderVo tradeOrderVo, HttpServletRequest request) {
@@ -445,12 +446,12 @@ public class GpTradeController extends BaseController {
 	/**
 	 * isWeixinOrAlipay(判断扫码APP类型)
 	 *
-	 * @param request
-	 * @return java.lang.String
-	 * @throws
 	 * @Title: isWeixinOrAlipay
-	 * @Description:
+	 * @Description: 
+	 * @param request
+	 * @throws 
 	 * @author Ripin Yan
+	 * @return java.lang.String
 	 */
 	public String isWeixinOrAlipay(HttpServletRequest request) {
 		if (request != null) {
@@ -468,6 +469,49 @@ public class GpTradeController extends BaseController {
 		}
 		return "OTHER";
 	}
+
+
+	
+	public ModelAndView createRedirectURL(String channelType) {
+		if (CHANNEL_TYPE_WX.equals(channelType)) {// 来自微信
+			String redirectUrl = OAuthManager.generateRedirectURI(isvConfig.getRedirectUri(), "", "");
+			return new ModelAndView("redirect:" + redirectUrl);
+		} else if (CHANNEL_TYPE_ALI.equals(channelType)) {// 来自支付宝
+			String redirectUrl = this.generateAliRedirectURI("1221");
+			return new ModelAndView("redirect:" + redirectUrl);
+		}else {
+			ModelAndView mv = new ModelAndView();
+			mv.setViewName("view/index/unAllow");
+			return mv;
+		}
+	}
+
+	public String generateAliRedirectURI(String state) {
+
+		StringBuffer url = new StringBuffer();
+		try {
+			url.append(isvConfig.getGetUserIdUrl());
+			url.append("?app_id=").append("2018073160766860");
+			//url.append("?appid=").append(isvConfig.getAppId());
+			url.append("&scope=").append(TradeConstant.Ali.SCOP_AUTH_BASE);
+			url.append("&redirect_uri=").append(URLEncoder.encode(isvConfig.getRedirectUri(), TradeConstant.Ali.CHARSET));
+			url.append("&state=").append(state);
+		} catch (UnsupportedEncodingException e) {
+			logger.error("URLEncoder出错" + e.getMessage(), e);
+		}
+		return url.toString();
+	}
+
+	@Autowired
+	private GpTradeServiceImpl gpTradeServiceImpl;
+
+	@RequestMapping(value = "/downLoadBill", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseBody
+	public R<String> downLoadBill(@RequestParam(value = "billDate") String billDate) {
+		return new R<>(gpTradeServiceImpl.downLoadBill(billDate));
+	}
+
 
 
 }
