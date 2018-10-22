@@ -1,0 +1,45 @@
+<document>
+  <response id="response">
+    <head>
+      <Version>1.0.0</Version>
+      <Appid>2018090700000286</Appid>
+      <Function>ant.mybank.bkmerchanttrade.prePay</Function>
+      <RespTime>20181019101311</RespTime>
+      <RespTimeZone>UTC+8</RespTimeZone>
+      <ReqMsgId>d435da79-9415-47f8-b6f7-3a268ec2b333</ReqMsgId>
+      <Reserve></Reserve>
+      <SignType>RSA</SignType>
+      <InputCharset>UTF-8</InputCharset>
+    </head>
+    <body>
+      <RespInfo>
+        <ResultStatus>F</ResultStatus>
+        <ResultCode>MT_ILLEGAL_PARAMETER</ResultCode>
+        <ResultMsg>请求参数错误。错误原因:${paramErrorDesc}</ResultMsg>
+      </RespInfo>
+      <OutTradeNo>6457590eaee34f7c9522f041b6e9707a</OutTradeNo>
+      <OrderNo></OrderNo>
+      <PrePayId></PrePayId>
+      <PayInfo></PayInfo>
+    </body>
+  </response>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+        <DigestValue>IuTFsaCqSI1xtYr+4r31TKMnU0E=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>
+      W4zwT6NeuvSFbgpAIsdsEtAYeX1DCPOzvLlB9CVLsDK/ef/VnH+VgD63dbskBjJBHejYzOAk6KhU
+      0FbsjlvQo9br0Cu9HGLyZq+r+w9LPWnxKU3cB7elGFq6A/IlKQmY+F2NUkUw60FD2ghMxafOoHEc
+      So1EpSvoWNE9UbFKALI=
+    </SignatureValue>
+  </Signature>
+</document>
+

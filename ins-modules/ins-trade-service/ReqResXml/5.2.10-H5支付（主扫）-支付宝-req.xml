@@ -1,0 +1,55 @@
+<document>
+  <request id="request">
+    <head>
+      <Version>1.0.0</Version>
+      <Appid>2018090700000286</Appid>
+      <Function>ant.mybank.bkmerchanttrade.prePay</Function>
+      <ReqTime>2018-10-19 10:13:07.263</ReqTime>
+      <ReqTimeZone>UTC+8</ReqTimeZone>
+      <ReqMsgId>d435da79-9415-47f8-b6f7-3a268ec2b333</ReqMsgId>
+      <InputCharset>UTF-8</InputCharset>
+    </head>
+    <body>
+      <OutTradeNo>6457590eaee34f7c9522f041b6e9707a</OutTradeNo>
+      <Body>主扫测试-支付宝12</Body>
+      <GoodsTag>test</GoodsTag>
+      <GoodsDetail>test</GoodsDetail>
+      <TotalAmount>1</TotalAmount>
+      <Currency>CNY</Currency>
+      <MerchantId>226801000000142576686</MerchantId>
+      <SubAppIdType>SUBSCRIPTION</SubAppIdType>
+      <IsvOrgId>202210000000000001316</IsvOrgId>
+      <ChannelType>ALI</ChannelType>
+      <OpenId>2088012733782230</OpenId>
+      <OperatorId></OperatorId>
+      <StoreId></StoreId>
+      <DeviceId></DeviceId>
+      <DeviceCreateIp>8.8.8.8</DeviceCreateIp>
+      <ExpireExpress>1440</ExpireExpress>
+      <SettleType>T1</SettleType>
+      <SpecifySubMerchId>N</SpecifySubMerchId>
+      <ChannelId></ChannelId>
+      <SubMerchId></SubMerchId>
+    </body>
+  </request>
+  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></ds:SignatureMethod>
+      <ds:Reference URI="">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+        <ds:DigestValue>rc+cdVMUzTBRPI0wOKMZBQ/TmzQ=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>
+      Ld1DsyLbdvR9a0KZUhTt27rLbfGoha7pgIGVaTxg6dzftecjj738FYe9oTkv07M/Va78St0SgOzi
+      WMcyJyhFNi8IPIOmUwIeB0kWWMiv5Y2Qp7EEpPewrBsfRgR5HluL6deUJB5i+/ONgnNUKxvB4lQu
+      U9vFTNsPEQBfhlLFtuQl7OqUgcYS/BjrhvrTCyjQy0bRcIRWi7Jil55TCbkY6m9upSMXZv9+/gaO
+      q3Fdacz3J/RJlkZjOCnIOtHGUpWK42Vb/EEgWNVdDSLWEKMDQ2EqRIPKeC2iX8teXK5u9GZpUgrQ
+      npxVWrIpGftcVSG/a7CaDeNJaaI59RPVKtMn3g==
+    </ds:SignatureValue>
+  </ds:Signature>
+</document>

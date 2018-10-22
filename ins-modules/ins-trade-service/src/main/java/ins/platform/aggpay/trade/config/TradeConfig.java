@@ -32,17 +32,7 @@ import org.springframework.context.annotation.Configuration;
 public class TradeConfig {
 
 
-	public static class Sftp{
-		private String host;
 
-		public String getHost() {
-			return host;
-		}
-
-		public void setHost(String host) {
-			this.host = host;
-		}
-	}
 	/**
 	 * 合作方机构号（网商银行分配）
 	 */
@@ -85,6 +75,15 @@ public class TradeConfig {
 	 * 图片上传接口地址
 	 */
 	private String uploadUrl;
+
+	/**
+	 * 微信获取auth_code地址
+	 */
+	private String wxOpenauthUrl;
+	/**
+	 * 支付宝获取auth_code地址
+	 */
+	private String aliOpenauthUrl;
 	/**
 	 * 微信获取用户openId
 	 */
@@ -93,6 +92,16 @@ public class TradeConfig {
 	 * 支付宝通用api地址
 	 */
 	private String aliOauthUrl;
+	/**
+	 * ali授权code重定向地址
+	 */
+	private String aliRedirectUrl;
+	/**
+	 * wx授权code重定向地址
+	 */
+	private String wxRedirectUrl;
+
+
 
 	public static final String APP_PRIVATE_KEY =
 			"MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCV3Ju7rfIehCjimtzIeMb8lrZszv2w0QDdbtjNmKcvl3yuzTMzKddSs7X" +
@@ -205,6 +214,22 @@ public class TradeConfig {
 		this.uploadUrl = uploadUrl;
 	}
 
+	public String getWxOpenauthUrl() {
+		return wxOpenauthUrl;
+	}
+
+	public void setWxOpenauthUrl(String wxOpenauthUrl) {
+		this.wxOpenauthUrl = wxOpenauthUrl;
+	}
+
+	public String getAliOpenauthUrl() {
+		return aliOpenauthUrl;
+	}
+
+	public void setAliOpenauthUrl(String aliOpenauthUrl) {
+		this.aliOpenauthUrl = aliOpenauthUrl;
+	}
+
 	public String getWxOauthUrl() {
 		return wxOauthUrl;
 	}
@@ -219,6 +244,22 @@ public class TradeConfig {
 
 	public void setAliOauthUrl(String aliOauthUrl) {
 		this.aliOauthUrl = aliOauthUrl;
+	}
+
+	public String getAliRedirectUrl() {
+		return aliRedirectUrl;
+	}
+
+	public void setAliRedirectUrl(String aliRedirectUrl) {
+		this.aliRedirectUrl = aliRedirectUrl;
+	}
+
+	public String getWxRedirectUrl() {
+		return wxRedirectUrl;
+	}
+
+	public void setWxRedirectUrl(String wxRedirectUrl) {
+		this.wxRedirectUrl = wxRedirectUrl;
 	}
 
 	public String getAppPrivateKey() {

@@ -45,8 +45,10 @@ import ins.platform.aggpay.trade.vo.RespInfoVo;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +59,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
@@ -175,14 +176,14 @@ public class GpTradeController extends BaseController {
 		String errorMessage = "";
 		String channelType = isWeixinOrAlipay(request);
 		// TODO 测试
-		channelType = "ALI";
-		channelType = "WX";
+
+		tradeOrderVo.setId(1L);
 		tradeOrderVo.setTotalAmount(1);
 		tradeOrderVo.setBody("主扫测试-支付宝01");
 		tradeOrderVo.setBody("主扫测试-微信01");
 		tradeOrderVo.setExpireExpress(70);
-		tradeOrderVo.setOpenId("2088502287562373");
 		tradeOrderVo.setOpenId("otBP8wWRG63MS9IZkK27hhO0jYnM");
+		tradeOrderVo.setOpenId("2088502287562373");
 		if (TradeConstant.CHANNEL_TYPE_OTHER.equals(channelType)) {
 			errorMessage = "请使用微信或支付宝扫描二维码！";
 			logger.info("{}信息：{}", logPrefix, errorMessage);
@@ -310,17 +311,64 @@ public class GpTradeController extends BaseController {
 		return jo.toJSONString();
 	}
 
+
+
+	/**
+	 * 授权获取Code
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/authorizationCode", method = RequestMethod.GET)
+	public String getAuthCode(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject jo = new JSONObject();
+		String errorMessage = "";
+		String logPrefix = "";
+		String authCodeUrl = "";
+		String channelType = isWeixinOrAlipay(request);
+		if (TradeConstant.CHANNEL_TYPE_WX.equals(channelType)) {
+			logPrefix = "【调用微信openApi】";
+			authCodeUrl = generateWxRedirectURI();
+		}else if (TradeConstant.CHANNEL_TYPE_ALI.equals(channelType)){
+			logPrefix = "【调用支付宝openApi】";
+			authCodeUrl = generateAliRedirectURI();
+		} else {
+			errorMessage = "请使用微信或支付宝扫描二维码！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "1001");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+		try {
+			response.sendRedirect(authCodeUrl);
+			logger.info("{}", logPrefix);
+			jo.put("resCode", "0000");
+			jo.put("resMsg", "success");
+
+		} catch (Exception e) {
+			errorMessage = "重定向服务器认证失败！" + e.getMessage();
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "1010");
+			jo.put("resMsg", errorMessage);
+		}
+
+		return jo.toJSONString();
+
+	}
+
 	/**
 	 * 支付宝支付授权获取Code
 	 *
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/auth/ali", method = RequestMethod.GET)
+	@RequestMapping(value = "/oauth/ali", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public String aliPayAuthorize(@RequestParam(value = "auth_code") String authCode) {
-
+		JSONObject jo = new JSONObject();
+		String errorMessage = "";
 		String logPrefix = "【支付宝获取用户信息】";
 		String appId = tradeConfig.getAppId();
 		appId = "2018073160766860";
@@ -336,12 +384,17 @@ public class GpTradeController extends BaseController {
 			AlipaySystemOauthTokenResponse oauthTokenResponse = alipayClient.execute(request);
 			userId = oauthTokenResponse.getUserId();
 			logger.info("{}-UserId：{}", logPrefix, userId);
+			jo.put("resCode", "0000");
+			jo.put("resMsg", "success");
+			jo.put("openId", userId);
 		} catch (AlipayApiException e) {
-			logger.error(logPrefix + "异常:" + e.getMessage(), e);
+			errorMessage = logPrefix + "异常:" + e.getMessage();
+			logger.error(errorMessage, e);
+			jo.put("resCode", "1011");
+			jo.put("resMsg", errorMessage);
 		}
 
-		return userId;
-
+		return jo.toJSONString();
 	}
 
 	/**
@@ -350,23 +403,26 @@ public class GpTradeController extends BaseController {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/auth/wx", method = RequestMethod.GET)
+	@RequestMapping(value = "/oauth/wx", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public String wxAuthorize(@RequestParam(value = "code") String code) {
-
+		JSONObject jo = new JSONObject();
+		String errorMessage = "";
 		String logPrefix = "【微信支付获取用户信息】";
 		String openId = "";
 		// TODO 测试公众号配置
-//		String subAppId = "wx59df2ba56720ee7d";
-//		String appSecret = "7a2790cf4235ca07ba40a8516047296c";
+		String subAppId = "wx59df2ba56720ee7d";
+		String appSecret = "7a2790cf4235ca07ba40a8516047296c";
 
 		try {
 			StringBuffer sf = new StringBuffer(tradeConfig.getWxOauthUrl());
 			sf.append("?appid=");
-			sf.append(tradeConfig.getSubAppId());
+			//sf.append(tradeConfig.getSubAppId());
+			sf.append(subAppId);
 			sf.append("&secret=");
-			sf.append(tradeConfig.getAppSecret());
+			//sf.append(tradeConfig.getAppSecret());
+			sf.append(appSecret);
 			sf.append("&code=");
 			sf.append(code);
 			sf.append("&grant_type=");
@@ -374,31 +430,28 @@ public class GpTradeController extends BaseController {
 
 			HttpRequest get = HttpUtil.createGet(sf.toString());
 			HttpResponse execute = get.execute();
-			String body = execute.body();//{"errcode":40029,"errmsg":"invalid code, hints: [ req_id: 2F1ygA07344124 ]"}
+			String body = execute.body();
+			// {"errcode":40029,"errmsg":"invalid code, hints: [ req_id: 2F1ygA07344124 ]"}
 			JSONObject resJson = JSONObject.parseObject(body);
 			openId = resJson.getString(OPEN_ID);
 			if (StringUtils.isBlank(openId)) {
 				logger.info("{} OpenId获取失败，错误代码：{}，错误信息：{}", logPrefix, resJson.getString(ERR_CODE), resJson.getString(ERR_MSG));
+				jo.put("resCode", "1012");
+				jo.put("resMsg", "OpenId获取失败.");
 			} else {
 				logger.info("{} OpenId获取成功，OpenId：{}", logPrefix, openId);
+				jo.put("resCode", "0000");
+				jo.put("resMsg", "success");
+				jo.put("openId", openId);
 			}
 		} catch (Exception e) {
-			logger.error(logPrefix + "异常:" + e.getMessage(), e);
+			errorMessage = logPrefix + "异常:" + e.getMessage();
+			logger.error(errorMessage, e);
+			jo.put("resCode", "1013");
+			jo.put("resMsg", errorMessage);
 		}
 
-		return openId;
-	}
-
-	@RequestMapping(value = "/qrPay", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	@ResponseBody
-	public String qrPay(HttpServletRequest request) {
-
-		String logPrefix = "【支付宝获取用户信息】";
-		String state = RandomUtil.randomString(4);
-		String url = "";
-		logger.info("ip地址{}，{}调用{}", IpUtils.getIpAddr(request), logPrefix, url);
-		return "redirect:" + url;
+		return jo.toJSONString();
 	}
 
 	@RequestMapping(value = "/trade/rf", method = RequestMethod.GET)
@@ -459,7 +512,6 @@ public class GpTradeController extends BaseController {
 		if (request != null) {
 			String userAgent = request.getHeader("User-Agent");
 			if (StringUtils.isNotBlank(userAgent)) {
-				userAgent = userAgent.toLowerCase();
 				if (userAgent.indexOf("MicroMessenger") > -1) {// 微信客户端
 					logger.info("微信扫码...");
 					return CHANNEL_TYPE_WX;
@@ -478,6 +530,57 @@ public class GpTradeController extends BaseController {
 	@ResponseBody
 	public R<String> downLoadBill(@RequestParam(value = "billDate") String billDate) {
 		return new R<>(gpTradeService.downLoadBill(billDate));
+	}
+
+
+	/**
+	 * 生成支付宝授权code请求地址
+	 * @return
+	 */
+	public String generateAliRedirectURI() {
+
+		// https://openauth.alipay.com/oauth2/publicAppAuthorize
+		// .htm?app_id=2018073160766860&scope=auth_base&redirect_uri=http%3A%2F%2Fripin925.ngrok.xiaomiqiu.cn%2Fauth%2Fali";
+
+		StringBuffer url = new StringBuffer();
+
+		try {
+			url.append(tradeConfig.getAliOpenauthUrl());
+			//url.append("?app_id=").append(tradeConfig.getAppId());
+			// 本人阿里自研appId
+			url.append("?app_id=").append("2018073160766860");
+			url.append("&scope=").append(TradeConstant.Ali.SCOP_AUTH_BASE);
+			url.append("&redirect_uri=").append(URLEncoder.encode(tradeConfig.getAliRedirectUrl(), TradeConstant.Ali.CHARSET));
+			url.append("&state=").append(RandomUtil.randomString(4));
+		} catch (UnsupportedEncodingException e) {
+			logger.error("URLEncoder出错" + e.getMessage(), e);
+		}
+		return url.toString();
+	}
+
+	/**
+	 * 生成微信授权code请求地址
+	 * @return
+	 */
+	public String generateWxRedirectURI() {
+
+		// https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx59df2ba56720ee7d&redirect_uri=http%3A%2F%2Fripin925.ngrok.xiaomiqiu
+		// .cn%2Fauth%2Fwx&response_type=code&scope=snsapi_base&state=111#wechat_redirect";
+
+		StringBuffer url = new StringBuffer();
+		try {
+			url.append(tradeConfig.getWxOpenauthUrl());
+			//url.append("?appid=").append(tradeConfig.getSubAppId());
+			url.append("?appid=").append("wx59df2ba56720ee7d");
+			url.append("&redirect_uri=").append(URLEncoder.encode(tradeConfig.getWxRedirectUrl(), TradeConstant.Wx.CHARSET));
+			url.append("&response_type=").append(TradeConstant.Wx.CODE);
+			url.append("&scope=").append(TradeConstant.Wx.SCOP_AUTH_BASE);
+			url.append("&state=").append(RandomUtil.randomString(4));
+			url.append("#wechat_redirect");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("URLEncoder出错" + e.getMessage(), e);
+		}
+		return url.toString();
 	}
 
 

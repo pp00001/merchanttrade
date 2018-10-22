@@ -1,0 +1,44 @@
+<document>
+<response id="response">
+  <head>
+    <Version>1.0.0</Version>
+    <Appid>2018090700000286</Appid>
+    <Function>ant.mybank.bkmerchanttrade.prePay</Function>
+    <RespTime>20181019101614</RespTime>
+    <RespTimeZone>UTC+8</RespTimeZone>
+    <ReqMsgId>f8fce3be-66c4-4f90-95a9-ef66f5bfb432</ReqMsgId>
+    <Reserve></Reserve>
+    <SignType>RSA</SignType>
+    <InputCharset>UTF-8</InputCharset>
+  </head>
+  <body>
+    <RespInfo>
+      <ResultStatus>S</ResultStatus>
+      <ResultCode>0000</ResultCode>
+      <ResultMsg></ResultMsg>
+    </RespInfo>
+    <OutTradeNo>31e9f74277ce47c58420841db456fc5b</OutTradeNo>
+    <OrderNo>2018101910152010020001680100003676</OrderNo>
+    <PrePayId>2018101922001482235409811242</PrePayId>
+    <PayInfo></PayInfo>
+  </body>
+</response>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+  <SignedInfo>
+    <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></CanonicalizationMethod>
+    <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></SignatureMethod>
+    <Reference URI="">
+      <Transforms>
+        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></Transform>
+      </Transforms>
+      <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></DigestMethod>
+      <DigestValue>XhhxJMbGBUsduWCIVY1XR4pgJ3w=</DigestValue>
+    </Reference>
+  </SignedInfo>
+  <SignatureValue>
+    xE+UR1DedSIdRPHmP9AMeCIMK02W4NViGUy4BXbjKUbbJUNC2qxkpVvjG6RK5SOqIl+AR4+qaO5W
+    qXfryA930K1H8s7SHKrYDK/i5J36XZm2i3abcwLonoHEMv+Z4/U5DrgTnaN3eIYcy9HmoCfcR1mD
+    TY5OVu8aGCIqOvhKI8Q=
+  </SignatureValue>
+</Signature>
+</document>

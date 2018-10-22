@@ -101,6 +101,14 @@ public class TradeConstant {
 		 * 公众号下唯一标识
 		 */
 		public static final String OPEN_ID = "openid";
+		/**
+		 * 编码格式
+		 */
+		public static final String CHARSET = "UTF-8";
+		/**
+		 * 返回类型
+		 */
+		public static final String CODE = "code";
 
 
 	}

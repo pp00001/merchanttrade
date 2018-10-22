@@ -156,8 +156,7 @@ public class XmlUtil {
 		requestElement.add(headElement);
 		requestElement.add(bodyElement);
 
-		String out = docRes.asXML();
-		return out;
+		return docRes.asXML();
 	}
 
 	private void sign(Document doc) {

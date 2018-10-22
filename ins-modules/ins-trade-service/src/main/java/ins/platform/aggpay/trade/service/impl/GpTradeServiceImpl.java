@@ -172,8 +172,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 					put("IsvOrgId", HttpsMain.IsvOrgId);
 					put("OutTradeNo", tradeOrderVo.getOutTradeNo());
 					put("Body", tradeOrderVo.getBody());
-					put("GoodsTag", "test");
-					put("GoodsDetail", "test");
+					put("GoodsTag", tradeOrderVo.getGoodsTag());
+					put("GoodsDetail", tradeOrderVo.getGoodsDetail());
 					put("TotalAmount", String.valueOf(tradeOrderVo.getTotalAmount()));
 					put("Currency", "CNY");
 					put("MerchantId", tradeOrderVo.getMerchantId());
