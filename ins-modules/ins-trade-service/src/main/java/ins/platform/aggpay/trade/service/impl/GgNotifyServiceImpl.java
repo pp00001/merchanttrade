@@ -85,7 +85,9 @@ public class GgNotifyServiceImpl implements GgNotifyService {
 		order.setMerchantId(orderVo.getMerchantId());
 		order = gpTradeOrderMapper.selectOne(order);
 		if (order != null) {
-			if (order.getGmtPayment() != null) {
+			if(order.getTotalAmount() != orderVo.getTotalAmount()){
+				logger.error("=====ERROR=====通知报文中订单金额与商户的订单金额不一致，存在假通知！请注意检查数据是否泄漏！");
+			}else if (order.getGmtPayment() != null) {
 				order.setGmtPayment(orderVo.getGmtPayment());
 				order.setBankType(orderVo.getBankType());
 				order.setIsSubscribe(orderVo.getIsSubscribe());

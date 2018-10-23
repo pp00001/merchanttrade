@@ -31,29 +31,6 @@ public class XmlUtil {
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(XmlUtil.class);
 
-	public static void main(String[] args) throws IOException {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("key", "value");
-		map.put("key1", "value1");
-		String xmlText = XmlUtil.createXml("data", map, "GBK");
-		System.out.println(xmlText);
-		//      System.out.println(XmlUtil.readXml(xmlText).get("key"));
-		//      try {
-		//          File file = new File("D:/warn.txt");
-		//          InputStream in = new FileInputStream(file);
-		//          byte[] b = new byte[in.available()];
-		//          in.read(b);
-		//          String text = new String(b,"GBK");
-		//          Map<String, String> map = XmlUtil.readXml(text);
-		//          System.out.println(map.get("hmac"));
-		//          System.out.println(map.get("order_Id"));
-		//          in.close();
-		//      } catch (Exception e) {
-		//          // TODO Auto-generated catch block
-		//          e.printStackTrace();
-		//      }
-	}
-
 	/**
 	 * 描  叙: 生成xml报文
 	 * <p>
@@ -112,13 +89,16 @@ public class XmlUtil {
 
 	//读取报文格式
 	public String sendStyle(String function) {
-		InputStream is = getClass().getResourceAsStream("../../../../xml/" + function + ".xml");
+		InputStream is = getClass().getResourceAsStream("/xml/" + function + ".xml");
+		if(is == null){
+			logger.error("无法读取【" + function + "】到对应的xml文件，getClass()="+ getClass().getName());
+		}
 		return getStyle(is);
 	}
 
 	//读取报文格式
 	public String receiveStyle(String function) {
-		InputStream is = getClass().getResourceAsStream("../../../../xml/" + function + ".xml");
+		InputStream is = getClass().getResourceAsStream("/xml/" + function + ".xml");
 		return getStyle(is);
 	}
 

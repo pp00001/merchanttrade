@@ -211,6 +211,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 				}
 			});
 
+			logger.info("开始调用{}接口, url={}", function, tradeConfig.getPayUrl());
 			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
 
 			// 插入报文日志表

@@ -45,6 +45,7 @@ import ins.platform.aggpay.trade.vo.RespInfoVo;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -177,13 +178,6 @@ public class GpTradeController extends BaseController {
 		String channelType = isWeixinOrAlipay(request);
 		// TODO 测试
 
-		tradeOrderVo.setId(1L);
-		tradeOrderVo.setTotalAmount(1);
-		tradeOrderVo.setBody("主扫测试-支付宝01");
-		tradeOrderVo.setBody("主扫测试-微信01");
-		tradeOrderVo.setExpireExpress(70);
-		tradeOrderVo.setOpenId("otBP8wWRG63MS9IZkK27hhO0jYnM");
-		tradeOrderVo.setOpenId("2088502287562373");
 		if (TradeConstant.CHANNEL_TYPE_OTHER.equals(channelType)) {
 			errorMessage = "请使用微信或支付宝扫描二维码！";
 			logger.info("{}信息：{}", logPrefix, errorMessage);
@@ -237,6 +231,15 @@ public class GpTradeController extends BaseController {
 			}
 			tradeOrderVo.setMerchantId(merchantVo.getMerchantId());
 
+			String body = tradeOrderVo.getBody();
+			if (StringUtils.isBlank(body)) {
+				errorMessage = "商品描述为空！";
+				logger.info("{}信息：{}", logPrefix, errorMessage);
+				tradeOrderVo.setBody(merchantVo.getGgMerchantDetailVo().getAlias()+"-消费");
+			}else {
+				tradeOrderVo.setBody(URLDecoder.decode(body, "UTF-8"));
+			}
+
 			// 禁用支付方式
 			String[] deniedPayTool = merchantVo.getDeniedPayToolList().split(",");
 			String[] payList = new String[2];
@@ -288,11 +291,8 @@ public class GpTradeController extends BaseController {
 			if (respInfoVo != null) {
 				jo.put("resCode", respInfoVo.getResultCode());
 				jo.put("resMsg", respInfoVo.getResultMsg());
-
 				jo.put("prePayId", resultVo.getPrePayId());
 				jo.put("payInfo", resultVo.getPayInfo());
-//				jo.put("resCode", "0000");
-//				jo.put("prePayId", "wx201410272009395522657a690389285100");
 			}
 
 		} catch (Exception e) {
@@ -301,11 +301,6 @@ public class GpTradeController extends BaseController {
 			jo.put("resCode", "1009");
 			jo.put("resMsg", result);
 			jo.put("resCode", "0000");
-//			jo.put("prePayId", "wx201410272009395522657a690389285100");
-			jo.put("payInfo", "{\"appId\":\"wxdace645e0bc2c424\",\"nonceStr\":\"03144cfa93ead27f958431953b70efb0\"," +
-					"\"package\":\"prepay_id=wx1212551978400940cf7e59343856862982\",\"paySign\":\"EF74B4C7219ADA508E4B18BA37F8C833\"," +
-					"\"signType\":\"MD5\",\"timeStamp\":\"1539320119\"}");
-
 		}
 
 		return jo.toJSONString();
@@ -366,7 +361,7 @@ public class GpTradeController extends BaseController {
 	@RequestMapping(value = "/oauth/ali", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
-	public String aliPayAuthorize(@RequestParam(value = "auth_code") String authCode) {
+	public String aliPayAuthorize(@RequestParam(value = "code") String authCode) {
 		JSONObject jo = new JSONObject();
 		String errorMessage = "";
 		String logPrefix = "【支付宝获取用户信息】";
@@ -412,17 +407,17 @@ public class GpTradeController extends BaseController {
 		String logPrefix = "【微信支付获取用户信息】";
 		String openId = "";
 		// TODO 测试公众号配置
-		String subAppId = "wx59df2ba56720ee7d";
-		String appSecret = "7a2790cf4235ca07ba40a8516047296c";
+		//String subAppId = "wx59df2ba56720ee7d";
+		//String appSecret = "7a2790cf4235ca07ba40a8516047296c";
 
 		try {
 			StringBuffer sf = new StringBuffer(tradeConfig.getWxOauthUrl());
 			sf.append("?appid=");
-			//sf.append(tradeConfig.getSubAppId());
-			sf.append(subAppId);
+			sf.append(tradeConfig.getSubAppId());
+			//sf.append(subAppId);
 			sf.append("&secret=");
-			//sf.append(tradeConfig.getAppSecret());
-			sf.append(appSecret);
+			sf.append(tradeConfig.getAppSecret());
+			//sf.append(appSecret);
 			sf.append("&code=");
 			sf.append(code);
 			sf.append("&grant_type=");
@@ -454,7 +449,7 @@ public class GpTradeController extends BaseController {
 		return jo.toJSONString();
 	}
 
-	@RequestMapping(value = "/trade/rf", method = RequestMethod.GET)
+	@RequestMapping(value = "/pay/refund", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public String refund(@RequestBody RefundVo refundVo, HttpServletRequest request) {

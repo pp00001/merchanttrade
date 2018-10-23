@@ -33,8 +33,8 @@ public abstract class AbstractReq {
   }
 
   public Map<String, Object> call(String reqUrl) throws Exception{
-    writeForm();
 
+    writeForm();
     //封装报文
     String param = xmlUtil.format(form, function);
     if (HttpsMain.isSign) {//生产环境需进行rsa签名
