@@ -157,5 +157,34 @@ public class TradeConstant {
 
 	}
 
+	/**
+	 * 交易状态
+	 */
+	public interface TradeStatus {
+
+		/**
+		 * 支付成功
+		 */
+		public static final String TRADE_STATUS_SUCC = "succ";
+		/**
+		 * 支付失败
+		 */
+		public static final String TRADE_STATUS_FAIL = "fail";
+		/**
+		 * 支付中
+		 */
+		public static final String TRADE_STATUS_PAYING = "paying";
+		/**
+		 * 已关单
+		 */
+		public static final String TRADE_STATUS_CLOSED = "closed";
+		/**
+		 * 已撤销
+		 */
+		public static final String TRADE_STATUS_CANCEL = "cancel";
+
+	}
+
+
 
 }

@@ -3,7 +3,7 @@
 
 <!--4.2.13	退款接口<ant.mybank.bkmerchanttrade.refund> -->
 <body>
-<xmlTag tagName="IsvOrgId" defaultValue="202210000000000001025"></xmlTag>
+<xmlTag tagName="IsvOrgId"></xmlTag>
 <xmlTag tagName="OutTradeNo"></xmlTag>
 <xmlTag tagName="MerchantId"></xmlTag>
 <xmlTag tagName="OutRefundNo"></xmlTag>

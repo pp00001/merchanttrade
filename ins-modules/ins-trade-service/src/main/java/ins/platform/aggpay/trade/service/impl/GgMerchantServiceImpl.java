@@ -44,9 +44,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -140,7 +140,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 			//			if(rs.getRespInfo() != null && "S".equals(rs.getRespInfo().getResultStatus())){
 			//update merchant 入驻结果
 			GgMerchant insert = new GgMerchant();
-			BeanUtils.copyProperties(insert, register);
+			BeanUtils.copyProperties(register, insert);
 			insert.setOutMerchantId(rs.getOutMerchantId());
 			insert.setOrderNo(rs.getOrderNo());
 
@@ -149,7 +149,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 
 
 			GgMerchantDetail detail = new GgMerchantDetail();
-			BeanUtils.copyProperties(detail, register.getGgMerchantDetailVo());
+			BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
 			ggMerchantDetailMapper.insert(detail);
 
 

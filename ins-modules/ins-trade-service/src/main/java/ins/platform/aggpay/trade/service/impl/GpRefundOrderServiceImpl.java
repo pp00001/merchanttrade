@@ -19,8 +19,16 @@ package ins.platform.aggpay.trade.service.impl;
 import ins.platform.aggpay.trade.entity.GpRefundOrder;
 import ins.platform.aggpay.trade.mapper.GpRefundOrderMapper;
 import ins.platform.aggpay.trade.service.GpRefundOrderService;
+import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
 /**
@@ -34,4 +42,28 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 @Service
 public class GpRefundOrderServiceImpl extends ServiceImpl<GpRefundOrderMapper, GpRefundOrder> implements GpRefundOrderService {
 
+	private static final Logger logger = LoggerFactory.getLogger(GpRefundOrderServiceImpl.class);
+
+	@Autowired
+	private GpRefundOrderMapper gpRefundOrderMapper;
+
+	@Override
+	public List<GpRefundOrderVo> selectListByOutTradeNo(String outTradeNo) {
+		logger.info("通过外部交易号{}查询退款订单数据。", outTradeNo);
+		List<GpRefundOrderVo> refundOrderVos = new ArrayList<>();
+		try {
+			List<GpRefundOrder> refundOrderList = gpRefundOrderMapper.selectList(new EntityWrapper<GpRefundOrder>().eq("out_trade_no", outTradeNo).eq("valid_ind", "1"));
+			for (int i = 0; i < refundOrderList.size(); i++) {
+				GpRefundOrderVo refundOrderVo = new GpRefundOrderVo();
+				BeanUtils.copyProperties(refundOrderList.get(i), refundOrderVo);
+				refundOrderVos.add(refundOrderVo);
+			}
+
+		} catch (Exception e) {
+			logger.error("查询退款订单异常，异常信息：" + e.getMessage(), e);
+			refundOrderVos = null;
+		}
+
+		return refundOrderVos;
+	}
 }

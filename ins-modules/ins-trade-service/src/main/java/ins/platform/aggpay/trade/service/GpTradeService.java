@@ -16,6 +16,7 @@
 
 package ins.platform.aggpay.trade.service;
 
+import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
 
 /**
@@ -53,4 +54,24 @@ public interface GpTradeService {
 	GpTradeOrderVo prePay(GpTradeOrderVo tradeOrderVo);
 
 	String downLoadBill(String billDate);
+
+	/**
+	 * refund(退款)
+	 *
+	 * @Title: refund
+	 * @Description: 
+	 * @param refundVo
+	 * @throws 
+	 * @author Ripin Yan
+	 * @return ins.platform.aggpay.trade.vo.GpRefundOrderVo
+	 */
+	GpRefundOrderVo refund(GpRefundOrderVo refundVo);
+
+	/**
+	 * 订单查询
+	 *
+	 * @param outTradeNo 外部交易号
+	 * @return 交易订单信息
+	 */
+	GpTradeOrderVo payQuery(String merchantId, String outTradeNo);
 }

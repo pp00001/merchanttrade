@@ -31,6 +31,7 @@ public class ApiCallUtil extends AbstractReq{
 	public final static String FUNCTION_FREEZE = "ant.mybank.merchantprod.merchant.freeze";
 	public final static String FUNCTION_UNFREEZE = "ant.mybank.merchantprod.merchant.unfreeze";
 	public final static String FUNCTION_PREPAY = "ant.mybank.bkmerchanttrade.prePay";
+	public final static String FUNCTION_REFUND = "ant.mybank.bkmerchanttrade.refund";
 	public static final String FUNCTION_PRE_PAY_NOTICE = "ant.mybank.bkmerchanttrade.prePayNotice";
 	public static final String FUNCTION_NOTIFY_PAY_RESULT = "ant.mybank.bkmerchantsettle.notifyPayResult";
 

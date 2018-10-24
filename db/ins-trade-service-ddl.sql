@@ -223,7 +223,7 @@ CREATE TABLE gp_trade_order (
   receipt_amount          INT           DEFAULT NULL COMMENT '实收金额',
   buyer_pay_amount        INT           DEFAULT NULL COMMENT '用户实付金额',
   invoice_amount          INT           DEFAULT NULL COMMENT '开票金额',
-  trade_status            VARCHAR(16)   DEFAULT '1' COMMENT '支付状态 - succ：支付成功，fail：失败，paying：支付中，closed：已关单，cancel：已撤消',
+  trade_status            VARCHAR(16)   DEFAULT NULL COMMENT '支付状态 - succ：支付成功，fail：失败，paying：支付中，closed：已关单，cancel：已撤消',
   valid_ind               VARCHAR(1)    DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
   del_flag                CHAR(1)       DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
   creator_code            VARCHAR(32)   DEFAULT NULL COMMENT '创建人代码',

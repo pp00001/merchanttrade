@@ -19,10 +19,13 @@ package ins.platform.aggpay.trade.service.impl;
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
+import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
 import ins.platform.aggpay.trade.entity.GgXmlLog;
 import com.jcraft.jsch.ChannelSftp;
 import ins.platform.aggpay.trade.config.SftpConfig;
+import ins.platform.aggpay.trade.entity.GpRefundOrder;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
+import ins.platform.aggpay.trade.mapper.GpRefundOrderMapper;
 import ins.platform.aggpay.trade.mapper.GpTradeOrderMapper;
 import ins.platform.aggpay.trade.service.GgXmlLogService;
 import ins.platform.aggpay.trade.service.GpTradeService;
@@ -30,7 +33,9 @@ import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.util.MapUtil;
 import ins.platform.aggpay.trade.util.SFTP;
 import ins.platform.aggpay.trade.util.TXT2ExcelUtil;
+import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
+import ins.platform.aggpay.trade.vo.RefundVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 
 import java.io.File;
@@ -69,6 +74,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 	@Autowired
 	private GpTradeOrderMapper gpTradeOrderMapper;
+	@Autowired
+	private GpRefundOrderMapper gpRefundOrderMapper;
 	@Autowired
 	private TradeConfig tradeConfig;
 	@Autowired
@@ -169,7 +176,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 			ApiCallUtil prePay = new ApiCallUtil(function);
 			prePay.setBody(new HashMap<String, String>() {
 				{
-					put("IsvOrgId", HttpsMain.IsvOrgId);
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
 					put("OutTradeNo", tradeOrderVo.getOutTradeNo());
 					put("Body", tradeOrderVo.getBody());
 					put("GoodsTag", tradeOrderVo.getGoodsTag());
@@ -233,6 +240,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 				tradeOrderVo.setOrderNo(rs.getOrderNo());
 				tradeOrderVo.setPrePayId(rs.getPrePayId());
 				tradeOrderVo.setPayInfo(rs.getPayInfo());
+				tradeOrderVo.setTradeStatus(TRADE_STATUS_PAYING);
 			} else {
 				logger.info("订单创建失败!外部交易号：{}", rs.getOutTradeNo());
 				tradeOrderVo.setValidInd("0");
@@ -321,6 +329,125 @@ public class GpTradeServiceImpl implements GpTradeService {
 			return "连接sftp服务器异常!";
 		}
 
+	}
+
+	@Override
+	public GpRefundOrderVo refund(GpRefundOrderVo refundVo) {
+		GgXmlLog xmlLog = new GgXmlLog();
+		GpRefundOrderVo rs = new GpRefundOrderVo();
+		try {
+			String function = ApiCallUtil.FUNCTION_REFUND;
+			xmlLog.setFunction(function);
+			xmlLog.setReqTime(new Date());
+			refundVo.setOutRefundNo(ApiCallUtil.generateOutTradeNo());
+
+			ApiCallUtil prePay = new ApiCallUtil(function);
+			prePay.setBody(new HashMap<String, String>() {
+				{
+					put("OutTradeNo", refundVo.getOutTradeNo());
+					put("MerchantId", refundVo.getMerchantId());
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
+					put("OutRefundNo", refundVo.getOutRefundNo());
+					put("RefundAmount", String.valueOf(refundVo.getRefundAmount()));
+					put("RefundReason",refundVo.getRefundReason());
+					put("OperatorId", refundVo.getOperatorId());
+					put("DeviceId", refundVo.getDeviceId());
+					put("DeviceCreateIp", refundVo.getDeviceCreateIp());
+				}
+			});
+
+			logger.info("开始调用{}接口, url={}", function, tradeConfig.getPayUrl());
+			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
+
+			// 插入报文日志表
+
+			xmlLog.setRequestXml((String) resMap.get("requestXml"));
+			xmlLog.setResponseXml((String) resMap.get("responseXml"));
+			xmlLog.setRespTime(DateUtils.parseDate((String) resMap.get("RespTime"), DatePattern.PURE_DATETIME_PATTERN));
+
+			// 数据转换
+			rs = MapUtil.map2Obj(resMap, GpRefundOrderVo.class);
+			RespInfoVo respInfoVo = rs.getRespInfo();
+			xmlLog.setResultStatus(respInfoVo.getResultStatus());
+			xmlLog.setResultCode(respInfoVo.getResultCode());
+			xmlLog.setResultMsg(respInfoVo.getResultMsg());
+
+			refundVo.setRespInfo(respInfoVo);
+			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+				logger.info("退款成功!退款外部交易号：{}，退款订单号：{}", rs.getOutRefundNo(), rs.getRefundOrderNo());
+				refundVo.setRefundOrderNo(rs.getRefundOrderNo());
+				refundVo.setRefundAmount(rs.getRefundAmount());
+			} else {
+				logger.info("退款失败!退款外部交易号：{}", rs.getOutRefundNo());
+				refundVo.setValidInd("0");
+			}
+
+			GpRefundOrder gpRefundOrder = new GpRefundOrder();
+			BeanUtils.copyProperties(refundVo, gpRefundOrder);
+			gpRefundOrderMapper.insert(gpRefundOrder);
+
+		} catch (Exception e) {
+			xmlLog.setFlag("0");
+			logger.error("退款发起异常！" + e.getMessage()+"##", e);
+			throw new RuntimeException("退款发起异常" + e.getMessage());
+		} finally {
+			ggXmlLogService.insert(xmlLog);
+		}
+		return rs;
+	}
+
+	@Override
+	public GpTradeOrderVo payQuery(String merchantId, String outTradeNo) {
+
+		GgXmlLog xmlLog = new GgXmlLog();
+		GpTradeOrderVo rs = new GpTradeOrderVo();
+		try {
+			String function = ApiCallUtil.FUNCTION_REFUND;
+			xmlLog.setFunction(function);
+			xmlLog.setReqTime(new Date());
+
+			ApiCallUtil prePay = new ApiCallUtil(function);
+			prePay.setBody(new HashMap<String, String>() {
+				{
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
+					put("MerchantId", merchantId);
+					put("OutTradeNo", ApiCallUtil.generateOutTradeNo());
+				}
+			});
+
+			logger.info("开始调用{}接口, url={}", function, tradeConfig.getPayUrl());
+			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
+
+			// 插入报文日志表
+
+			xmlLog.setRequestXml((String) resMap.get("requestXml"));
+			xmlLog.setResponseXml((String) resMap.get("responseXml"));
+			xmlLog.setRespTime(DateUtils.parseDate((String) resMap.get("RespTime"), DatePattern.PURE_DATETIME_PATTERN));
+
+			// 数据转换
+			rs = MapUtil.map2Obj(resMap, GpTradeOrderVo.class);
+			RespInfoVo respInfoVo = rs.getRespInfo();
+			xmlLog.setResultStatus(respInfoVo.getResultStatus());
+			xmlLog.setResultCode(respInfoVo.getResultCode());
+			xmlLog.setResultMsg(respInfoVo.getResultMsg());
+
+			rs.setRespInfo(respInfoVo);
+			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+				logger.info("订单查询成功!外部交易号：{}，订单号：{}", outTradeNo, rs.getOrderNo());
+
+			} else {
+				logger.info("订单查询失败!外部交易号：{}", outTradeNo);
+			}
+
+		} catch (Exception e) {
+			xmlLog.setFlag("0");
+			logger.error("订单查询异常！" + e.getMessage()+"##", e);
+			throw new RuntimeException("订单查询异常" + e.getMessage());
+		} finally {
+			ggXmlLogService.insert(xmlLog);
+		}
+
+		return rs;
 	}
 
 

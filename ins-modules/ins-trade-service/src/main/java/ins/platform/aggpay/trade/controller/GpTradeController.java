@@ -28,19 +28,21 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_JD;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_QQ;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_WX;
 import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PREPAY;
+import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
+import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.ERR_CODE;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.ERR_MSG;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.GRANT_TYPE_CODE;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.OPEN_ID;
-import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.service.GgMerchantService;
+import ins.platform.aggpay.trade.service.GpRefundOrderService;
 import ins.platform.aggpay.trade.service.GpTradeOrderService;
 import ins.platform.aggpay.trade.service.GpTradeService;
 import ins.platform.aggpay.trade.util.IpUtils;
 import ins.platform.aggpay.trade.vo.GgFeeParamVo;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
+import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
-import ins.platform.aggpay.trade.vo.RefundVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 
 import java.io.IOException;
@@ -67,9 +69,7 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.mybank.bkmerchant.constant.DeniedPayTool;
-import com.mybank.bkmerchant.constant.TradeStatusEnum;
 import com.xiaoleilu.hutool.http.HttpRequest;
 import com.xiaoleilu.hutool.http.HttpResponse;
 import com.xiaoleilu.hutool.http.HttpUtil;
@@ -87,6 +87,8 @@ public class GpTradeController extends BaseController {
 
 	@Autowired
 	private GpTradeOrderService gpTradeOrderService;
+	@Autowired
+	private GpRefundOrderService gpRefundOrderService;
 	@Autowired
 	private GgMerchantService ggMerchantService;
 	@Autowired
@@ -212,10 +214,8 @@ public class GpTradeController extends BaseController {
 
 		// 支付渠道类型
 		tradeOrderVo.setChannelType(channelType);
+		// 订单类型
 		tradeOrderVo.setOrderType(ORDER_TYPE_PREPAY);
-		String url = request.getRequestURL().toString();
-		logger.info("url:{}", url);
-
 		// 终端IP
 		tradeOrderVo.setDeviceCreateIp(IpUtils.getIpAddr(request));
 
@@ -300,57 +300,137 @@ public class GpTradeController extends BaseController {
 			logger.error(result + e.getMessage(), e);
 			jo.put("resCode", "1009");
 			jo.put("resMsg", result);
-			jo.put("resCode", "0000");
 		}
 
 		return jo.toJSONString();
 	}
 
 
+	@RequestMapping(value = "/pay/refund", method = RequestMethod.PUT)
+	@ResponseStatus(value = HttpStatus.OK)
+	@ResponseBody
+	public String refund(@RequestBody GpRefundOrderVo refundVo, HttpServletRequest request) {
 
-	/**
-	 * 授权获取Code
-	 *
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/authorizationCode", method = RequestMethod.GET)
-	public String getAuthCode(HttpServletRequest request, HttpServletResponse response) {
-		JSONObject jo = new JSONObject();
+		String logPrefix = "【发起退款】";
 		String errorMessage = "";
-		String logPrefix = "";
-		String authCodeUrl = "";
-		String channelType = isWeixinOrAlipay(request);
-		if (TradeConstant.CHANNEL_TYPE_WX.equals(channelType)) {
-			logPrefix = "【调用微信openApi】";
-			authCodeUrl = generateWxRedirectURI();
-		}else if (TradeConstant.CHANNEL_TYPE_ALI.equals(channelType)){
-			logPrefix = "【调用支付宝openApi】";
-			authCodeUrl = generateAliRedirectURI();
-		} else {
-			errorMessage = "请使用微信或支付宝扫描二维码！";
+		JSONObject jo = new JSONObject();
+		String outTradeNo = refundVo.getOutTradeNo();
+		Integer refundAmount = refundVo.getRefundAmount();
+
+		if (StringUtils.isBlank(outTradeNo)) {
+			errorMessage = "原支付交易外部交易号不能为空！";
 			logger.info("{}信息：{}", logPrefix, errorMessage);
-			jo.put("resCode", "1001");
+			jo.put("resCode", "9001");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		if (refundAmount == null || refundAmount <= 0) {
+			errorMessage = "退款金额必须大于0！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "9002");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		GpTradeOrderVo tradeOrderVo = gpTradeOrderService.findGpTradeOrderByOutTradeNo(outTradeNo);
+		if (tradeOrderVo == null) {
+			errorMessage = "该交易号无对应订单！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "9003");
 			jo.put("resMsg", errorMessage);
 			return jo.toJSONString();
 		}
 
+		if (!TRADE_STATUS_SUCC.equals(tradeOrderVo.getTradeStatus())) {
+			GpTradeOrderVo queryVo = gpTradeService.payQuery(tradeOrderVo.getMerchantId(), outTradeNo);
+			String tradeStatus = queryVo.getTradeStatus();
+			if (!tradeStatus.equals(tradeOrderVo.getTradeStatus())) {
+
+				GpTradeOrderVo updateVo = new GpTradeOrderVo();
+				updateVo.setTradeStatus(queryVo.getTradeStatus());
+				if(TRADE_STATUS_SUCC.equals(tradeStatus)){
+					updateVo.setGmtPayment(queryVo.getGmtPayment());
+					updateVo.setBankType(queryVo.getBankType());
+					updateVo.setIsSubscribe(queryVo.getIsSubscribe());
+					updateVo.setPayChannelOrderNo(queryVo.getPayChannelOrderNo());
+					updateVo.setMerchantOrderNo(queryVo.getMerchantOrderNo());
+					updateVo.setSubAppId(queryVo.getSubAppId());
+					updateVo.setCouponFee(queryVo.getCouponFee());
+					updateVo.setBuyerLogonId(queryVo.getBuyerLogonId());
+					updateVo.setBuyerUserId(queryVo.getBuyerUserId());
+					updateVo.setCredit(queryVo.getCredit());
+					updateVo.setReceiptAmount(queryVo.getReceiptAmount());
+					updateVo.setBuyerPayAmount(queryVo.getBuyerPayAmount());
+					updateVo.setInvoiceAmount(queryVo.getInvoiceAmount());
+					gpTradeOrderService.update(updateVo);
+				}else {
+					errorMessage = "该订单未支付成功，无法发起退款！";
+					logger.info("{}信息：{}", logPrefix, errorMessage);
+					jo.put("resCode", "9004");
+					jo.put("resMsg", errorMessage);
+					return jo.toJSONString();
+				}
+			}
+
+		}
+
+		String channelType = tradeOrderVo.getChannelType();
+		refundVo.setOrderNo(tradeOrderVo.getOrderNo());
+		refundVo.setMerchantId(tradeOrderVo.getMerchantId());
+		refundVo.setCurrency(tradeOrderVo.getCurrency());
+		refundVo.setChannelType(channelType);
+		refundVo.setReceiptAmount(tradeOrderVo.getReceiptAmount());
+		refundVo.setBuyerPayAmount(tradeOrderVo.getBuyerPayAmount());
+
+		List<GpRefundOrderVo> refundOrderVos = gpRefundOrderService.selectListByOutTradeNo(outTradeNo);
+		// 已退款总金额
+		int totalRefundAmount = 0;
+		for (int i = 0; i < refundOrderVos.size(); i++) {
+			totalRefundAmount += refundOrderVos.get(i).getRefundAmount();
+		}
+
+		// 可退款金额
+		int remainderAmount = 0;
+		if (TradeConstant.CHANNEL_TYPE_ALI.equals(channelType)) {
+			Integer buyerPayAmount = tradeOrderVo.getBuyerPayAmount() == null ? 0 : tradeOrderVo.getBuyerPayAmount();
+			remainderAmount = buyerPayAmount - totalRefundAmount;
+		} else if (TradeConstant.CHANNEL_TYPE_WX.equals(channelType)) {
+			int couponFee = tradeOrderVo.getCouponFee() == null ? 0 : tradeOrderVo.getCouponFee();
+			remainderAmount = tradeOrderVo.getTotalAmount() - couponFee - totalRefundAmount;
+		}
+
+		if (refundAmount > remainderAmount) {
+			errorMessage = "退款金额大于允许退款金额，无法发起退款！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "9005");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+		String clientIP = IpUtils.getIpAddr(request);
+		refundVo.setDeviceCreateIp(clientIP);
+		if (StringUtils.isBlank(refundVo.getRefundReason())) {
+			refundVo.setRefundReason("交易撤销");
+		}
+		String result;
 		try {
-			response.sendRedirect(authCodeUrl);
-			logger.info("{}", logPrefix);
-			jo.put("resCode", "0000");
-			jo.put("resMsg", "success");
+			GpRefundOrderVo resultVo = gpTradeService.refund(refundVo);
+			RespInfoVo respInfoVo = resultVo.getRespInfo();
+			if (respInfoVo != null) {
+				jo.put("resCode", respInfoVo.getResultCode());
+				jo.put("resMsg", respInfoVo.getResultMsg());
+				jo.put("refundOrderNo", resultVo.getRefundOrderNo());
+			}
 
 		} catch (Exception e) {
-			errorMessage = "重定向服务器认证失败！" + e.getMessage();
-			logger.info("{}信息：{}", logPrefix, errorMessage);
-			jo.put("resCode", "1010");
-			jo.put("resMsg", errorMessage);
+			result = "退款异常!";
+			logger.error(result + e.getMessage(), e);
+			jo.put("resCode", "9009");
+			jo.put("resMsg", result);
 		}
 
 		return jo.toJSONString();
-
 	}
+
 
 	/**
 	 * 支付宝支付授权获取Code
@@ -449,50 +529,6 @@ public class GpTradeController extends BaseController {
 		return jo.toJSONString();
 	}
 
-	@RequestMapping(value = "/pay/refund", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	@ResponseBody
-	public String refund(@RequestBody RefundVo refundVo, HttpServletRequest request) {
-
-		String logPrefix = "【发起退款】";
-		String errorMessage = "";
-		JSONObject jo = new JSONObject();
-		String outTradeNo = refundVo.getOutTradeNo();
-
-		if(StringUtils.isBlank(outTradeNo)){
-			errorMessage = "原支付交易外部交易号不能为空！";
-			logger.info("{}信息：{}", logPrefix, errorMessage);
-			jo.put("resCode", "9001");
-			jo.put("resMsg", errorMessage);
-			return jo.toJSONString();
-		}
-		GpTradeOrder gpTradeOrder = gpTradeOrderService.selectOne(new EntityWrapper<GpTradeOrder>().eq("out_trade_no", outTradeNo));
-		if(gpTradeOrder == null){
-			errorMessage = "该交易号无对应订单！";
-			logger.info("{}信息：{}", logPrefix, errorMessage);
-			jo.put("resCode", "9002");
-			jo.put("resMsg", errorMessage);
-			return jo.toJSONString();
-		}
-
-		if(!TradeStatusEnum.succ.getStatusCode().equals(gpTradeOrder.getTradeStatus())){
-			errorMessage = "该交易号无对应订单！";
-			logger.info("{}信息：{}", logPrefix, errorMessage);
-			jo.put("resCode", "9002");
-			jo.put("resMsg", errorMessage);
-			return jo.toJSONString();
-		}
-
-		String clientIP = IpUtils.getIpAddr(request);
-		refundVo.setDeviceCreateIp(clientIP);
-
-
-		String url = "";
-		logger.info("ip地址{}，{}调用{}", IpUtils.getIpAddr(request), logPrefix, url);
-		return "redirect:" + url;
-	}
-
-
 	/**
 	 * isWeixinOrAlipay(判断扫码APP类型)
 	 *
@@ -527,6 +563,51 @@ public class GpTradeController extends BaseController {
 		return new R<>(gpTradeService.downLoadBill(billDate));
 	}
 
+
+	/**
+	 * 授权获取Code
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	@Deprecated
+	@RequestMapping(value = "/authorizationCode", method = RequestMethod.GET)
+	public String getAuthCode(HttpServletRequest request, HttpServletResponse response) {
+		JSONObject jo = new JSONObject();
+		String errorMessage = "";
+		String logPrefix = "";
+		String authCodeUrl = "";
+		String channelType = isWeixinOrAlipay(request);
+		if (TradeConstant.CHANNEL_TYPE_WX.equals(channelType)) {
+			logPrefix = "【调用微信openApi】";
+			authCodeUrl = generateWxRedirectURI();
+		}else if (TradeConstant.CHANNEL_TYPE_ALI.equals(channelType)){
+			logPrefix = "【调用支付宝openApi】";
+			authCodeUrl = generateAliRedirectURI();
+		} else {
+			errorMessage = "请使用微信或支付宝扫描二维码！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "1001");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+		try {
+			response.sendRedirect(authCodeUrl);
+			logger.info("{}", logPrefix);
+			jo.put("resCode", "0000");
+			jo.put("resMsg", "success");
+
+		} catch (Exception e) {
+			errorMessage = "重定向服务器认证失败！" + e.getMessage();
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "1010");
+			jo.put("resMsg", errorMessage);
+		}
+
+		return jo.toJSONString();
+
+	}
 
 	/**
 	 * 生成支付宝授权code请求地址

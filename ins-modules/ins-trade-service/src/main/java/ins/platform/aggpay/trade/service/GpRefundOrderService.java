@@ -1,6 +1,9 @@
 package ins.platform.aggpay.trade.service;
 
 import ins.platform.aggpay.trade.entity.GpRefundOrder;
+import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
+
+import java.util.List;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface GpRefundOrderService extends IService<GpRefundOrder> {
 
+	List<GpRefundOrderVo> selectListByOutTradeNo(String outTradeNo);
 }

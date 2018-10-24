@@ -1,6 +1,8 @@
 package ins.platform.aggpay.trade.service;
 
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
+import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
+
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface GpTradeOrderService extends IService<GpTradeOrder> {
 
+	GpTradeOrderVo findGpTradeOrderByOutTradeNo(String outTradeNo);
+
+	boolean update(GpTradeOrderVo gpTradeOrderVo);
 }
