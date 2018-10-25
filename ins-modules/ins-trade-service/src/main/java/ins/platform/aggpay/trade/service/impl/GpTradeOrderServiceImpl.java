@@ -36,15 +36,26 @@ public class GpTradeOrderServiceImpl extends ServiceImpl<GpTradeOrderMapper, GpT
 				BeanUtils.copyProperties(gpTradeOrder, vo);
 			}
 		} catch (Exception e) {
-			logger.error("查询交易订单异常，异常信息：" + e.getMessage(), e);
+			logger.error("查询交易订单异常!", e);
 			vo = null;
 		}
 		return vo;
 	}
 
 	@Override
-	public boolean update(GpTradeOrderVo gpTradeOrderVo) {
-
-		return false;
+	public boolean updateById(GpTradeOrderVo gpTradeOrderVo) {
+		logger.info("更新订单id={}数据记录", gpTradeOrderVo.getId());
+		boolean result;
+		try {
+			GpTradeOrder gpTradeOrder = new GpTradeOrder();
+			BeanUtils.copyProperties(gpTradeOrderVo, gpTradeOrder);
+			result = this.updateById(gpTradeOrder);
+		} catch (Exception e) {
+			logger.error("更新订单表异常!");
+			throw new RuntimeException(e);
+		}
+		return result;
 	}
+
+
 }

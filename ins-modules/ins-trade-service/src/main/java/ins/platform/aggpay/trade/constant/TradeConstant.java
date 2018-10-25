@@ -182,6 +182,10 @@ public class TradeConstant {
 		 * 已撤销
 		 */
 		public static final String TRADE_STATUS_CANCEL = "cancel";
+		/**
+		 * 退款中
+		 */
+		public static final String TRADE_STATUS_REFUNDING = "refunding";
 
 	}
 

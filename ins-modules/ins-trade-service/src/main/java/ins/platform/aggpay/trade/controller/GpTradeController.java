@@ -29,11 +29,13 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_QQ;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_WX;
 import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PREPAY;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
+import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.ERR_CODE;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.ERR_MSG;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.GRANT_TYPE_CODE;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.OPEN_ID;
+import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.service.GpRefundOrderService;
 import ins.platform.aggpay.trade.service.GpTradeOrderService;
@@ -339,39 +341,33 @@ public class GpTradeController extends BaseController {
 			jo.put("resMsg", errorMessage);
 			return jo.toJSONString();
 		}
-
-		if (!TRADE_STATUS_SUCC.equals(tradeOrderVo.getTradeStatus())) {
-			GpTradeOrderVo queryVo = gpTradeService.payQuery(tradeOrderVo.getMerchantId(), outTradeNo);
-			String tradeStatus = queryVo.getTradeStatus();
-			if (!tradeStatus.equals(tradeOrderVo.getTradeStatus())) {
-
-				GpTradeOrderVo updateVo = new GpTradeOrderVo();
-				updateVo.setTradeStatus(queryVo.getTradeStatus());
-				if(TRADE_STATUS_SUCC.equals(tradeStatus)){
-					updateVo.setGmtPayment(queryVo.getGmtPayment());
-					updateVo.setBankType(queryVo.getBankType());
-					updateVo.setIsSubscribe(queryVo.getIsSubscribe());
-					updateVo.setPayChannelOrderNo(queryVo.getPayChannelOrderNo());
-					updateVo.setMerchantOrderNo(queryVo.getMerchantOrderNo());
-					updateVo.setSubAppId(queryVo.getSubAppId());
-					updateVo.setCouponFee(queryVo.getCouponFee());
-					updateVo.setBuyerLogonId(queryVo.getBuyerLogonId());
-					updateVo.setBuyerUserId(queryVo.getBuyerUserId());
-					updateVo.setCredit(queryVo.getCredit());
-					updateVo.setReceiptAmount(queryVo.getReceiptAmount());
-					updateVo.setBuyerPayAmount(queryVo.getBuyerPayAmount());
-					updateVo.setInvoiceAmount(queryVo.getInvoiceAmount());
-					gpTradeOrderService.update(updateVo);
-				}else {
-					errorMessage = "该订单未支付成功，无法发起退款！";
-					logger.info("{}信息：{}", logPrefix, errorMessage);
-					jo.put("resCode", "9004");
-					jo.put("resMsg", errorMessage);
-					return jo.toJSONString();
-				}
-			}
-
+		if (tradeOrderVo == null) {
+			errorMessage = "该交易号无对应订单！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "9003");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
 		}
+
+		String tradeStatus = tradeOrderVo.getTradeStatus();
+		if (TRADE_STATUS_PAYING.equals(tradeStatus)) {
+			GpTradeOrderVo queryVo = gpTradeService.payQuery(tradeOrderVo.getMerchantId(), outTradeNo);
+			String queryStatus = queryVo.getTradeStatus();
+			if (!queryStatus.equals(tradeStatus)) {
+				tradeStatus = queryStatus;
+				tradeOrderVo = queryVo;
+			}
+		}
+
+		if (!TRADE_STATUS_SUCC.equals(tradeStatus)) {
+			errorMessage = "该订单未支付成功，无法发起退款！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "9004");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+
 
 		String channelType = tradeOrderVo.getChannelType();
 		refundVo.setOrderNo(tradeOrderVo.getOrderNo());

@@ -16,5 +16,16 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface GpRefundOrderService extends IService<GpRefundOrder> {
 
+	/**
+	 * selectListByOutTradeNo(查询退款订单记录)
+	 *
+	 * @Title: selectListByOutTradeNo
+	 * @Description:
+	 * @param outTradeNo 外部交易号
+	 * @throws
+	 * @author Ripin Yan
+	 * @return java.util.List<ins.platform.aggpay.trade.vo.GpRefundOrderVo>
+	 */
 	List<GpRefundOrderVo> selectListByOutTradeNo(String outTradeNo);
+
 }

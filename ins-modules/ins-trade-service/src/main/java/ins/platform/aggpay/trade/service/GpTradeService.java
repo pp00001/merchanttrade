@@ -60,8 +60,7 @@ public interface GpTradeService {
 	 *
 	 * @Title: refund
 	 * @Description: 
-	 * @param refundVo
-	 * @throws 
+	 * @param refundVo 退款订单
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.GpRefundOrderVo
 	 */
@@ -70,8 +69,23 @@ public interface GpTradeService {
 	/**
 	 * 订单查询
 	 *
+	 * @param merchantId 商户号
 	 * @param outTradeNo 外部交易号
 	 * @return 交易订单信息
 	 */
 	GpTradeOrderVo payQuery(String merchantId, String outTradeNo);
+
+
+	/**
+	 * refundQuery(退款查询)
+	 *
+	 * @Title: refundQuery
+	 * @Description: 
+	 * @param merchantId 商户号
+	 * @param outTradeNo 退款外部交易号
+	 * @author Ripin Yan
+	 * @return ins.platform.aggpay.trade.vo.GpRefundOrderVo
+	 */
+	GpRefundOrderVo refundQuery(String merchantId, String outRefundNo);
+
 }
