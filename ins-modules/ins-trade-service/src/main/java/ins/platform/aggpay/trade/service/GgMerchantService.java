@@ -11,15 +11,14 @@ package ins.platform.aggpay.trade.service;
 
 import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
-import ins.platform.aggpay.trade.vo.MerchantResVo;
-import ins.platform.aggpay.trade.vo.RegistResVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
+import ins.platform.aggpay.trade.vo.RespInfoVo;
+import ins.platform.aggpay.trade.vo.SmsVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.mybank.bkmerchant.merchant.UpdateMerchant;
 import com.mybank.bkmerchant.merchant.UploadPhoto;
-import com.mybank.bkmerchant.trade.SendSmsCode;
 
 
 
@@ -44,29 +43,29 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	GgMerchantVo findMerchantById(Long merchantId);
 
 	//短信验证码发送接口
-	MerchantResVo sendsmscode(SendSmsCode sendSmsCode);
+	RespInfoVo sendSmsCode(SmsVo smsVo);
 	
 	//图片上传接口
-	UploadPhotoVo uploadphoto(UploadPhoto uploadPhoto);
+	UploadPhotoVo uploadPhoto(UploadPhoto uploadPhoto);
 
 	//商户入驻申请接口
-	RegistResVo regist(GgMerchantVo register);
+	GgMerchantVo regist(GgMerchantVo register);
 	
 	//商户入驻结果查询
 	RegisterQueryVo registerQuery(String orderNo);
 
 	//商户信息修改
-	MerchantResVo updateMerchant(UpdateMerchant updateMerchant);
+	RespInfoVo updateMerchant(UpdateMerchant updateMerchant);
 
 	//商户信息查询接口
 	GgMerchantVo merchantQuery(String orderNo);
 
 	//商户关闭接口
-	MerchantResVo merchantFreeze(String merchantId,
+	RespInfoVo merchantFreeze(String merchantId,
 			String freezeReason, String outTradeNo);
 
 	//商户开启接口
-	MerchantResVo merchantUnfreeze(String merchantId,
+	RespInfoVo merchantUnfreeze(String merchantId,
 			String unfreezeReason, String outTradeNo);
 
 

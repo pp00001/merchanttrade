@@ -194,8 +194,6 @@ public class GgMerchantDetailVo implements Serializable{
 		obj.put("OtherPhoto", otherPhoto);
 		obj.put("SubscribeAppId", subscribeAppId);
 
-		System.out.println("商户详细信息：" + obj.toString());
-
 		return new BASE64Encoder().encode(obj.toString().getBytes());
 	}
 

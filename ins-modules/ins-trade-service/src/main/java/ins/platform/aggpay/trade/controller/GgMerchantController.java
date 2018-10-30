@@ -22,12 +22,15 @@ import ins.platform.aggpay.common.util.R;
 import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.service.GgMerchantService;
+import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
+import ins.platform.aggpay.trade.vo.RespInfoVo;
+import ins.platform.aggpay.trade.vo.SmsVo;
 
 import java.util.Date;
 import java.util.Map;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,12 +41,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.mybank.bkmerchant.merchant.UpdateMerchant;
 import com.mybank.bkmerchant.merchant.UploadPhoto;
-import com.mybank.bkmerchant.trade.SendSmsCode;
 
 /**
  * <p>
@@ -68,7 +70,7 @@ public class GgMerchantController extends BaseController {
 	 */
 	@GetMapping("/{id}")
 	public R<GgMerchant> get(@PathVariable Integer id) {
-        return new R<>(ggMerchantService.selectById(id));
+		return new R<>(ggMerchantService.selectById(id));
 	}
 
 
@@ -81,17 +83,18 @@ public class GgMerchantController extends BaseController {
 	@RequestMapping("/page")
 	public Page page(@RequestParam Map<String, Object> params) {
 		params.put(CommonConstant.DEL_FLAG, CommonConstant.STATUS_NORMAL);
-        return ggMerchantService.selectPage(new Query<>(params), new EntityWrapper<>());
+		return ggMerchantService.selectPage(new Query<>(params), new EntityWrapper<>());
 	}
 
 	/**
 	 * 添加
-     * @param  ggMerchant  实体
+	 *
+	 * @param ggMerchant 实体
 	 * @return success/false
 	 */
 	@PostMapping
-    public R<Boolean> add(@RequestBody GgMerchant ggMerchant) {
-        return new R<>(ggMerchantService.insert(ggMerchant));
+	public R<Boolean> add(@RequestBody GgMerchant ggMerchant) {
+		return new R<>(ggMerchantService.insert(ggMerchant));
 	}
 
 	/**
@@ -101,23 +104,24 @@ public class GgMerchantController extends BaseController {
 	 * @return success/false
 	 */
 	@DeleteMapping("/{id}")
-    public R<Boolean> delete(@PathVariable Long id) {
-        GgMerchant ggMerchant = new GgMerchant();
-        ggMerchant.setId(id);
-        ggMerchant.setUpdateTime(new Date());
-        ggMerchant.setDelFlag(CommonConstant.STATUS_DEL);
-        return new R<>(ggMerchantService.updateById(ggMerchant));
+	public R<Boolean> delete(@PathVariable Long id) {
+		GgMerchant ggMerchant = new GgMerchant();
+		ggMerchant.setId(id);
+		ggMerchant.setUpdateTime(new Date());
+		ggMerchant.setDelFlag(CommonConstant.STATUS_DEL);
+		return new R<>(ggMerchantService.updateById(ggMerchant));
 	}
 
 	/**
 	 * 编辑
-     * @param  ggMerchant  实体
+	 *
+	 * @param ggMerchant 实体
 	 * @return success/false
 	 */
 	@PutMapping
-    public R<Boolean> edit(@RequestBody GgMerchant ggMerchant) {
-        ggMerchant.setUpdateTime(new Date());
-        return new R<>(ggMerchantService.updateById(ggMerchant));
+	public R<Boolean> edit(@RequestBody GgMerchant ggMerchant) {
+		ggMerchant.setUpdateTime(new Date());
+		return new R<>(ggMerchantService.updateById(ggMerchant));
 	}
 
 	/**
@@ -127,8 +131,8 @@ public class GgMerchantController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/sendSmsCode")
-	public R<Object> sendsmscode(@RequestBody SendSmsCode sendSmsCode) {
-		return new R<>(ggMerchantService.sendsmscode(sendSmsCode));
+	public R<Object> sendSmsCode(@RequestBody SmsVo smsVo) {
+		return new R<>(ggMerchantService.sendSmsCode(smsVo));
 	}
 
 	/**
@@ -137,9 +141,9 @@ public class GgMerchantController extends BaseController {
 	 * @param uploadPhoto
 	 * @return
 	 */
-	@PostMapping("/uploadphoto")
-	public R<Object> uploadphoto(@RequestBody UploadPhoto uploadPhoto) {
-		return new R<>(ggMerchantService.uploadphoto(uploadPhoto));
+	@PostMapping("/upload/photo")
+	public R<Object> uploadPhoto(@RequestBody UploadPhoto uploadPhoto) {
+		return new R<>(ggMerchantService.uploadPhoto(uploadPhoto));
 	}
 
 	/**
@@ -149,19 +153,74 @@ public class GgMerchantController extends BaseController {
 	 * @return
 	 */
 	@PostMapping("/regist")
-	public R<Object> regist(@RequestBody GgMerchantVo register) {
-		return new R<>(ggMerchantService.regist(register));
+	public String regist(@RequestBody GgMerchantVo register) {
+
+		JSONObject jo = new JSONObject();
+		String logPrefix = "【商户入驻申请】";
+		try {
+			register.setOutTradeNo(ApiCallUtil.generateOutTradeNo());
+			if (StringUtils.isBlank(register.getOutMerchantId())) {
+				register.setOutMerchantId(register.getOutTradeNo());
+			}
+			GgMerchantVo resultVo = ggMerchantService.regist(register);
+			RespInfoVo respInfoVo = resultVo.getRespInfo();
+			if (respInfoVo != null) {
+				jo.put("resCode", respInfoVo.getResultCode());
+				jo.put("resMsg", respInfoVo.getResultMsg());
+				jo.put("orderNo", resultVo.getOrderNo());
+				jo.put("outTradeNo", resultVo.getOutTradeNo());
+			}
+		} catch (Exception e) {
+			String errorMessage = logPrefix + "异常:" + e.getMessage();
+			logger.error(errorMessage, e);
+			jo.put("resCode", "1001");
+			jo.put("resMsg", errorMessage);
+		}
+		return jo.toJSONString();
 	}
 
 	/**
 	 * 5.2.3	商户入驻结果查询
 	 *
-	 * @param orderNo//2018091811150710010000000000000000165045
+	 * @param orderNo 订单号
 	 * @return
 	 */
-	@GetMapping("registerQuery/{orderNo}")
-	public R<RegisterQueryVo> registerQuery(@PathVariable String orderNo) {
-		return new R<>(ggMerchantService.registerQuery(orderNo));
+	@GetMapping("/register/query/{orderNo}")
+	public String registerQuery(@PathVariable String orderNo) {
+		String logPrefix = "【商户入驻结果查询】";
+		JSONObject jo = new JSONObject();
+		String errorMessage;
+
+		if (StringUtils.isBlank(orderNo)) {
+			errorMessage = "订单号不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "1002");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		try {
+			RegisterQueryVo resultVo = ggMerchantService.registerQuery(orderNo);
+			RespInfoVo respInfoVo = resultVo.getRespInfo();
+			if (respInfoVo != null) {
+				jo.put("resCode", respInfoVo.getResultCode());
+				jo.put("resMsg", respInfoVo.getResultMsg());
+				jo.put("merchantId", resultVo.getMerchantId());
+				jo.put("registerStatus", resultVo.getRegisterStatus());
+				jo.put("failReason", resultVo.getFailReason());
+				jo.put("wechatChannelList", resultVo.getWechatChannelVoList());
+			} else {
+				errorMessage = "查询失败！";
+				logger.info("{}信息：{}", logPrefix, errorMessage);
+				jo.put("resCode", "1003");
+				jo.put("resMsg", errorMessage);
+			}
+		} catch (Exception e) {
+			errorMessage = logPrefix + "异常:" + e.getMessage();
+			logger.error(errorMessage, e);
+			jo.put("resCode", "1003");
+			jo.put("resMsg", errorMessage);
+		}
+		return jo.toJSONString();
 	}
 
 	/**
@@ -183,18 +242,16 @@ public class GgMerchantController extends BaseController {
 	/**
 	 * 5.2.7	商户关闭接口
 	 */
-	@GetMapping("/merchantFreeze/{merchantId}/{freezeReason}/{outTradeNo}")
-	public R<Object> merchantFreeze(@PathVariable String merchantId, @PathVariable String freezeReason, @PathVariable
-			String outTradeNo) {
+	@GetMapping("/freeze/{merchantId}/{freezeReason}/{outTradeNo}")
+	public R<Object> merchantFreeze(@PathVariable String merchantId, @PathVariable String freezeReason, @PathVariable String outTradeNo) {
 		return new R<>(ggMerchantService.merchantFreeze(merchantId, freezeReason, outTradeNo));
 	}
 
 	/**
 	 * 5.2.8	商户开启接口
 	 */
-	@GetMapping("/merchantUnfreeze/{merchantId}/{unfreezeReason}/{outTradeNo}")
-	public R<Object> merchantUnfreeze(@PathVariable String merchantId, @PathVariable String unfreezeReason,
-	                                  @PathVariable String outTradeNo) {
+	@GetMapping("/unfreeze/{merchantId}/{unfreezeReason}/{outTradeNo}")
+	public R<Object> merchantUnfreeze(@PathVariable String merchantId, @PathVariable String unfreezeReason, @PathVariable String outTradeNo) {
 		return new R<>(ggMerchantService.merchantUnfreeze(merchantId, unfreezeReason, outTradeNo));
 	}
 

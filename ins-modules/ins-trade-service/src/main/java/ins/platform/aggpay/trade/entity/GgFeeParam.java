@@ -55,15 +55,18 @@ public class GgFeeParam extends Model<GgFeeParam> {
 	/**
 	 * 渠道类型 - 01：支付宝，02：微信支付
 	 */
-	private String channeltype;
+    @TableField("channel_type")
+	private String channelType;
 	/**
 	 * 费用类型 - 01：t0收单手续费，02：t1收单手续费
 	 */
-	private String feetype;
+    @TableField("fee_type")
+	private String feeType;
 	/**
 	 * 费率最多支持小数点后5位
 	 */
-	private String feevalue;
+    @TableField("fee_value")
+	private String feeValue;
 	/**
 	 * 是否有效 - 1：有效，0：无效
 	 */

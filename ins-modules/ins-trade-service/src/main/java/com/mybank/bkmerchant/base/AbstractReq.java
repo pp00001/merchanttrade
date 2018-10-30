@@ -11,7 +11,7 @@ import com.mybank.bkmerchant.util.XmlUtil;
  * Created by jingzhu.zr on 2017/7/27.
  */
 public abstract class AbstractReq {
-  private String function;
+  protected String function;
   private Map<String, String> form;
   private XmlUtil xmlUtil;
 

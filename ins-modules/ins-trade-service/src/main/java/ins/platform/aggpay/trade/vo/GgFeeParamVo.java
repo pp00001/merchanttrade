@@ -16,18 +16,16 @@
 
 package ins.platform.aggpay.trade.vo;
 
+import lombok.Data;
+import sun.misc.BASE64Encoder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import lombok.Data;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * @author RipinYan
@@ -51,15 +49,15 @@ public class GgFeeParamVo implements Serializable {
 	/**
 	 * 渠道类型 - 01：支付宝，02：微信支付
 	 */
-	private String channeltype;
+	private String channelType;
 	/**
 	 * 费用类型 - 01：t0收单手续费，02：t1收单手续费
 	 */
-	private String feetype;
+	private String feeType;
 	/**
 	 * 费率最多支持小数点后5位
 	 */
-	private String feevalue;
+	private String feeValue;
 	/**
 	 * 是否有效 - 1：有效，0：无效
 	 */
@@ -89,12 +87,10 @@ public class GgFeeParamVo implements Serializable {
 	    List<JSONObject> arr = new ArrayList<JSONObject>();
 	    for (GgFeeParamVo param: feeParamList) {
 	      JSONObject obj = new JSONObject();
-	      obj.put("ChannelType", param.getChanneltype());
-	      obj.put("FeeType", param.getFeetype());
-	      obj.put("FeeValue", param.getFeevalue());
-
+	      obj.put("ChannelType", param.getChannelType());
+	      obj.put("FeeType", param.getFeeType());
+	      obj.put("FeeValue", param.getFeeValue());
 	      arr.add(obj);
-
 	      System.out.println(obj.toString());
 	    }
 

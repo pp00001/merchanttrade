@@ -9,8 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MapUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(MapUtil.class);
 
 	final private static String BOOLEAN_OBJECT_TYPE = "Boolean";
 	final private static String INTEGER_OBJECT_TYPE = "Integer";
@@ -57,12 +61,15 @@ public class MapUtil {
 						field.set(obj, DateUtils.parseDate((String) value, "yyyy-MM-dd HH:mm:ss"));
 					}
 				} else {
-					field.set(obj, map.get(field.getName()));
+					try {
+						field.set(obj, map.get(field.getName()));
+					} catch (Exception e) {
+						logger.error("field set error：{}", e.getMessage());
+					}
 				}
 			}
 		} catch (Exception e) {
-
-			e.printStackTrace();
+			logger.error("Map change error：{}", e.getMessage());
 		}
 		return (T) obj;
 	}

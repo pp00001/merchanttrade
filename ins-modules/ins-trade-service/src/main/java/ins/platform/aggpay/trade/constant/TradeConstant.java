@@ -16,6 +16,8 @@
 
 package ins.platform.aggpay.trade.constant;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author RipinYan
  * @ClassName: TradeConstant
@@ -30,6 +32,82 @@ public class TradeConstant {
 	public static final String CHANNEL_TYPE_JD = "JD";
 	public static final String CHANNEL_TYPE_OTHER = "OTHER";
 
+	/**
+	 * 入驻状态
+	 */
+	public enum RegisterStatusEnum {
+
+		Audit("0", "审核中"),
+
+		Success( "1","成功"),
+
+		Failure( "2","失败");
+
+		private String statusCode;
+		private String statusDesc;
+
+		private String code;
+		private String desc;
+
+		RegisterStatusEnum(String statusCode, String statusDesc) {
+			this.statusCode = statusCode;
+			this.statusDesc = statusDesc;
+		}
+
+		/**
+		 * 根据状态码获取交易状态枚举
+		 *
+		 * @param statusCode
+		 * @return
+		 */
+		public static RegisterStatusEnum getRegisterStatusByCode(String statusCode) {
+			if (StringUtils.isEmpty(statusCode)) {
+				return null;
+			}
+			for (RegisterStatusEnum registerStatus : values()) {
+				if (StringUtils.equals(statusCode, registerStatus.getStatusCode())) {
+					return registerStatus;
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * Getter method for property <tt>statusCode</tt>.
+		 *
+		 * @return property value of statusCode
+		 */
+		public String getStatusCode() {
+			return statusCode;
+		}
+
+		/**
+		 * Setter method for property <tt>statusCode</tt>.
+		 *
+		 * @param statusCode value to be assigned to property statusCode
+		 */
+		public void setStatusCode(String statusCode) {
+			this.statusCode = statusCode;
+		}
+
+		/**
+		 * Getter method for property <tt>statusDesc</tt>.
+		 *
+		 * @return property value of statusDesc
+		 */
+		public String getStatusDesc() {
+			return statusDesc;
+		}
+
+		/**
+		 * Setter method for property <tt>statusDesc</tt>.
+		 *
+		 * @param statusDesc value to be assigned to property statusDesc
+		 */
+		public void setStatusDesc(String statusDesc) {
+			this.statusDesc = statusDesc;
+		}
+	}
 
 	/**
 	 * 支付宝配置
@@ -188,7 +266,6 @@ public class TradeConstant {
 		public static final String TRADE_STATUS_REFUNDING = "refunding";
 
 	}
-
 
 
 }

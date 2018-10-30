@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ins.platform.aggpay.trade.mapper.GgWechatChannelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgWechatChannel">
+        <id column="id" property="id" />
+        <result column="out_merchant_id" property="outMerchantId" />
+        <result column="channel_id" property="channelId" />
+        <result column="wechat_merch_id" property="wechatMerchId" />
+        <result column="status" property="status" />
+        <result column="fail_reason" property="failReason" />
+        <result column="valid_ind" property="validInd" />
+        <result column="del_flag" property="delFlag" />
+        <result column="creator_code" property="creatorCode" />
+        <result column="create_time" property="createTime" />
+        <result column="updater_code" property="updaterCode" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, out_merchant_id AS outMerchantId, channel_id AS channelId, wechat_merch_id AS wechatMerchId, status, fail_reason AS failReason, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    </sql>
+
+</mapper>

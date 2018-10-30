@@ -147,6 +147,11 @@ public class GgMerchant extends Model<GgMerchant> {
 	@TableField("register_status")
 	private String registerStatus;
 	/**
+	 * 二类户卡号
+	 */
+	@TableField("account_no")
+	private String accountNo;
+	/**
 	 * 入驻失败原因
 	 */
 	@TableField("fail_reason")
@@ -155,26 +160,6 @@ public class GgMerchant extends Model<GgMerchant> {
 	 * Smid
 	 */
 	private String smid;
-	/**
-	 * 微信支付渠道号
-	 */
-	@TableField("channel_id")
-	private String channelId;
-	/**
-	 * 微信商户号
-	 */
-	@TableField("wechat_merch_id")
-	private String wechatMerchId;
-	/**
-	 * 微信入驻状态 - 0：处理中，1：成功，2：失败
-	 */
-	@TableField("wechat_status")
-	private String wechatStatus;
-	/**
-	 * 微信入驻失败原因
-	 */
-	@TableField("wechat_fail_reason")
-	private String wechatFailReason;
 	/**
 	 * 是否有效 - 1：有效，0：无效
 	 */

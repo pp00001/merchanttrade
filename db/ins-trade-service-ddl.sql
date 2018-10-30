@@ -49,12 +49,9 @@ CREATE TABLE gg_merchant (
   wechat_channel       VARCHAR(10)  DEFAULT NULL COMMENT '指定微信渠道号入驻',
   rate_version         VARCHAR(16)  DEFAULT NULL COMMENT '支付宝费率版本 - RS：标准费率, R0：0费率, R1：千一费率, RBLUE：蓝海行动餐饮0费率',
   register_status      VARCHAR(1)   DEFAULT NULL COMMENT '入驻状态 - 0：审核中，1：成功，2：失败',
+  account_no           VARCHAR(32)  DEFAULT NULL COMMENT '二类户卡号',
   fail_reason          VARCHAR(256) DEFAULT NULL COMMENT '入驻失败原因',
   smid                 VARCHAR(128) DEFAULT NULL COMMENT 'Smid',
-  channel_id           VARCHAR(64)  DEFAULT NULL COMMENT '微信支付渠道号',
-  wechat_merch_id      VARCHAR(64)  DEFAULT NULL COMMENT '微信商户号',
-  wechat_status        VARCHAR(1)   DEFAULT NULL COMMENT '微信入驻状态 - 0：处理中，1：成功，2：失败',
-  wechat_fail_reason   VARCHAR(256) DEFAULT NULL COMMENT '微信入驻失败原因',
   valid_ind            VARCHAR(1)   DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
   del_flag             CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
   creator_code         VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
@@ -63,6 +60,27 @@ CREATE TABLE gg_merchant (
   update_time          TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '商户信息主表';
+
+
+/*==============================================================*/
+/* Table: gg_wechat_channel                                           */
+/*==============================================================*/
+CREATE TABLE gg_wechat_channel (
+  id                   BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  out_merchant_id      VARCHAR(64)  DEFAULT NULL COMMENT '外部商户号',
+  channel_id           VARCHAR(64)  DEFAULT NULL COMMENT '微信支付渠道号',
+  wechat_merch_id      VARCHAR(64)  DEFAULT NULL COMMENT '微信商户号',
+  status        VARCHAR(1)   DEFAULT NULL COMMENT '微信入驻状态 - 0：处理中，1：成功，2：失败',
+  fail_reason   VARCHAR(256) DEFAULT NULL COMMENT '微信入驻失败原因',
+  valid_ind            VARCHAR(1)   DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
+  del_flag             CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
+  creator_code         VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',
+  create_time          TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updater_code         VARCHAR(32)  DEFAULT NULL COMMENT '更新人代码',
+  update_time          TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE =utf8mb4_bin COMMENT = '商户微信渠道表';
+
 
 /*==============================================================*/
 /* Table: gg_merchant_detail                                    */
@@ -111,9 +129,9 @@ CREATE TABLE gg_fee_param
 (
   id              BIGINT (20) NOT NULL auto_increment COMMENT '主键',
   out_merchant_id VARCHAR(64) NOT NULL COMMENT '外部商户号',
-  channeltype     VARCHAR(8)  DEFAULT NULL COMMENT '渠道类型 - 01：支付宝，02：微信支付',
-  feetype         VARCHAR(8)  DEFAULT NULL COMMENT '费用类型 - 01：t0收单手续费，02：t1收单手续费',
-  feevalue        VARCHAR(15) DEFAULT NULL COMMENT '费率最多支持小数点后5位',
+  channel_type    VARCHAR(8)  DEFAULT NULL COMMENT '渠道类型 - 01：支付宝，02：微信支付',
+  fee_type        VARCHAR(8)  DEFAULT NULL COMMENT '费用类型 - 01：t0收单手续费，02：t1收单手续费',
+  fee_value       VARCHAR(15) DEFAULT NULL COMMENT '费率最多支持小数点后5位',
   valid_ind       VARCHAR(1)  DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
   del_flag        CHAR(1)     DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
   creator_code    VARCHAR(32) DEFAULT NULL COMMENT '创建人代码',
@@ -179,22 +197,22 @@ CREATE TABLE gg_xml_log (
 /*==============================================================*/
 CREATE TABLE gp_trade_order (
   id                      BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  merchant_id             VARCHAR(64)   DEFAULT NULL COMMENT '商户号',
+  out_trade_no            VARCHAR(64)   DEFAULT NULL COMMENT '外部交易号',
   order_type              VARCHAR(16)   DEFAULT NULL COMMENT '支付单类型 - create：主扫，pay：被扫，create_dynamic：动态扫码',
   order_no                VARCHAR(64)   DEFAULT NULL COMMENT '订单号',
-  auth_code               VARCHAR(64)   DEFAULT NULL COMMENT '第三方支付授权码',
-  out_trade_no            VARCHAR(64)   DEFAULT NULL COMMENT '外部交易号',
+  channel_type            VARCHAR(16)   DEFAULT NULL COMMENT '支付渠道类型',
   body                    VARCHAR(128)  DEFAULT NULL COMMENT '商品描述',
   goods_tag               VARCHAR(32)   DEFAULT NULL COMMENT '商品标记',
   goods_detail            VARCHAR(256)  DEFAULT NULL COMMENT '商品详情列表',
   total_amount            INT           DEFAULT NULL COMMENT '交易总金额',
   currency                VARCHAR(16)   DEFAULT NULL COMMENT '币种',
-  merchant_id             VARCHAR(64)   DEFAULT NULL COMMENT '商户号',
-  channel_type            VARCHAR(16)   DEFAULT NULL COMMENT '支付渠道类型',
   open_id                 VARCHAR(128)  DEFAULT NULL COMMENT '消费者用户标识',
   operator_id             VARCHAR(32)   DEFAULT NULL COMMENT '操作员ID',
   store_id                VARCHAR(32)   DEFAULT NULL COMMENT '门店ID',
   device_id               VARCHAR(32)   DEFAULT NULL COMMENT '终端设备号',
   device_create_ip        VARCHAR(16)   DEFAULT NULL COMMENT '终端IP',
+  auth_code               VARCHAR(64)   DEFAULT NULL COMMENT '第三方支付授权码',
   expire_express          INT           DEFAULT NULL COMMENT '订单有效期（分钟1-1440）',
   settle_type             VARCHAR(32)   DEFAULT NULL COMMENT '清算方式 - T0，T1',
   attach                  VARCHAR(128)  DEFAULT NULL COMMENT '附加信息',
@@ -238,19 +256,19 @@ CREATE TABLE gp_trade_order (
 /*==============================================================*/
 CREATE TABLE gp_refund_order (
   id               BIGINT (20) NOT NULL auto_increment COMMENT '主键',
-  order_no         VARCHAR(64)  DEFAULT NULL COMMENT '支付返回的订单号',
   out_trade_no     VARCHAR(64)  DEFAULT NULL COMMENT '外部交易号',
+  out_refund_no    VARCHAR(64)  DEFAULT NULL COMMENT '退款交易号',
   merchant_id      VARCHAR(64)  DEFAULT NULL COMMENT '商户号',
+  order_no         VARCHAR(64)  DEFAULT NULL COMMENT '支付返回的订单号',
   refund_order_no  VARCHAR(64)  DEFAULT NULL COMMENT '退款订单号',
-  out_refund_no      VARCHAR(64) DEFAULT NULL COMMENT '退款交易号',
   total_amount     INT          DEFAULT NULL COMMENT '交易总金额',
+  refund_amount    INT          DEFAULT NULL COMMENT '退款金额',
   currency         VARCHAR(16)  DEFAULT NULL COMMENT '币种',
   channel_type     VARCHAR(16)  DEFAULT NULL COMMENT '支付渠道类型',
   operator_id      VARCHAR(32)  DEFAULT NULL COMMENT '操作员ID',
-  device_id               VARCHAR(32)   DEFAULT NULL COMMENT '终端设备号',
+  device_id        VARCHAR(32)  DEFAULT NULL COMMENT '终端设备号',
   device_create_ip VARCHAR(16)  DEFAULT NULL COMMENT '终端IP',
-  refund_amount    INT          DEFAULT NULL COMMENT '退款金额',
-  refund_reason    VARCHAR(256)  DEFAULT NULL COMMENT '退款原因',
+  refund_reason    VARCHAR(256) DEFAULT NULL COMMENT '退款原因',
   receipt_amount   INT          DEFAULT NULL COMMENT '实收金额',
   buyer_pay_amount INT          DEFAULT NULL COMMENT '用户实付金额',
   gmt_refundment   TIMESTAMP NULL DEFAULT NULL COMMENT '退款完成时间',

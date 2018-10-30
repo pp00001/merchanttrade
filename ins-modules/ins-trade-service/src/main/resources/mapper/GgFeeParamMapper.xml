@@ -22,9 +22,9 @@
   <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgFeeParam">
     <id column="id" property="id"/>
     <result column="out_merchant_id" property="outMerchantId"/>
-    <result column="channeltype" property="channeltype"/>
-    <result column="feetype" property="feetype"/>
-    <result column="feevalue" property="feevalue"/>
+    <result column="channel_type" property="channelType"/>
+    <result column="fee_type" property="feeType"/>
+    <result column="fee_value" property="feeValue"/>
     <result column="valid_ind" property="validInd"/>
     <result column="del_flag" property="delFlag"/>
     <result column="creator_code" property="creatorCode"/>
@@ -35,7 +35,7 @@
 
   <!-- 通用查询结果列 -->
   <sql id="Base_Column_List">
-    id, out_merchant_id AS outMerchantId, channeltype, feetype, feevalue, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    id, out_merchant_id AS outMerchantId, channel_type AS channelType, fee_type AS feeType, fee_value AS feeValue, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
   </sql>
 
 </mapper>

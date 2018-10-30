@@ -20,44 +20,33 @@ import lombok.Data;
 
 /**
  * @author RipinYan
- * @ClassName: RefundVo
- * @Description: TODO
- * @date 2018/10/18 下午7:25
+ * @ClassName: SmsVo
+ * @Description: 短信Vo
+ * @date 2018/10/30 7:33 PM
  */
 @Data
-public class RefundVo {
+public class SmsVo {
 
 	/**
-	 * 原支付交易外部交易号
+	 * 短信业务类型。本短信验证码对应的业务。可选值：
+	 * 01：开通银行账户
+	 * 02：换绑银行卡
+	 * 03：更换银行预留手机号
+	 * 04：商户入驻申请
+	 * 05：余利宝提现
 	 */
-	private String outTradeNo;
+	private String bizType;
 	/**
-	 * 商户号
+	 * 商户号。当BizType为02、03、05时必填，其余情况不可填
 	 */
 	private String merchantId;
 	/**
-	 * 退款外部交易号
+	 * 手机号。短信验证码接受手机号。当BizType为01、03、04时必填，其余情况不可填。
 	 */
-	private String outRefundNo;
+	private String mobile;
 	/**
-	 * 退款金额。币种同原交易
+	 * 外部交易号
 	 */
-	private String refundAmount;
-	/**
-	 * 退款原因。支付宝交易须填写
-	 */
-	private String refundReason;
-	/**
-	 * 操作员ID
-	 */
-	private String operatorId;
-	/**
-	 * 终端设备号(门店号或收银设备ID)
-	 */
-	private String deviceId;
-	/**
-	 * 创建订单终端的IP
-	 */
-	private String deviceCreateIp;
+	private String outTradeNo;
 
 }

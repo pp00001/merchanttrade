@@ -13,7 +13,6 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import com.mybank.bkmerchant.base.HttpsMain;
 
 /**
  * @author RipinYan
@@ -30,13 +29,12 @@ public class GgMerchantVo implements Serializable {
 	/**
 	 * 合作方机构号（网商银行分配）
 	 */
-	private String isvOrgId = HttpsMain.IsvOrgId;
+	private String isvOrgId;
 
 	/**
 	 * 外部商户号。合作商对商户的自定义编码，要求同一个合作商下保持唯一
 	 */
 	private String outMerchantId;
-
 	/**
 	 * 申请单号
 	 */
@@ -157,6 +155,10 @@ public class GgMerchantVo implements Serializable {
 	 */
 	private String registerStatus;
 	/**
+	 * 二类户卡号
+	 */
+	private String accountNo;
+	/**
 	 * 入驻失败原因
 	 */
 	private String failReason;
@@ -165,21 +167,13 @@ public class GgMerchantVo implements Serializable {
 	 */
 	private String smid;
 	/**
-	 * 微信支付渠道号
+	 * 微信渠道入驻情况
 	 */
-	private String channelId;
+	private List<GgWechatChannelVo> wechatChannelList;
 	/**
-	 * 微信商户号
+	 * 返回码对象
 	 */
-	private String wechatMerchId;
-	/**
-	 * 微信入驻状态 - 0：处理中，1：成功，2：失败
-	 */
-	private String wechatStatus;
-	/**
-	 * 微信入驻失败原因
-	 */
-	private String wechatFailReason;
+	private RespInfoVo respInfo;
 	/**
 	 * 是否有效 - 1：有效，0：无效
 	 */

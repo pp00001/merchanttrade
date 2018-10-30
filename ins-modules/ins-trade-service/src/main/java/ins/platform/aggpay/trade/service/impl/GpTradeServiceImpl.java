@@ -16,6 +16,7 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
+import ins.platform.aggpay.trade.config.SftpConfig;
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
@@ -23,8 +24,6 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_REFUNDING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
 import ins.platform.aggpay.trade.entity.GgXmlLog;
-import com.jcraft.jsch.ChannelSftp;
-import ins.platform.aggpay.trade.config.SftpConfig;
 import ins.platform.aggpay.trade.entity.GpRefundOrder;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.mapper.GpRefundOrderMapper;
@@ -37,16 +36,15 @@ import ins.platform.aggpay.trade.util.SFTP;
 import ins.platform.aggpay.trade.util.TXT2ExcelUtil;
 import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
-import ins.platform.aggpay.trade.vo.RefundVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -56,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.jcraft.jsch.ChannelSftp;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.util.XmlSignUtil;
 import com.mybank.bkmerchant.util.XmlUtil;
@@ -167,15 +166,10 @@ public class GpTradeServiceImpl implements GpTradeService {
 	@Override
 	public GpTradeOrderVo prePay(GpTradeOrderVo tradeOrderVo) {
 
-		GgXmlLog xmlLog = new GgXmlLog();
 		GpTradeOrderVo rs = new GpTradeOrderVo();
 		try {
-			String function = ApiCallUtil.FUNCTION_PRE_PAY;
-			xmlLog.setFunction(function);
-			xmlLog.setReqTime(new Date());
 			tradeOrderVo.setOutTradeNo(ApiCallUtil.generateOutTradeNo());
-
-			ApiCallUtil prePay = new ApiCallUtil(function);
+			ApiCallUtil prePay = new ApiCallUtil(ApiCallUtil.FUNCTION_PRE_PAY);
 			prePay.setBody(new HashMap<String, String>() {
 				{
 					put("IsvOrgId", tradeConfig.getIsvOrgId());
@@ -184,7 +178,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 					put("GoodsTag", tradeOrderVo.getGoodsTag());
 					put("GoodsDetail", tradeOrderVo.getGoodsDetail());
 					put("TotalAmount", String.valueOf(tradeOrderVo.getTotalAmount()));
-					put("Currency", "CNY");
+					put("Currency", tradeOrderVo.getCurrency());
 					put("MerchantId", tradeOrderVo.getMerchantId());
 					put("IsvOrgId", tradeConfig.getIsvOrgId());
 					put("ChannelType", tradeOrderVo.getChannelType());
@@ -196,6 +190,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 					if (tradeOrderVo.getExpireExpress() != null && tradeOrderVo.getExpireExpress() > 0) {
 						put("ExpireExpress", String.valueOf(tradeOrderVo.getExpireExpress()));
 					} else {
+						tradeOrderVo.setExpireExpress(Integer.valueOf(tradeConfig.getExpireExpress()));
 						put("ExpireExpress", tradeConfig.getExpireExpress());
 					}
 					put("SettleType", tradeOrderVo.getSettleType());
@@ -220,23 +215,13 @@ public class GpTradeServiceImpl implements GpTradeService {
 				}
 			});
 
-			logger.info("开始调用{}接口, url={}", function, tradeConfig.getPayUrl());
+			logger.info("开始调用prePay接口, url={}", tradeConfig.getPayUrl());
 			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
-
-			// 插入报文日志表
-
-			xmlLog.setRequestXml((String) resMap.get("requestXml"));
-			xmlLog.setResponseXml((String) resMap.get("responseXml"));
-			xmlLog.setRespTime(DateUtils.parseDate((String) resMap.get("RespTime"), DatePattern.PURE_DATETIME_PATTERN));
 
 			// 数据转换
 			rs = MapUtil.map2Obj(resMap, GpTradeOrderVo.class);
 			RespInfoVo respInfoVo = rs.getRespInfo();
-			xmlLog.setResultStatus(respInfoVo.getResultStatus());
-			xmlLog.setResultCode(respInfoVo.getResultCode());
-			xmlLog.setResultMsg(respInfoVo.getResultMsg());
 
-			tradeOrderVo.setRespInfo(respInfoVo);
 			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
 				logger.info("订单创建成功!外部交易号：{}，订单号：{}", rs.getOutTradeNo(), rs.getOrderNo());
 				tradeOrderVo.setOrderNo(rs.getOrderNo());
@@ -253,11 +238,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 			gpTradeOrderMapper.insert(gpTradeOrder);
 
 		} catch (Exception e) {
-			xmlLog.setFlag("0");
 			logger.error("主扫支付异常！" + e.getMessage()+"##", e);
 			throw new RuntimeException("主扫支付异常" + e.getMessage());
-		} finally {
-			ggXmlLogService.insert(xmlLog);
 		}
 
 		return rs;
@@ -316,15 +298,10 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 	@Override
 	public GpRefundOrderVo refund(GpRefundOrderVo refundVo) {
-		GgXmlLog xmlLog = new GgXmlLog();
 		GpRefundOrderVo rs = new GpRefundOrderVo();
 		try {
-			String function = ApiCallUtil.FUNCTION_REFUND;
-			xmlLog.setFunction(function);
-			xmlLog.setReqTime(new Date());
-			refundVo.setOutRefundNo(ApiCallUtil.generateOutTradeNo());
-
-			ApiCallUtil prePay = new ApiCallUtil(function);
+			refundVo.setOutRefundNo(ApiCallUtil.generateOutRefundNo());
+			ApiCallUtil prePay = new ApiCallUtil(ApiCallUtil.FUNCTION_REFUND);
 			prePay.setBody(new HashMap<String, String>() {
 				{
 					put("OutTradeNo", refundVo.getOutTradeNo());
@@ -339,23 +316,13 @@ public class GpTradeServiceImpl implements GpTradeService {
 				}
 			});
 
-			logger.info("开始调用{}接口, url={}", function, tradeConfig.getPayUrl());
+			logger.info("开始调用refund接口, url={}", tradeConfig.getPayUrl());
 			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
-
-			// 插入报文日志表
-
-			xmlLog.setRequestXml((String) resMap.get("requestXml"));
-			xmlLog.setResponseXml((String) resMap.get("responseXml"));
-			xmlLog.setRespTime(DateUtils.parseDate((String) resMap.get("RespTime"), DatePattern.PURE_DATETIME_PATTERN));
 
 			// 数据转换
 			rs = MapUtil.map2Obj(resMap, GpRefundOrderVo.class);
 			RespInfoVo respInfoVo = rs.getRespInfo();
-			xmlLog.setResultStatus(respInfoVo.getResultStatus());
-			xmlLog.setResultCode(respInfoVo.getResultCode());
-			xmlLog.setResultMsg(respInfoVo.getResultMsg());
 
-			refundVo.setRespInfo(respInfoVo);
 			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
 				logger.info("退款成功!退款外部交易号：{}，退款订单号：{}", rs.getOutRefundNo(), rs.getRefundOrderNo());
 				refundVo.setRefundOrderNo(rs.getRefundOrderNo());
@@ -371,11 +338,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 			gpRefundOrderMapper.insert(gpRefundOrder);
 
 		} catch (Exception e) {
-			xmlLog.setFlag("0");
 			logger.error("退款发起异常！");
 			throw new RuntimeException(e);
-		} finally {
-			ggXmlLogService.insert(xmlLog);
 		}
 		return rs;
 	}
@@ -383,14 +347,9 @@ public class GpTradeServiceImpl implements GpTradeService {
 	@Override
 	public GpTradeOrderVo payQuery(String merchantId, String outTradeNo) {
 
-		GgXmlLog xmlLog = new GgXmlLog();
 		GpTradeOrderVo rs = new GpTradeOrderVo();
 		try {
-			String function = ApiCallUtil.FUNCTION_PAY_QUERY;
-			xmlLog.setFunction(function);
-			xmlLog.setReqTime(new Date());
-
-			ApiCallUtil prePay = new ApiCallUtil(function);
+			ApiCallUtil prePay = new ApiCallUtil(ApiCallUtil.FUNCTION_PAY_QUERY);
 			prePay.setBody(new HashMap<String, String>() {
 				{
 					put("IsvOrgId", tradeConfig.getIsvOrgId());
@@ -399,24 +358,15 @@ public class GpTradeServiceImpl implements GpTradeService {
 				}
 			});
 
-			logger.info("开始调用{}接口, url={}", function, tradeConfig.getReqUrl());
+			logger.info("开始调用payQuery接口, url={}", tradeConfig.getReqUrl());
 			Map<String, Object> resMap = prePay.call(tradeConfig.getReqUrl());
-
-			// 插入报文日志表
-			xmlLog.setRequestXml((String) resMap.get("requestXml"));
-			xmlLog.setResponseXml((String) resMap.get("responseXml"));
-			xmlLog.setRespTime(DateUtils.parseDate((String) resMap.get("RespTime"), DatePattern.PURE_DATETIME_PATTERN));
 
 			// 数据转换
 			rs = MapUtil.map2Obj(resMap, GpTradeOrderVo.class);
 			RespInfoVo respInfoVo = rs.getRespInfo();
-			xmlLog.setResultStatus(respInfoVo.getResultStatus());
-			xmlLog.setResultCode(respInfoVo.getResultCode());
-			xmlLog.setResultMsg(respInfoVo.getResultMsg());
 
-			rs.setRespInfo(respInfoVo);
 			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
-				logger.info("订单查询成功!外部交易号：{}，订单号：{}", outTradeNo, rs.getOrderNo());
+				logger.info("订单查询成功!外部交易号：{}，交易状态：{}", outTradeNo, rs.getTradeStatus());
 				GpTradeOrder tradeOrderVo = new GpTradeOrder().setOutTradeNo(outTradeNo).setMerchantId(merchantId);
 				tradeOrderVo = gpTradeOrderMapper.selectOne(tradeOrderVo);
 				if(tradeOrderVo != null){
@@ -445,7 +395,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 						try {
 							gpTradeOrderMapper.updateById(update);
 						} catch (Exception e) {
-							logger.error(e.getMessage());
+							logger.error("更新订单状态失败！", e);
 						}
 					}
 				}
@@ -454,11 +404,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 			}
 
 		} catch (Exception e) {
-			xmlLog.setFlag("0");
-			logger.error("订单查询异常！");
-			throw new RuntimeException(e);
-		} finally {
-			ggXmlLogService.insert(xmlLog);
+			logger.error("订单查询异常！", e);
 		}
 
 		return rs;
@@ -466,14 +412,9 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 	@Override
 	public GpRefundOrderVo refundQuery(String merchantId, String outRefundNo) {
-		GgXmlLog xmlLog = new GgXmlLog();
 		GpRefundOrderVo rs = new GpRefundOrderVo();
 		try {
-			String function = ApiCallUtil.FUNCTION_REFUND_QUERY;
-			xmlLog.setFunction(function);
-			xmlLog.setReqTime(new Date());
-
-			ApiCallUtil prePay = new ApiCallUtil(function);
+			ApiCallUtil prePay = new ApiCallUtil(ApiCallUtil.FUNCTION_REFUND_QUERY);
 			prePay.setBody(new HashMap<String, String>() {
 				{
 					put("IsvOrgId", tradeConfig.getIsvOrgId());
@@ -482,25 +423,15 @@ public class GpTradeServiceImpl implements GpTradeService {
 				}
 			});
 
-			logger.info("开始调用{}接口, url={}", function, tradeConfig.getPayUrl());
+			logger.info("开始调用refundQuery接口, url={}", tradeConfig.getPayUrl());
 			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
-
-			// 插入报文日志表
-
-			xmlLog.setRequestXml((String) resMap.get("requestXml"));
-			xmlLog.setResponseXml((String) resMap.get("responseXml"));
-			xmlLog.setRespTime(DateUtils.parseDate((String) resMap.get("RespTime"), DatePattern.PURE_DATETIME_PATTERN));
 
 			// 数据转换
 			rs = MapUtil.map2Obj(resMap, GpRefundOrderVo.class);
 			RespInfoVo respInfoVo = rs.getRespInfo();
-			xmlLog.setResultStatus(respInfoVo.getResultStatus());
-			xmlLog.setResultCode(respInfoVo.getResultCode());
-			xmlLog.setResultMsg(respInfoVo.getResultMsg());
 
-			rs.setRespInfo(respInfoVo);
 			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
-				logger.info("退款订单-查询成功!退款外部交易号：{}，退款订单号：{}，退款状态：{}", outRefundNo, rs.getRefundOrderNo(), rs.getTradeStatus());
+				logger.info("【退款订单查询】- 查询成功!退款外部交易号：{}，退款订单号：{}，退款状态：{}", outRefundNo, rs.getRefundOrderNo(), rs.getTradeStatus());
 				GpRefundOrder gpRefundOrder = new GpRefundOrder().setOutRefundNo(outRefundNo).setMerchantId(merchantId);
 				gpRefundOrder = gpRefundOrderMapper.selectOne(gpRefundOrder);
 				if(gpRefundOrder != null){
@@ -516,20 +447,16 @@ public class GpTradeServiceImpl implements GpTradeService {
 						try {
 							gpRefundOrderMapper.updateById(update);
 						} catch (Exception e) {
-							logger.error("退款订单-更新失败！退款外部交易号：{}", outRefundNo, e);
+							logger.error("【退款订单查询】- 更新失败！退款外部交易号：{}", outRefundNo, e);
 						}
 					}
 				}
 			} else {
-				logger.info("退款订单-查询失败!退款外部交易号：{}", outRefundNo);
+				logger.info("【退款订单查询】- 查询失败!退款外部交易号：{}", outRefundNo);
 			}
 
 		} catch (Exception e) {
-			xmlLog.setFlag("0");
-			logger.error("退款订单查询异常！");
-			throw new RuntimeException(e);
-		} finally {
-			ggXmlLogService.insert(xmlLog);
+			logger.error("退款订单查询异常！", e);
 		}
 
 		return rs;
@@ -537,3 +464,4 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 
 }
+
