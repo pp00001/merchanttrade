@@ -17,8 +17,6 @@ import ins.platform.aggpay.trade.vo.SmsVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import com.baomidou.mybatisplus.service.IService;
-import com.mybank.bkmerchant.merchant.UpdateMerchant;
-import com.mybank.bkmerchant.merchant.UploadPhoto;
 
 
 
@@ -46,7 +44,7 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	RespInfoVo sendSmsCode(SmsVo smsVo);
 	
 	//图片上传接口
-	UploadPhotoVo uploadPhoto(UploadPhoto uploadPhoto);
+	UploadPhotoVo uploadPhoto(UploadPhotoVo uploadPhotoVo);
 
 	//商户入驻申请接口
 	GgMerchantVo regist(GgMerchantVo register);
@@ -55,7 +53,7 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	RegisterQueryVo registerQuery(String orderNo);
 
 	//商户信息修改
-	RespInfoVo updateMerchant(UpdateMerchant updateMerchant);
+	RespInfoVo updateMerchant(GgMerchantVo updateMerchant);
 
 	//商户信息查询接口
 	GgMerchantVo merchantQuery(String orderNo);

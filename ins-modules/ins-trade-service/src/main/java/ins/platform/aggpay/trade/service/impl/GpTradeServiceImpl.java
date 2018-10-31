@@ -23,7 +23,6 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_S
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_REFUNDING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
-import ins.platform.aggpay.trade.entity.GgXmlLog;
 import ins.platform.aggpay.trade.entity.GpRefundOrder;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.mapper.GpRefundOrderMapper;
@@ -33,7 +32,7 @@ import ins.platform.aggpay.trade.service.GpTradeService;
 import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.util.MapUtil;
 import ins.platform.aggpay.trade.util.SFTP;
-import ins.platform.aggpay.trade.util.TXT2ExcelUtil;
+import ins.platform.aggpay.trade.util.Txt2ExcelUtil;
 import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
@@ -44,11 +43,9 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -58,7 +55,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.mybank.bkmerchant.base.HttpsMain;
 import com.mybank.bkmerchant.util.XmlSignUtil;
 import com.mybank.bkmerchant.util.XmlUtil;
-import com.xiaoleilu.hutool.date.DatePattern;
 
 /**
  * <p>
@@ -280,7 +276,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 				// 4. 调用txt2excel方法
 				logger.info("正在转换excel文件...");
-				TXT2ExcelUtil txt2ExcelUtil = new TXT2ExcelUtil();
+				Txt2ExcelUtil txt2ExcelUtil = new Txt2ExcelUtil();
 				txt2ExcelUtil.conversionExcel(saveBillFile, "E:\\" + sftpConfig.getExcelPath());
 
 

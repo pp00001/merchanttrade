@@ -87,7 +87,12 @@ public class XmlUtil {
 		}
 	}
 
-	//读取报文格式
+	/**
+	 * 读取报文格式
+	 *
+	 * @param function 操作接口
+	 * @return
+	 */
 	public String sendStyle(String function) {
 		InputStream is = getClass().getResourceAsStream("/xml/" + function + ".xml");
 		if(is == null){
@@ -96,7 +101,12 @@ public class XmlUtil {
 		return getStyle(is);
 	}
 
-	//读取报文格式
+	/**
+	 * 读取报文格式
+	 *
+	 * @param function 操作接口
+	 * @return
+	 */
 	public String receiveStyle(String function) {
 		InputStream is = getClass().getResourceAsStream("/xml/" + function + ".xml");
 		return getStyle(is);

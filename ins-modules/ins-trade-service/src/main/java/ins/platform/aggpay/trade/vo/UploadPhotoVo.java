@@ -7,11 +7,33 @@ import lombok.Data;
  */
 @Data
 public class UploadPhotoVo {
-	
-	private RespInfoVo respInfoVo;//返回码组件
-	
-	private String photoUrl;//文件唯一编号，非地址，公网不可访问
-	
-	private String outTradeNo;//外部交易号
-	
+
+	/**
+	 * 外部交易号
+	 */
+	private String outTradeNo;
+	/**
+	 * 图片类型
+	 * 01 身份证正面
+	 * 02 身份证反面
+	 * 03 营业执照
+	 * 04 组织机构代码证
+	 * 05 开户许可证
+	 * 06 门头照
+	 * 07 其他
+	 */
+	private String photoType;
+	/**
+	 * 图片地址
+	 */
+	private String picture;
+	/**
+	 * 返回码组件
+	 */
+	private RespInfoVo respInfo;
+
+	/**
+	 * 文件唯一编号，非地址，公网不可访问
+	 */
+	private String photoUrl;
 }

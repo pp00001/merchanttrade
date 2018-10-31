@@ -23,12 +23,12 @@ import org.slf4j.LoggerFactory;
  * 将对账txt文件转换成商户excel文件
  * Created by ADD on 2018/10/11.
  */
-public class TXT2ExcelUtil {
+public class Txt2ExcelUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(TXT2ExcelUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(Txt2ExcelUtil.class);
 
     public static void main(String args[]) throws Exception {
-        TXT2ExcelUtil txt2ExcelUtil = new TXT2ExcelUtil();
+        Txt2ExcelUtil txt2ExcelUtil = new Txt2ExcelUtil();
         System.out.println("TXTConversionExcel.main");
 
     }

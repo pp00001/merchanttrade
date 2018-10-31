@@ -27,6 +27,7 @@ import ins.platform.aggpay.trade.vo.GgMerchantVo;
 import ins.platform.aggpay.trade.vo.RegisterQueryVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 import ins.platform.aggpay.trade.vo.SmsVo;
+import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import java.util.Date;
 import java.util.Map;
@@ -44,8 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.mybank.bkmerchant.merchant.UpdateMerchant;
-import com.mybank.bkmerchant.merchant.UploadPhoto;
 
 /**
  * <p>
@@ -127,7 +126,7 @@ public class GgMerchantController extends BaseController {
 	/**
 	 * 5.1.1	短信验证码发送接口
 	 *
-	 * @param sendSmsCode
+	 * @param smsVo 短信vo
 	 * @return
 	 */
 	@PostMapping("/sendSmsCode")
@@ -138,12 +137,12 @@ public class GgMerchantController extends BaseController {
 	/**
 	 * 5.1.2	图片上传接口
 	 *
-	 * @param uploadPhoto
+	 * @param uploadPhotoVo 上传图片信息
 	 * @return
 	 */
 	@PostMapping("/upload/photo")
-	public R<Object> uploadPhoto(@RequestBody UploadPhoto uploadPhoto) {
-		return new R<>(ggMerchantService.uploadPhoto(uploadPhoto));
+	public R<Object> uploadPhoto(@RequestBody UploadPhotoVo uploadPhotoVo) {
+		return new R<>(ggMerchantService.uploadPhoto(uploadPhotoVo));
 	}
 
 	/**
@@ -224,11 +223,30 @@ public class GgMerchantController extends BaseController {
 	}
 
 	/**
-	 * 5.2.5	商户信息修改
+	 * 5.2.5 商户信息修改
+	 * 商户入驻成功后，不允许单纯修改商户信息，当且仅当发起商户信息修改成功后，才能修改商户表数据
+	 *
+	 * @param update 待修改的商户vo
+	 * @return
 	 */
 	@PostMapping("/updateMerchant")
-	public R<Object> updateMerchant(UpdateMerchant updateMerchant) {
-		return new R<>(ggMerchantService.updateMerchant(updateMerchant));
+	public R<Object> updateMerchant(@RequestBody GgMerchantVo update) {
+		JSONObject jo = new JSONObject();
+		String logPrefix = "【商户信息修改】";
+		try {
+			update.setOutTradeNo(ApiCallUtil.generateOutTradeNo());
+			RespInfoVo respInfoVo = ggMerchantService.updateMerchant(update);
+			if (respInfoVo != null) {
+				jo.put("resCode", respInfoVo.getResultCode());
+				jo.put("resMsg", respInfoVo.getResultMsg());
+			}
+		} catch (Exception e) {
+			String errorMessage = logPrefix + "异常:" + e.getMessage();
+			logger.error(errorMessage, e);
+			jo.put("resCode", "1004");
+			jo.put("resMsg", errorMessage);
+		}
+		return new R<>(jo);
 	}
 
 	/**
