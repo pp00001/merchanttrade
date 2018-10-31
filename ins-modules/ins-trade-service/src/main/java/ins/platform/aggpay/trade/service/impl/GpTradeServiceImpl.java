@@ -16,45 +16,34 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.config.SftpConfig;
+import com.mybank.bkmerchant.base.HttpsMain;
+import com.mybank.bkmerchant.util.XmlSignUtil;
+import com.mybank.bkmerchant.util.XmlUtil;
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
-import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
-import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
-import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_REFUNDING;
-import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
 import ins.platform.aggpay.trade.entity.GpRefundOrder;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.mapper.GpRefundOrderMapper;
 import ins.platform.aggpay.trade.mapper.GpTradeOrderMapper;
-import ins.platform.aggpay.trade.service.GgXmlLogService;
 import ins.platform.aggpay.trade.service.GpTradeService;
 import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.util.MapUtil;
-import ins.platform.aggpay.trade.util.SFTP;
-import ins.platform.aggpay.trade.util.Txt2ExcelUtil;
 import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.jcraft.jsch.ChannelSftp;
-import com.mybank.bkmerchant.base.HttpsMain;
-import com.mybank.bkmerchant.util.XmlSignUtil;
-import com.mybank.bkmerchant.util.XmlUtil;
+
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
+import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.*;
 
 /**
  * <p>
@@ -75,10 +64,6 @@ public class GpTradeServiceImpl implements GpTradeService {
 	private GpRefundOrderMapper gpRefundOrderMapper;
 	@Autowired
 	private TradeConfig tradeConfig;
-	@Autowired
-	private GgXmlLogService ggXmlLogService;
-	@Autowired
-	private SftpConfig sftpConfig;
 
 	@Override
 	public GpTradeOrderVo scanPay(GpTradeOrderVo tradeOrderVo) {
@@ -239,57 +224,6 @@ public class GpTradeServiceImpl implements GpTradeService {
 		}
 
 		return rs;
-	}
-
-
-	public String downLoadBill(String billDate) {
-
-		//获取当前时间(YYYYMMdd)
-		DateFormat dfDate = new SimpleDateFormat("yyyyMMdd");
-		DateFormat dfMonth = new SimpleDateFormat("yyyyMM");
-		Calendar calendar = Calendar.getInstance();
-		String date = dfDate.format(calendar.getTime());
-		String month = dfMonth.format(calendar.getTime());
-
-//		SFTP sftp = new SFTP();
-		Map<String, Object> resultMap = new SFTP().connect(sftpConfig.getHost(), sftpConfig.getPort(), sftpConfig.getUsername(), sftpConfig.getPassword());
-
-		// resultMap-code
-		if (resultMap != null || resultMap.size() > 1) {
-			try {
-				ChannelSftp sftp = (ChannelSftp) resultMap.get("sftp");//获取连接的sftp
-
-				String saveFile = tradeConfig.getIsvOrgId() + "_" + billDate + ".txt";
-				String savePath = "E:\\" + sftpConfig.getBillPath() + "/" + month + "/";
-				//要保存的对账文件
-				String saveBillFile = savePath + saveFile;
-				File fileDir = new File(savePath);
-				//如果文件夹不存在则创建
-				if (!fileDir.exists() && !fileDir.isDirectory()) {
-					fileDir.mkdir();
-				}
-				FileOutputStream fos = new FileOutputStream(new File(saveBillFile));
-				//下载文件地址
-				String remoteBillPath = "/home/sinosoft/sftp_root/isv/226801000001181738033/20181015/226801000001181738033_20181017.txt";
-				sftp.get(remoteBillPath, fos);
-				logger.info("账单文件下载完成！");
-
-				// 4. 调用txt2excel方法
-				logger.info("正在转换excel文件...");
-				Txt2ExcelUtil txt2ExcelUtil = new Txt2ExcelUtil();
-				txt2ExcelUtil.conversionExcel(saveBillFile, "E:\\" + sftpConfig.getExcelPath());
-
-
-			} catch (Exception e) {
-				logger.error("账单下载失败！异常信息：" + e.getMessage(), e);
-			}
-			logger.info("账单下载成功！");
-			return "账单下载成功!";
-		}else{
-			logger.info("连接sftp服务器异常！");
-			return "连接sftp服务器异常!";
-		}
-
 	}
 
 	@Override

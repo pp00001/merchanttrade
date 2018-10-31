@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ins.platform.aggpay.trade.mapper.GgBillMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgBill">
+        <id column="id" property="id" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="bill_date" property="billDate" />
+        <result column="file_name" property="fileName" />
+        <result column="generate_time" property="generateTime" />
+        <result column="directory" property="directory" />
+        <result column="valid_ind" property="validInd" />
+        <result column="del_flag" property="delFlag" />
+        <result column="creator_code" property="creatorCode" />
+        <result column="create_time" property="createTime" />
+        <result column="updater_code" property="updaterCode" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, merchant_id AS merchantId, bill_date AS billDate, file_name AS fileName, generate_time AS generateTime, directory, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    </sql>
+
+    <select id="selectByMerchantId" resultMap="BaseResultMap">
+        select id,merchant_id,bill_date,file_name,generate_time,directory,
+        valid_ind,del_flag,creator_code,create_time,updater_code,update_time
+        from gg_bill 
+        <where>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -572,13 +572,6 @@ public class GpTradeController extends BaseController {
 	}
 
 
-	@RequestMapping(value = "/downLoadBill", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	@ResponseBody
-	public R<String> downLoadBill(@RequestParam(value = "billDate") String billDate) {
-		return new R<>(gpTradeService.downLoadBill(billDate));
-	}
-
 	/**
 	 * 获取清算方式
 	 *
