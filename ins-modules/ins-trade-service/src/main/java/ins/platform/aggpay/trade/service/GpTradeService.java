@@ -53,13 +53,11 @@ public interface GpTradeService {
 	 */
 	GpTradeOrderVo prePay(GpTradeOrderVo tradeOrderVo);
 
-	String downLoadBill(String billDate);
-
 	/**
 	 * refund(退款)
 	 *
 	 * @Title: refund
-	 * @Description: 
+	 * @Description:
 	 * @param refundVo 退款订单
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.GpRefundOrderVo
@@ -80,7 +78,7 @@ public interface GpTradeService {
 	 * refundQuery(退款查询)
 	 *
 	 * @Title: refundQuery
-	 * @Description: 
+	 * @Description:
 	 * @param merchantId 商户号
 	 * @param outTradeNo 退款外部交易号
 	 * @author Ripin Yan

@@ -43,6 +43,11 @@ public class SftpConfig {
      */
     private String excelPath;
 
+    /**
+     * sftp账单文件路径
+     */
+    private String ftpBillPath;
+
 
     public String getHost() {
         return host;
@@ -92,4 +97,11 @@ public class SftpConfig {
         this.excelPath = excelPath;
     }
 
+    public String getFtpBillPath() {
+        return ftpBillPath;
+    }
+
+    public void setFtpBillPath(String ftpBillPath) {
+        this.ftpBillPath = ftpBillPath;
+    }
 }
