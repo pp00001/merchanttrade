@@ -27,6 +27,7 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_ALI;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_JD;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_QQ;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_WX;
+import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PAY;
 import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PREPAY;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
@@ -34,6 +35,8 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.ERR_CODE;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.ERR_MSG;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.GRANT_TYPE_CODE;
 import static ins.platform.aggpay.trade.constant.TradeConstant.Wx.OPEN_ID;
+import ins.platform.aggpay.trade.entity.GgMerchant;
+import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.service.GpRefundOrderService;
 import ins.platform.aggpay.trade.service.GpTradeOrderService;
@@ -63,13 +66,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.mybank.bkmerchant.constant.DeniedPayTool;
 import com.xiaoleilu.hutool.http.HttpRequest;
 import com.xiaoleilu.hutool.http.HttpResponse;
@@ -109,60 +112,103 @@ public class GpTradeController extends BaseController {
 	public String scanPay(@RequestBody GpTradeOrderVo tradeOrderVo) {
 		String logPrefix = "【移动刷卡支付-被扫】";
 
+		JSONObject jo = new JSONObject();
+		String errorMessage = "";
+		// TODO 测试
+
+		// 终端IP
+		if (StringUtils.isBlank(tradeOrderVo.getAuthCode())) {
+			errorMessage = "第三方支付授权码不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "3001");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		// 终端IP
+		if (StringUtils.isBlank(tradeOrderVo.getBody())) {
+			errorMessage = "商品描述不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "3002");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		if (StringUtils.isBlank(tradeOrderVo.getMerchantId())) {
+			errorMessage = "商户号不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "2002");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		if (tradeOrderVo.getTotalAmount() == null || tradeOrderVo.getTotalAmount() <= 0) {
+			errorMessage = "金额必须为正数！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "2003");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		// 终端IP
+		if (StringUtils.isBlank(tradeOrderVo.getChannelType())) {
+			errorMessage = "支付渠道类型不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "3003");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		// 终端IP
+		if (StringUtils.isBlank(tradeOrderVo.getDeviceCreateIp())) {
+			errorMessage = "终端IP不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "3004");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+		// 订单类型
+		tradeOrderVo.setOrderType(ORDER_TYPE_PAY);
+
 		String result;
 		try {
-			GgMerchantVo merchantVo = ggMerchantService.findMerchantById(tradeOrderVo.getId());
+			GgMerchantVo merchantVo = ggMerchantService.findMerchantByMerchantId(tradeOrderVo.getMerchantId());
+			if (merchantVo == null) {
+				errorMessage = "商户不存在！";
+				logger.info("{}信息：{}", logPrefix, errorMessage);
+				jo.put("resCode", "2005");
+				jo.put("resMsg", errorMessage);
+				return jo.toJSONString();
+			}
 			// 禁用支付方式
-			String[] deniedPayTool = merchantVo.getDeniedPayToolList().split(",");
-			String[] payList = new String[2];
-			for (int i = 0; i < deniedPayTool.length; i++) {
-				if ("credit".equals(deniedPayTool[i])) {
-				}
-				switch (deniedPayTool[i]) {
-					case DeniedPayTool.CREDIT_CARD:
-						payList[i] = "credit";
-						break;
-					case DeniedPayTool.HUABEI:
-						payList[i] = "pcredit";
-						break;
-				}
-			}
-			tradeOrderVo.setPayLimit(StringUtils.join(payList, ','));
-			// 支付渠道类型
-			String channelType = tradeOrderVo.getChannelType();
-			switch (channelType) {
-				case "ALI":
-					channelType = "01";
-					break;
-				case "WX":
-					channelType = "02";
-					break;
-				case "QQ":
-					channelType = "03";
-					break;
-				case "JD":
-					channelType = "04";
-					break;
+			tradeOrderVo.setPayLimit(transferPayLimit(merchantVo.getDeniedPayToolList()));
 
+			// 支付渠道类型
+			tradeOrderVo.setSettleType(transferSettleType(tradeOrderVo.getChannelType(), merchantVo.getFeeParamList()));
+
+			// 字段[SubAppId]不能为空
+			if (StringUtils.isBlank(tradeOrderVo.getSubAppId())) {
+				tradeOrderVo.setSubAppId(tradeConfig.getSubAppId());
 			}
-			// 默认清算方式 T+1
-			String feeType = "T1";
-			List<GgFeeParamVo> feeParamList = merchantVo.getFeeParamList();
-			for (int i = 0; i < feeParamList.size(); i++) {
-				if (feeParamList.get(i).getChannelType().equals(channelType)) {
-					feeType = feeParamList.get(i).getFeeType().equals("01") ? "T0" : "T1";
-				}
+			// 币种，默认CNY
+			if (StringUtils.isBlank(tradeOrderVo.getCurrency())) {
+				tradeOrderVo.setCurrency("CNY");
 			}
-			tradeOrderVo.setSettleType(feeType);
+
+			// 被扫支付api调用
 			GpTradeOrderVo resultVo = gpTradeService.scanPay(tradeOrderVo);
-			result = JSON.toJSONString(resultVo);
+			RespInfoVo respInfoVo = resultVo.getRespInfo();
+			if (respInfoVo != null) {
+				jo.put("resCode", respInfoVo.getResultCode());
+				jo.put("resMsg", respInfoVo.getResultMsg());
+				jo.put("prePayId", resultVo.getPrePayId());
+				jo.put("payInfo", resultVo.getPayInfo());
+			}
+
 
 		} catch (Exception e) {
 			result = "移动刷卡支付（被扫）支付异常!";
 			logger.error(result + e.getMessage(), e);
+			jo.put("resCode", "2009");
+			jo.put("resMsg", result);
 		}
 
-		return result;
+		return jo.toJSONString();
 	}
 
 	/**

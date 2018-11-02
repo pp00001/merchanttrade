@@ -20,6 +20,8 @@ import ins.platform.aggpay.trade.config.SftpConfig;
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
+import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_UNKNOWN;
+import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_FAIL;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_REFUNDING;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_SUCC;
@@ -82,81 +84,103 @@ public class GpTradeServiceImpl implements GpTradeService {
 
 	@Override
 	public GpTradeOrderVo scanPay(GpTradeOrderVo tradeOrderVo) {
-		//账户余额查询
-		String function = "ant.mybank.bkmerchanttrade.pay";
-
-		XmlUtil xmlUtil = new XmlUtil();
-		Map<String, String> form = new HashMap<String, String>();
-		form.put("Function", function);
-		form.put("ReqTime", new Timestamp(System.currentTimeMillis()).toString());
-		//reqMsgId每次报文必须都不一样
-		form.put("ReqMsgId", UUID.randomUUID().toString());
-		// 成功authcode
-		// 28763443825664394
-		// 微信ok-134621141753364349-134723186961316101
-		form.put("AuthCode", "134621141753364349");
-		form.put("AuthCode", "286664990659481080");
-		form.put("OutTradeNo", UUID.randomUUID().toString().replace("-", ""));
-		form.put("Body", "反扫测试-碧螺春9");
-		form.put("GoodsTag", "test");
-		form.put("GoodsDetail", "test");
-		form.put("TotalAmount", "3");
-		form.put("Currency", "CNY");
-		form.put("MerchantId", HttpsMain.merchantId);
-		form.put("IsvOrgId", HttpsMain.IsvOrgId);
-		form.put("ChannelType", "WX");
-		form.put("ChannelType", "ALI");
-		//        form.put("OperatorId","test");
-		//        form.put("StoreId","test");
-		//        form.put("DeviceId","test");
-		form.put("DeviceCreateIp", "112.97.59.21");
-		form.put("ExpireExpress", "120");
-		form.put("SettleType", "T1");
-		form.put("Attach", "附加信息");
-		form.put("PayLimit", "pcredit");
-		form.put("DiscountableAmount", "1");
-		form.put("UndiscountableAmount", "2");
-		//form.put("AlipayStoreId","支付宝的店铺编号");
-		form.put("SysServiceProviderId", "2018090700000286");
-		//form.put("CheckLaterNm","");
-		form.put("SubAppId", "wx62a55dbdd041bb1d");
-		//        form.put("SpecifySubMerchId","N");
-		//        form.put("ChannelId","240824008");
-		//        form.put("SubMerchId","242972555");
-
-		//封装报文
+		GpTradeOrderVo rs = new GpTradeOrderVo();
 		try {
-			String param = xmlUtil.format(form, function);
-			if (HttpsMain.isSign) {//生产环境需进行rsa签名
-				param = XmlSignUtil.sign(param);
-			}
-			System.out.println("-------------------------");
-			System.out.println("---------REQUEST---------");
-			System.out.println("-------------------------");
-			System.out.println(param);
+			tradeOrderVo.setOutTradeNo(ApiCallUtil.generateOutTradeNo());
+			ApiCallUtil pay = new ApiCallUtil(ApiCallUtil.FUNCTION_PAY);
+			pay.setBody(new HashMap<String, String>() {
+				{
+					put("AuthCode", tradeOrderVo.getAuthCode());
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
+					put("OutTradeNo", tradeOrderVo.getOutTradeNo());
+					put("Body", tradeOrderVo.getBody());
+					put("GoodsTag", tradeOrderVo.getGoodsTag());
+					put("GoodsDetail", tradeOrderVo.getGoodsDetail());
+					put("TotalAmount", String.valueOf(tradeOrderVo.getTotalAmount()));
+					put("Currency", tradeOrderVo.getCurrency());
+					put("MerchantId", tradeOrderVo.getMerchantId());
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
+					put("ChannelType", tradeOrderVo.getChannelType());
+					put("OperatorId", tradeOrderVo.getOperatorId());
+					put("StoreId", tradeOrderVo.getStoreId());
+					put("DeviceId", tradeOrderVo.getDeviceId());
+					put("DeviceCreateIp", tradeOrderVo.getDeviceCreateIp());
+					if (tradeOrderVo.getExpireExpress() != null && tradeOrderVo.getExpireExpress() > 0) {
+						put("ExpireExpress", String.valueOf(tradeOrderVo.getExpireExpress()));
+					} else {
+						tradeOrderVo.setExpireExpress(Integer.valueOf(tradeConfig.getExpireExpress()));
+						put("ExpireExpress", tradeConfig.getExpireExpress());
+					}
+					put("SettleType", tradeOrderVo.getSettleType());
+					put("Attach", tradeOrderVo.getAttach());
+					put("PayLimit", tradeOrderVo.getPayLimit());
+					if (TradeConstant.CHANNEL_TYPE_WX.equals(tradeOrderVo.getChannelType())) {
+						put("SubAppId", tradeOrderVo.getSubAppId());
+						put("SpecifySubMerchId", tradeOrderVo.getSpecifySubMerchId());
+						put("ChannelId", tradeOrderVo.getChannelId());
+						put("SubMerchId", tradeOrderVo.getSubMerchId());
+					} else {
+						put("DiscountableAmount", tradeOrderVo.getDiscountableAmount() == null ? null : String.valueOf(tradeOrderVo
+								.getDiscountableAmount()));
+						put("UndiscountableAmount", tradeOrderVo.getUndiscountableAmount() == null ? null : String.valueOf(tradeOrderVo
+								.getUndiscountableAmount()));
+						put("AlipayStoreId", tradeOrderVo.getAlipayStoreId());
+						put("SysServiceProviderId", tradeOrderVo.getSysServiceProviderId());
+						put("CheckLaterNm", tradeOrderVo.getCheckLaterNm());
 
-			//发送请求
-			String response = HttpsMain.httpsReq(HttpsMain.payUrl, param);
-
-			System.out.println("-------------------------");
-			System.out.println("---------RESPONSE--------");
-			System.out.println("-------------------------");
-			System.out.println(response);
-			if (HttpsMain.isSign) {//生产环境需进行rsa验签
-				if (!XmlSignUtil.verify(response)) {
-					throw new Exception("验签失败");
+					}
 				}
+			});
+
+			logger.info("开始调用pay接口, url={}", tradeConfig.getPayUrl());
+			Map<String, Object> resMap = pay.call(tradeConfig.getPayUrl());
+
+			// 数据转换
+			rs = MapUtil.map2Obj(resMap, GpTradeOrderVo.class);
+			RespInfoVo respInfoVo = rs.getRespInfo();
+
+			if (respInfoVo != null) {
+				String resultStatus = respInfoVo.getResultStatus();
+				if (RESULT_STATUS_SUCCESS.equals(resultStatus)) {
+					logger.info("移动刷卡支付成功!外部交易号：{}，订单号：{}", rs.getOutTradeNo(), rs.getOrderNo());
+					tradeOrderVo.setOrderNo(rs.getOrderNo());
+					tradeOrderVo.setGmtPayment(rs.getGmtPayment());
+					tradeOrderVo.setBankType(rs.getBankType());
+					tradeOrderVo.setPayChannelOrderNo(rs.getPayChannelOrderNo());
+					tradeOrderVo.setMerchantOrderNo(rs.getMerchantOrderNo());
+					tradeOrderVo.setCouponFee(rs.getCouponFee());
+					tradeOrderVo.setIsSubscribe(rs.getIsSubscribe());
+					tradeOrderVo.setOpenId(rs.getOpenId());
+					tradeOrderVo.setBuyerLogonId(rs.getBuyerLogonId());
+					tradeOrderVo.setBuyerUserId(rs.getBuyerUserId());
+					tradeOrderVo.setCredit(rs.getCredit());
+					tradeOrderVo.setReceiptAmount(rs.getReceiptAmount());
+					tradeOrderVo.setBuyerPayAmount(rs.getBuyerPayAmount());
+					tradeOrderVo.setInvoiceAmount(rs.getInvoiceAmount());
+					tradeOrderVo.setTradeStatus(TRADE_STATUS_SUCC);
+
+				} else if (RESULT_STATUS_UNKNOWN.equals(resultStatus)) {
+					logger.info("移动刷卡支付处理中!外部交易号：{}", rs.getOutTradeNo());
+					tradeOrderVo.setTradeStatus(TRADE_STATUS_PAYING);
+				} else {
+					logger.info("移动刷卡支付失败!外部交易号：{}", rs.getOutTradeNo());
+					tradeOrderVo.setTradeStatus(TRADE_STATUS_FAIL);
+				}
+			} else {
+				logger.info("移动刷卡支付异常!外部交易号：{}", rs.getOutTradeNo());
+				tradeOrderVo.setValidInd("0");
 			}
-			//解析报文
-			Map<String, Object> resMap = xmlUtil.parse(response, function);
-			//结果消息
-			String b = (String) resMap.get("OutTradeNo");
-			System.out.println(b);
+
+			GpTradeOrder gpTradeOrder = new GpTradeOrder();
+			BeanUtils.copyProperties(tradeOrderVo, gpTradeOrder);
+			gpTradeOrderMapper.insert(gpTradeOrder);
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("移动刷卡支付异常！");
+			throw new RuntimeException(e);
 		}
 
-		return null;
+		return rs;
 	}
 
 	@Override
@@ -234,8 +258,8 @@ public class GpTradeServiceImpl implements GpTradeService {
 			gpTradeOrderMapper.insert(gpTradeOrder);
 
 		} catch (Exception e) {
-			logger.error("主扫支付异常！" + e.getMessage()+"##", e);
-			throw new RuntimeException("主扫支付异常" + e.getMessage());
+			logger.error("主扫支付异常！");
+			throw new RuntimeException(e);
 		}
 
 		return rs;
@@ -251,8 +275,9 @@ public class GpTradeServiceImpl implements GpTradeService {
 		String date = dfDate.format(calendar.getTime());
 		String month = dfMonth.format(calendar.getTime());
 
-//		SFTP sftp = new SFTP();
-		Map<String, Object> resultMap = new SFTP().connect(sftpConfig.getHost(), sftpConfig.getPort(), sftpConfig.getUsername(), sftpConfig.getPassword());
+		//		SFTP sftp = new SFTP();
+		Map<String, Object> resultMap = new SFTP().connect(sftpConfig.getHost(), sftpConfig.getPort(), sftpConfig.getUsername(), sftpConfig
+				.getPassword());
 
 		// resultMap-code
 		if (resultMap != null || resultMap.size() > 1) {
@@ -285,7 +310,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 			}
 			logger.info("账单下载成功！");
 			return "账单下载成功!";
-		}else{
+		} else {
 			logger.info("连接sftp服务器异常！");
 			return "连接sftp服务器异常!";
 		}
@@ -305,7 +330,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 					put("IsvOrgId", tradeConfig.getIsvOrgId());
 					put("OutRefundNo", refundVo.getOutRefundNo());
 					put("RefundAmount", String.valueOf(refundVo.getRefundAmount()));
-					put("RefundReason",refundVo.getRefundReason());
+					put("RefundReason", refundVo.getRefundReason());
 					put("OperatorId", refundVo.getOperatorId());
 					put("DeviceId", refundVo.getDeviceId());
 					put("DeviceCreateIp", refundVo.getDeviceCreateIp());
@@ -365,7 +390,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 				logger.info("订单查询成功!外部交易号：{}，交易状态：{}", outTradeNo, rs.getTradeStatus());
 				GpTradeOrder tradeOrderVo = new GpTradeOrder().setOutTradeNo(outTradeNo).setMerchantId(merchantId);
 				tradeOrderVo = gpTradeOrderMapper.selectOne(tradeOrderVo);
-				if(tradeOrderVo != null){
+				if (tradeOrderVo != null) {
 					String tradeStatus = tradeOrderVo.getTradeStatus();
 					String queryStatus = rs.getTradeStatus();
 					if (!queryStatus.equals(tradeStatus)) {
@@ -430,14 +455,14 @@ public class GpTradeServiceImpl implements GpTradeService {
 				logger.info("【退款订单查询】- 查询成功!退款外部交易号：{}，退款订单号：{}，退款状态：{}", outRefundNo, rs.getRefundOrderNo(), rs.getTradeStatus());
 				GpRefundOrder gpRefundOrder = new GpRefundOrder().setOutRefundNo(outRefundNo).setMerchantId(merchantId);
 				gpRefundOrder = gpRefundOrderMapper.selectOne(gpRefundOrder);
-				if(gpRefundOrder != null){
+				if (gpRefundOrder != null) {
 					String tradeStatus = gpRefundOrder.getTradeStatus();
 					String queryTradeStatus = rs.getTradeStatus();
-					if(!tradeStatus.equals(queryTradeStatus)){
+					if (!tradeStatus.equals(queryTradeStatus)) {
 						GpRefundOrder update = new GpRefundOrder();
 						update.setId(gpRefundOrder.getId());
 						update.setTradeStatus(queryTradeStatus);
-						if(TRADE_STATUS_SUCC.equals(queryTradeStatus)){
+						if (TRADE_STATUS_SUCC.equals(queryTradeStatus)) {
 							update.setGmtRefundment(rs.getGmtRefundment());
 						}
 						try {

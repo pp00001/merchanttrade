@@ -153,7 +153,7 @@ public class GgNotifyServiceImpl implements GgNotifyService {
 		String resMsgId = (String) resMap.get("resMsgId");
 		StringBuffer sf = new StringBuffer();
 		sf.append("<document><response id=\"response\"><head><Version>1.0.0</Version><Appid>");
-		sf.append(HttpsMain.appId);
+		sf.append(tradeConfig.getAppId());
 		sf.append("</Appid>");
 		sf.append("<Function>ant.mybank.bkmerchantsettle.notifyPayResult</Function>");
 		sf.append("<ResTime>");
@@ -161,10 +161,9 @@ public class GgNotifyServiceImpl implements GgNotifyService {
 		sf.append("</ResTime>");
 		sf.append("<RespTimeZone>UTC+8</RespTimeZone><ResMsgId>");
 		sf.append(resMsgId);
-		sf.append("</ResMsgId>");
-		sf.append("<Reserve></Reserve><SignType>RSA</SignType><InputCharset>UTF-8</InputCharset></head><body><IsvOrgId>");
-		sf.append(HttpsMain.IsvOrgId);
-		sf.append("</IsvOrgId><ResponseCode>OK</ResponseCode></body></response></document>");
+		sf.append("</ResMsgId><Reserve></Reserve><SignType>RSA</SignType><InputCharset>UTF-8</InputCharset></head>");
+		sf.append("<body><RespInfo><ResultStatus>S</ResultStatus><ResultCode>0000</ResultCode>");
+		sf.append("<ResultMsg></ResultMsg></RespInfo></body></response></document>");
 
 		/*String responseXml;
 		//对response进行加签

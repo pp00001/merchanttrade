@@ -264,38 +264,72 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		try {
 			GgMerchant ggMerchant = ggMerchantMapper.selectById(id);
 			if (ggMerchant != null) {
-				merchantVo = new GgMerchantVo();
-				BeanUtils.copyProperties(ggMerchant, merchantVo);
-
-				String outMerchantId = ggMerchant.getOutMerchantId();
-				GgMerchantDetail ggMerchantDetail = new GgMerchantDetail().setOutMerchantId(outMerchantId);
-				ggMerchantDetail = ggMerchantDetailMapper.selectOne(ggMerchantDetail);
-				if (ggMerchantDetail != null) {
-					GgMerchantDetailVo ggMerchantDetailVo = new GgMerchantDetailVo();
-					BeanUtils.copyProperties(ggMerchantDetail, ggMerchantDetailVo);
-					merchantVo.setGgMerchantDetailVo(ggMerchantDetailVo);
-				}
-				GgBankCardParam ggBankCardParam = new GgBankCardParam().setOutMerchantId(outMerchantId);
-				ggBankCardParam = ggBankCardParamMapper.selectOne(ggBankCardParam);
-				if (ggBankCardParam != null) {
-					GgBankCardParamVo bcpVo = new GgBankCardParamVo();
-					BeanUtils.copyProperties(ggBankCardParam, bcpVo);
-					merchantVo.setGgBankCardParamVo(bcpVo);
-				}
-
-				List<GgFeeParam> fpList = ggFeeParamMapper.selectList(new EntityWrapper<GgFeeParam>().eq("out_merchant_id", outMerchantId));
-				if (fpList != null && fpList.size() > 0) {
-					List<GgFeeParamVo> fpListVo = new ArrayList<>();
-					for (int i = 0; i < fpList.size(); i++) {
-						GgFeeParamVo fpVo = new GgFeeParamVo();
-						BeanUtils.copyProperties(fpList.get(i), fpVo);
-						fpListVo.add(fpVo);
-					}
-					merchantVo.setFeeParamList(fpListVo);
-				}
+				merchantVo = assembleMerchantVo(ggMerchant);
 			}
 		} catch (Exception e) {
 			logger.error("查询商户信息异常！" + e.getMessage(), e);
+		}
+		return merchantVo;
+	}
+
+	@Override
+	public GgMerchantVo findMerchantByMerchantId(String merchantId) {
+		GgMerchantVo merchantVo = null;
+		try {
+			GgMerchant ggMerchant = this.selectOne(new EntityWrapper<GgMerchant>().eq("merchant_id", merchantId));
+			if (ggMerchant != null) {
+				merchantVo = assembleMerchantVo(ggMerchant);
+			}
+		} catch (Exception e) {
+			logger.error("查询商户信息异常！" + e.getMessage(), e);
+		}
+		return merchantVo;
+	}
+
+
+	/**
+	 * assembleMerchantVo(组装商户信息vo)
+	 *
+	 * @Title: assembleMerchantVo
+	 * @Description:
+	 * @param merchantVo 商户vo
+	 * @param outMerchantId 外部商户号
+	 * @throws
+	 * @author Ripin Yan
+	 * @return ins.platform.aggpay.trade.vo.GgMerchantVo
+	 */
+	public GgMerchantVo assembleMerchantVo(GgMerchant merchant) {
+
+		GgMerchantVo merchantVo = new GgMerchantVo();
+		BeanUtils.copyProperties(merchant, merchantVo);
+
+		// 商户详情
+		String outMerchantId = merchant.getOutMerchantId();
+		GgMerchantDetail ggMerchantDetail = new GgMerchantDetail().setOutMerchantId(outMerchantId);
+		ggMerchantDetail = ggMerchantDetailMapper.selectOne(ggMerchantDetail);
+		if (ggMerchantDetail != null) {
+			GgMerchantDetailVo ggMerchantDetailVo = new GgMerchantDetailVo();
+			BeanUtils.copyProperties(ggMerchantDetail, ggMerchantDetailVo);
+			merchantVo.setGgMerchantDetailVo(ggMerchantDetailVo);
+		}
+		// 清算卡
+		GgBankCardParam ggBankCardParam = new GgBankCardParam().setOutMerchantId(outMerchantId);
+		ggBankCardParam = ggBankCardParamMapper.selectOne(ggBankCardParam);
+		if (ggBankCardParam != null) {
+			GgBankCardParamVo bcpVo = new GgBankCardParamVo();
+			BeanUtils.copyProperties(ggBankCardParam, bcpVo);
+			merchantVo.setGgBankCardParamVo(bcpVo);
+		}
+		// 手续费
+		List<GgFeeParam> fpList = ggFeeParamMapper.selectList(new EntityWrapper<GgFeeParam>().eq("out_merchant_id", outMerchantId));
+		if (fpList != null && fpList.size() > 0) {
+			List<GgFeeParamVo> fpListVo = new ArrayList<>();
+			for (int i = 0; i < fpList.size(); i++) {
+				GgFeeParamVo fpVo = new GgFeeParamVo();
+				BeanUtils.copyProperties(fpList.get(i), fpVo);
+				fpListVo.add(fpVo);
+			}
+			merchantVo.setFeeParamList(fpListVo);
 		}
 		return merchantVo;
 	}
