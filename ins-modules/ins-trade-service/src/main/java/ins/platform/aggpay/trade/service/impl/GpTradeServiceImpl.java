@@ -16,7 +16,6 @@
 
 package ins.platform.aggpay.trade.service.impl;
 
-import ins.platform.aggpay.trade.config.SftpConfig;
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
@@ -29,34 +28,20 @@ import ins.platform.aggpay.trade.entity.GpRefundOrder;
 import ins.platform.aggpay.trade.entity.GpTradeOrder;
 import ins.platform.aggpay.trade.mapper.GpRefundOrderMapper;
 import ins.platform.aggpay.trade.mapper.GpTradeOrderMapper;
-import ins.platform.aggpay.trade.service.GgXmlLogService;
 import ins.platform.aggpay.trade.service.GpTradeService;
 import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.util.MapUtil;
-import ins.platform.aggpay.trade.util.SFTP;
-import ins.platform.aggpay.trade.util.Txt2ExcelUtil;
 import ins.platform.aggpay.trade.vo.GpRefundOrderVo;
 import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
 import ins.platform.aggpay.trade.vo.RespInfoVo;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.jcraft.jsch.ChannelSftp;
-import com.mybank.bkmerchant.base.HttpsMain;
-import com.mybank.bkmerchant.util.XmlSignUtil;
-import com.mybank.bkmerchant.util.XmlUtil;
 
 /**
  * <p>
