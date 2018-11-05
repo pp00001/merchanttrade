@@ -30,7 +30,6 @@ import ins.platform.aggpay.trade.mapper.GgMerchantDetailMapper;
 import ins.platform.aggpay.trade.mapper.GgMerchantMapper;
 import ins.platform.aggpay.trade.mapper.GgWechatChannelMapper;
 import ins.platform.aggpay.trade.service.GgMerchantService;
-import ins.platform.aggpay.trade.service.GgXmlLogService;
 import ins.platform.aggpay.trade.util.ApiCallUtil;
 import ins.platform.aggpay.trade.util.MapUtil;
 import ins.platform.aggpay.trade.vo.GgBankCardParamVo;
@@ -48,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,22 +72,20 @@ import com.mybank.bkmerchant.merchant.UploadPhoto;
 public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerchant> implements GgMerchantService {
 
 
-	private static final Logger logger = LoggerFactory.getLogger(GgMerchantServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GgMerchantServiceImpl.class);
 
-	@Autowired
-	private GgMerchantMapper ggMerchantMapper;
-	@Autowired
-	private GgMerchantDetailMapper ggMerchantDetailMapper;
-	@Autowired
-	private GgBankCardParamMapper ggBankCardParamMapper;
-	@Autowired
-	private GgFeeParamMapper ggFeeParamMapper;
-	@Autowired
-	private GgWechatChannelMapper ggWechatChannelMapper;
-	@Autowired
-	private GgXmlLogService ggXmlLogService;
-	@Autowired
-	private TradeConfig tradeConfig;
+    @Autowired
+    private GgMerchantMapper ggMerchantMapper;
+    @Autowired
+    private GgMerchantDetailMapper ggMerchantDetailMapper;
+    @Autowired
+    private GgBankCardParamMapper ggBankCardParamMapper;
+    @Autowired
+    private GgFeeParamMapper ggFeeParamMapper;
+    @Autowired
+    private GgWechatChannelMapper ggWechatChannelMapper;
+    @Autowired
+    private TradeConfig tradeConfig;
 
 
 	@Override
@@ -159,11 +155,11 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 				BeanUtils.copyProperties(register, insert);
 				ggMerchantMapper.insert(insert);
 
-				// 插入商户详情信息
-				GgMerchantDetail detail = new GgMerchantDetail();
-				BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
-				detail.setOutMerchantId(outMerchantId);
-				ggMerchantDetailMapper.insert(detail);
+                // 插入商户详情信息
+                GgMerchantDetail detail = new GgMerchantDetail();
+                BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
+                detail.setOutMerchantId(outMerchantId);
+                ggMerchantDetailMapper.insert(detail);
 
 				// 插入手续费列表信息
 				List<GgFeeParamVo> feeParamList = register.getFeeParamList();
@@ -520,48 +516,101 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 		return rs;
 	}
 
-	@Override
-	public RespInfoVo merchantFreeze(String merchantId, String freezeReason, String outTradeNo) {
-		ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_FREEZE);
-		pc.setBody(new HashMap<String, String>() {
-			{
-				put("IsvOrgId", tradeConfig.getIsvOrgId());
-				put("MerchantId", merchantId);
-				put("FreezeReason", freezeReason);
-				put("OutTradeNo", UUID.randomUUID().toString());
-			}
-		});
-		Map<String, Object> result = null;
-		try {
-			result = pc.call(tradeConfig.getReqUrl());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		RespInfoVo rs = MapUtil.map2Obj(result, RespInfoVo.class);
-		return rs;
-	}
+    @Override
+    public RespInfoVo merchantFreeze(String merchantId, String freezeReason) {
+        ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_FREEZE);
+        RespInfoVo rs = null;
+        String outTradeNo = ApiCallUtil.generateOutTradeNo();
+        pc.setBody(new HashMap<String, String>() {
+            {
+                put("IsvOrgId", tradeConfig.getIsvOrgId());
+                put("MerchantId", merchantId);
+                put("FreezeReason", freezeReason);
+                put("OutTradeNo", outTradeNo);
+            }
+        });
 
-	@Override
-	public RespInfoVo merchantUnfreeze(String merchantId, String unfreezeReason, String outTradeNo) {
+        try {
+            Map<String, Object> result = pc.call(tradeConfig.getReqUrl());
+            rs = MapUtil.map2Obj((Map) result.get("respInfo"), RespInfoVo.class);
+            if (rs != null && RESULT_STATUS_SUCCESS.equals(rs.getResultStatus())) {
+                logger.info("商户关闭申请已受理!外部交易号：{}", outTradeNo);
+                //查询对应的商户信息
+                GgMerchant query = new GgMerchant();
+                query.setMerchantId(merchantId);
+                query = ggMerchantMapper.selectOne(query);
+                if (query != null) {
+                    //更新商户表
+                    GgMerchant update = new GgMerchant();
+                    update.setId(query.getId());
+                    update.setFreezeInd("0");
+                    update.setFreezeReason(freezeReason);
+                    int resultCode = ggMerchantMapper.updateById(update);
+                    if (resultCode != 0) {
+                        logger.info("数据库更新完毕！");
+                    } else {
+                        logger.error("数据库更新失败！");
+                    }
+                } else {
+                    logger.error("数据库查询商户失败！");
+                }
+            } else {
+                logger.info("商户关闭申请失败!外部交易号：{}", outTradeNo);
+            }
+        } catch (Exception e) {
+            logger.error("商户关闭异常！异常原因：" + e.getMessage(), e);
+        }
 
-		ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_UNFREEZE);
-		pc.setBody(new HashMap<String, String>() {
-			{
-				put("IsvOrgId", tradeConfig.getIsvOrgId());
-				put("MerchantId", merchantId);
-				put("UnfreezeReason", unfreezeReason);
-				put("OutTradeNo", UUID.randomUUID().toString());
-			}
-		});
-		Map<String, Object> result = null;
-		try {
-			result = pc.call(tradeConfig.getReqUrl());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		RespInfoVo rs = MapUtil.map2Obj(result, RespInfoVo.class);
-		return rs;
-	}
+        return rs;
+    }
+
+    @Override
+    public RespInfoVo merchantUnfreeze(String merchantId, String unFreezeReason) {
+        ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_UNFREEZE);
+        RespInfoVo rs = null;
+        String outTradeNo = ApiCallUtil.generateOutTradeNo();
+        pc.setBody(new HashMap<String, String>() {
+            {
+                put("IsvOrgId", tradeConfig.getIsvOrgId());
+                put("MerchantId", merchantId);
+                put("UnfreezeReason", unFreezeReason);
+                put("OutTradeNo", outTradeNo);
+            }
+        });
+
+        try {
+            Map<String, Object> result = pc.call(tradeConfig.getReqUrl());
+            rs = MapUtil.map2Obj((Map) result.get("respInfo"), RespInfoVo.class);
+            if (rs != null && RESULT_STATUS_SUCCESS.equals(rs.getResultStatus())) {
+                logger.info("商户开启申请已受理!外部交易号：{}", outTradeNo);
+                //查询对应的商户信息
+                GgMerchant query = new GgMerchant();
+                query.setMerchantId(merchantId);
+                query = ggMerchantMapper.selectOne(query);
+                if (query != null) {
+                    //更新商户表
+                    GgMerchant update = new GgMerchant();
+                    update.setId(query.getId());
+                    update.setFreezeInd("1");
+                    update.setFreezeReason(unFreezeReason);
+                    int resultCode = ggMerchantMapper.updateById(update);
+                    if (resultCode != 0) {
+                        logger.info("数据库更新完毕！");
+                    } else {
+                        logger.error("数据库更新失败！");
+                    }
+                } else {
+                    logger.error("数据库查询商户失败！");
+                }
+            } else {
+                logger.info("商户开启申请失败!外部交易号：{}", outTradeNo);
+            }
+        } catch (Exception e) {
+            logger.error("商户开启异常！异常原因：" + e.getMessage(), e);
+        }
+
+        return rs;
+    }
 
 
 }
