@@ -16,10 +16,6 @@
 
 package ins.platform.aggpay.trade.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.google.gson.JsonObject;
 import ins.platform.aggpay.common.constant.CommonConstant;
 import ins.platform.aggpay.common.util.Query;
 import ins.platform.aggpay.common.util.R;
@@ -27,13 +23,28 @@ import ins.platform.aggpay.common.web.BaseController;
 import ins.platform.aggpay.trade.entity.GgMerchant;
 import ins.platform.aggpay.trade.service.GgMerchantService;
 import ins.platform.aggpay.trade.util.ApiCallUtil;
-import ins.platform.aggpay.trade.vo.*;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import ins.platform.aggpay.trade.vo.GgMerchantVo;
+import ins.platform.aggpay.trade.vo.RegisterQueryVo;
+import ins.platform.aggpay.trade.vo.RespInfoVo;
+import ins.platform.aggpay.trade.vo.SmsVo;
+import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
 import java.util.Date;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 
 /**
  * <p>
