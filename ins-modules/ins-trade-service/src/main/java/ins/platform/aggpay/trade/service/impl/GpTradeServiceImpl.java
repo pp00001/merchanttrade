@@ -18,6 +18,7 @@ package ins.platform.aggpay.trade.service.impl;
 
 import ins.platform.aggpay.trade.config.TradeConfig;
 import ins.platform.aggpay.trade.constant.TradeConstant;
+import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PREPAY;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_SUCCESS;
 import static ins.platform.aggpay.trade.constant.TradeConstant.RespInfo.RESULT_STATUS_UNKNOWN;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_FAIL;
@@ -328,12 +329,15 @@ public class GpTradeServiceImpl implements GpTradeService {
 						update.setId(tradeOrderVo.getId());
 						update.setTradeStatus(queryStatus);
 						if (TRADE_STATUS_SUCC.equals(queryStatus)) {
+							update.setOrderNo(rs.getOrderNo());
 							update.setGmtPayment(rs.getGmtPayment());
 							update.setBankType(rs.getBankType());
 							update.setIsSubscribe(rs.getIsSubscribe());
 							update.setPayChannelOrderNo(rs.getPayChannelOrderNo());
 							update.setMerchantOrderNo(rs.getMerchantOrderNo());
-							update.setSubAppId(rs.getSubAppId());
+							if (!ORDER_TYPE_PREPAY.equals(rs.getOrderType())) {
+								update.setOpenId(rs.getOpenId());
+							}
 							update.setCouponFee(rs.getCouponFee());
 							update.setBuyerLogonId(rs.getBuyerLogonId());
 							update.setBuyerUserId(rs.getBuyerUserId());
@@ -344,6 +348,7 @@ public class GpTradeServiceImpl implements GpTradeService {
 						}
 						try {
 							gpTradeOrderMapper.updateById(update);
+							logger.error("更新订单状态成功！外部交易号：{}", outTradeNo);
 						} catch (Exception e) {
 							logger.error("更新订单状态失败！", e);
 						}

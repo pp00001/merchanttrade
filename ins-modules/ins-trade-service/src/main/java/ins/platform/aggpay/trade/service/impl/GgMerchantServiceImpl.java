@@ -292,7 +292,7 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 	 *
 	 * @Title: assembleMerchantVo
 	 * @Description:
-	 * @param merchantVo 商户vo
+	 * @param merchant 商户信息
 	 * @param outMerchantId 外部商户号
 	 * @throws
 	 * @author Ripin Yan
