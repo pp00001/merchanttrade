@@ -29,6 +29,18 @@ import com.baomidou.mybatisplus.service.IService;
 public interface GgMerchantService extends IService<GgMerchant> {
 
 	/**
+	 * insert(商户数据保存)
+	 *
+	 * @Title: insert
+	 * @Description:
+	 * @param ggMerchantVo 商户关联数据信息
+	 * @throws
+	 * @author Ripin Yan
+	 * @return void
+	 */
+	void insert(GgMerchantVo ggMerchantVo);
+
+	/**
 	 * findMerchantById(通过id查询商户信息)
 	 *
 	 * @Title: findMerchantById

@@ -87,6 +87,40 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
     @Autowired
     private TradeConfig tradeConfig;
 
+	@Override
+	public void insert(GgMerchantVo register) {
+		try {
+			// 插入商户信息
+			GgMerchant insert = new GgMerchant();
+			BeanUtils.copyProperties(register, insert);
+			ggMerchantMapper.insert(insert);
+
+			String outMerchantId = register.getOutMerchantId();
+			// 插入商户详情信息
+			GgMerchantDetail detail = new GgMerchantDetail();
+			BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
+			detail.setOutMerchantId(outMerchantId);
+			ggMerchantDetailMapper.insert(detail);
+
+			// 插入手续费列表信息
+			List<GgFeeParamVo> feeParamList = register.getFeeParamList();
+			for (int i = 0; i < feeParamList.size(); i++) {
+				GgFeeParam feeParam = new GgFeeParam();
+				BeanUtils.copyProperties(feeParamList.get(i), feeParam);
+				feeParam.setOutMerchantId(outMerchantId);
+				ggFeeParamMapper.insert(feeParam);
+			}
+
+			// 插入清算卡信息
+			GgBankCardParam bankCardParam = new GgBankCardParam();
+			BeanUtils.copyProperties(register.getGgBankCardParamVo(), bankCardParam);
+			bankCardParam.setOutMerchantId(outMerchantId);
+			ggBankCardParamMapper.insert(bankCardParam);
+		} catch (Exception e) {
+			logger.error("商户保存数据库操作异常");
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -150,31 +184,8 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
 					ggMerchantMapper.updateById(update);
 				}
 			} else {
-				// 插入商户信息
-				GgMerchant insert = new GgMerchant();
-				BeanUtils.copyProperties(register, insert);
-				ggMerchantMapper.insert(insert);
-
-                // 插入商户详情信息
-                GgMerchantDetail detail = new GgMerchantDetail();
-                BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
-                detail.setOutMerchantId(outMerchantId);
-                ggMerchantDetailMapper.insert(detail);
-
-				// 插入手续费列表信息
-				List<GgFeeParamVo> feeParamList = register.getFeeParamList();
-				for (int i = 0; i < feeParamList.size(); i++) {
-					GgFeeParam feeParam = new GgFeeParam();
-					BeanUtils.copyProperties(feeParamList.get(i), feeParam);
-					feeParam.setOutMerchantId(outMerchantId);
-					ggFeeParamMapper.insert(feeParam);
-				}
-
-				// 插入清算卡信息
-				GgBankCardParam bankCardParam = new GgBankCardParam();
-				BeanUtils.copyProperties(register.getGgBankCardParamVo(), bankCardParam);
-				bankCardParam.setOutMerchantId(outMerchantId);
-				ggBankCardParamMapper.insert(bankCardParam);
+				// 插入商户表
+				insert(register);
 			}
 
 		} catch (Exception e) {
