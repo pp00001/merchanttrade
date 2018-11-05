@@ -19,43 +19,45 @@
 <mapper namespace="ins.platform.aggpay.trade.mapper.GgMerchantMapper">
   <cache eviction="FIFO" flushInterval="1000" size="512" readOnly="true"/>
 
-  <!-- 通用查询映射结果 -->
-  <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgMerchant">
-    <id column="id" property="id"/>
-    <result column="out_merchant_id" property="outMerchantId"/>
-    <result column="order_no" property="orderNo"/>
-    <result column="merchant_id" property="merchantId"/>
-    <result column="merchant_name" property="merchantName"/>
-    <result column="merchant_type" property="merchantType"/>
-    <result column="deal_type" property="dealType"/>
-    <result column="support_prepayment" property="supportPrepayment"/>
-    <result column="settle_mode" property="settleMode"/>
-    <result column="mcc" property="mcc"/>
-    <result column="trade_type_list" property="tradeTypeList"/>
-    <result column="pay_channel_list" property="payChannelList"/>
-    <result column="denied_pay_tool_list" property="deniedPayToolList"/>
-    <result column="auth_code" property="authCode"/>
-    <result column="out_trade_no" property="outTradeNo"/>
-    <result column="support_stage" property="supportStage"/>
-    <result column="partner_type" property="partnerType"/>
-    <result column="alipay_source" property="alipaySource"/>
-    <result column="wechat_channel" property="wechatChannel"/>
-    <result column="rate_version" property="rateVersion"/>
-    <result column="register_status" property="registerStatus"/>
-    <result column="account_no" property="accountNo"/>
-    <result column="fail_reason" property="failReason"/>
-    <result column="smid" property="smid"/>
-    <result column="valid_ind" property="validInd"/>
-    <result column="del_flag" property="delFlag"/>
-    <result column="creator_code" property="creatorCode"/>
-    <result column="create_time" property="createTime"/>
-    <result column="updater_code" property="updaterCode"/>
-    <result column="update_time" property="updateTime"/>
-  </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="ins.platform.aggpay.trade.entity.GgMerchant">
+        <id column="id" property="id" />
+        <result column="out_merchant_id" property="outMerchantId" />
+        <result column="order_no" property="orderNo" />
+        <result column="merchant_id" property="merchantId" />
+        <result column="merchant_name" property="merchantName" />
+        <result column="merchant_type" property="merchantType" />
+        <result column="deal_type" property="dealType" />
+        <result column="support_prepayment" property="supportPrepayment" />
+        <result column="settle_mode" property="settleMode" />
+        <result column="mcc" property="mcc" />
+        <result column="trade_type_list" property="tradeTypeList" />
+        <result column="pay_channel_list" property="payChannelList" />
+        <result column="denied_pay_tool_list" property="deniedPayToolList" />
+        <result column="auth_code" property="authCode" />
+        <result column="out_trade_no" property="outTradeNo" />
+        <result column="support_stage" property="supportStage" />
+        <result column="partner_type" property="partnerType" />
+        <result column="alipay_source" property="alipaySource" />
+        <result column="wechat_channel" property="wechatChannel" />
+        <result column="rate_version" property="rateVersion" />
+        <result column="register_status" property="registerStatus" />
+        <result column="account_no" property="accountNo" />
+        <result column="fail_reason" property="failReason" />
+        <result column="smid" property="smid" />
+        <result column="freeze_ind" property="freezeInd" />
+        <result column="freeze_reason" property="freezeReason" />
+        <result column="valid_ind" property="validInd" />
+        <result column="del_flag" property="delFlag" />
+        <result column="creator_code" property="creatorCode" />
+        <result column="create_time" property="createTime" />
+        <result column="updater_code" property="updaterCode" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
 
-  <!-- 通用查询结果列 -->
-  <sql id="Base_Column_List">
-    id, out_merchant_id AS outMerchantId, order_no AS orderNo, merchant_id AS merchantId, merchant_name AS merchantName, merchant_type AS merchantType, deal_type AS dealType, support_prepayment AS supportPrepayment, settle_mode AS settleMode, mcc, trade_type_list AS tradeTypeList, pay_channel_list AS payChannelList, denied_pay_tool_list AS deniedPayToolList, auth_code AS authCode, out_trade_no AS outTradeNo, support_stage AS supportStage, partner_type AS partnerType, alipay_source AS alipaySource, wechat_channel AS wechatChannel, rate_version AS rateVersion, register_status AS registerStatus, account_no AS accountNo, fail_reason AS failReason, smid, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
-  </sql>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, out_merchant_id AS outMerchantId, order_no AS orderNo, merchant_id AS merchantId, merchant_name AS merchantName, merchant_type AS merchantType, deal_type AS dealType, support_prepayment AS supportPrepayment, settle_mode AS settleMode, mcc, trade_type_list AS tradeTypeList, pay_channel_list AS payChannelList, denied_pay_tool_list AS deniedPayToolList, auth_code AS authCode, out_trade_no AS outTradeNo, support_stage AS supportStage, partner_type AS partnerType, alipay_source AS alipaySource, wechat_channel AS wechatChannel, rate_version AS rateVersion, register_status AS registerStatus, account_no AS accountNo, fail_reason AS failReason, smid, freeze_ind AS freezeInd, freeze_reason AS freezeReason, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+    </sql>
 
 </mapper>

@@ -52,6 +52,8 @@ CREATE TABLE gg_merchant (
   account_no           VARCHAR(32)  DEFAULT NULL COMMENT '二类户卡号',
   fail_reason          VARCHAR(256) DEFAULT NULL COMMENT '入驻失败原因',
   smid                 VARCHAR(128) DEFAULT NULL COMMENT 'Smid',
+  freeze_ind            VARCHAR(1)   DEFAULT '1' COMMENT '是否开启 - 1：开启，0：关闭',
+  freeze_reason        VARCHAR(256) DEFAULT Null COMMENT '商户开启/关闭的原因',
   valid_ind            VARCHAR(1)   DEFAULT '1' COMMENT '是否有效 - 1：有效，0：无效',
   del_flag             CHAR(1)      DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
   creator_code         VARCHAR(32)  DEFAULT NULL COMMENT '创建人代码',

@@ -44,9 +44,9 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * findMerchantByMerchantId(根据商户号查询商户信息)
 	 *
 	 * @Title: findMerchantByMerchantId
-	 * @Description: 
+	 * @Description:
 	 * @param merchantId 商户号
-	 * @throws 
+	 * @throws
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.GgMerchantVo
 	 */
@@ -56,9 +56,9 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * sendSmsCode(发送短信验证码)
 	 *
 	 * @Title: sendSmsCode
-	 * @Description: 
+	 * @Description:
 	 * @param smsVo 短信vo
-	 * @throws 
+	 * @throws
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.RespInfoVo
 	 */
@@ -68,9 +68,9 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * uploadPhoto(上传图片)
 	 *
 	 * @Title: uploadPhoto
-	 * @Description: 
+	 * @Description:
 	 * @param uploadPhotoVo 图片vo
-	 * @throws 
+	 * @throws
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.UploadPhotoVo
 	 */
@@ -80,9 +80,9 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * regist(申请商户入驻)
 	 *
 	 * @Title: regist
-	 * @Description: 
+	 * @Description:
 	 * @param register 商户信息vo
-	 * @throws 
+	 * @throws
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.GgMerchantVo
 	 */
@@ -92,9 +92,9 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * registerQuery(查询商户入驻结果)
 	 *
 	 * @Title: registerQuery
-	 * @Description: 
+	 * @Description:
 	 * @param orderNo 订单号
-	 * @throws 
+	 * @throws
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.RegisterQueryVo
 	 */
@@ -116,39 +116,37 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * merchantQuery(查询商户信息)
 	 *
 	 * @Title: merchantQuery
-	 * @Description: 
+	 * @Description:
 	 * @param orderNo 订单号
-	 * @throws 
+	 * @throws
 	 * @author Ripin Yan
 	 * @return ins.platform.aggpay.trade.vo.GgMerchantVo
 	 */
 	GgMerchantVo merchantQuery(String orderNo);
 
-	/**
-	 * merchantFreeze(关闭商户)
-	 *
-	 * @Title: merchantFreeze
-	 * @Description: 
-	 * @param merchantId 商户号
-	 * @param freezeReason 理由
-	 * @throws
-	 * @author Ripin Yan
-	 * @return ins.platform.aggpay.trade.vo.RespInfoVo
-	 */
-	RespInfoVo merchantFreeze(String merchantId, String freezeReason, String outTradeNo);
-
-	/**
-	 * merchantUnfreeze(开启商户)
-	 *
-	 * @Title: merchantUnfreeze
-	 * @Description: 
-	 * @param merchantId 商户号
-	 * @param unfreezeReason 理由
-	 * @throws
-	 * @author Ripin Yan
-	 * @return ins.platform.aggpay.trade.vo.RespInfoVo
-	 */
-	RespInfoVo merchantUnfreeze(String merchantId, String unfreezeReason, String outTradeNo);
-
+    /**
+     * merchantFreeze(关闭商户)
+     *
+     * @Title: merchantFreeze
+     * @Description:
+     * @param merchantId 商户号
+     * @param freezeReason 理由
+     * @throws
+     * @author Ripin Yan
+     * @return ins.platform.aggpay.trade.vo.RespInfoVo
+     */
+	RespInfoVo merchantFreeze(String merchantId , String freezeReason);
+    /**
+     * merchantUnfreeze(开启商户)
+     *
+     * @Title: merchantUnfreeze
+     * @Description:
+     * @param merchantId 商户号
+     * @param unfreezeReason 理由
+     * @throws
+     * @author Ripin Yan
+     * @return ins.platform.aggpay.trade.vo.RespInfoVo
+     */
+	RespInfoVo merchantUnfreeze(String merchantId , String unFreezeReason);
 
 }
