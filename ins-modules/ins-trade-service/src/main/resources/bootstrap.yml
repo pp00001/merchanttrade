@@ -68,4 +68,4 @@ isvConfig:
     password: Sinosoft2018#
     billPath: /home/sinosoft/sftp_root/isv/
     excelPath:  /home/sinosoft/sftp_root/merchant/
-    ftpBillPath:  /home/sinosoft/sftp_root/isv/226801000001181738033/20181015/226801000001181738033_20181017.txt
+    ftpBillPath:  /home/sinosoft/sftp_root/isv/
