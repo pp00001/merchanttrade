@@ -27,6 +27,7 @@ import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_ALI;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_JD;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_QQ;
 import static ins.platform.aggpay.trade.constant.TradeConstant.CHANNEL_TYPE_WX;
+import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_DYNAMIC;
 import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PAY;
 import static ins.platform.aggpay.trade.constant.TradeConstant.OrderType.ORDER_TYPE_PREPAY;
 import static ins.platform.aggpay.trade.constant.TradeConstant.TradeStatus.TRADE_STATUS_PAYING;
@@ -101,14 +102,14 @@ public class GpTradeController extends BaseController {
 	private TradeConfig tradeConfig;
 
 	/**
-	 * @Title: pay
+	 * @Title: scanPay
 	 * @Description: 移动刷卡支付（被扫）接口
 	 * @param requestXml 请求报文
 	 * @throws
 	 * @author Ripin Yan
 	 * @return java.lang.String 响应报文
 	 */
-	@RequestMapping(value = "/trade/pay/scanPay", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/pay/scanPay", method = RequestMethod.POST)
 	public String scanPay(@RequestBody GpTradeOrderVo tradeOrderVo) {
 		String logPrefix = "【移动刷卡支付-被扫】";
 
@@ -212,14 +213,14 @@ public class GpTradeController extends BaseController {
 	}
 
 	/**
-	 * @Title: notifyPayResult
+	 * @Title: prePay
 	 * @Description: H5支付（主扫）
 	 * @param requestXml 请求报文
 	 * @throws
 	 * @author Ripin Yan
 	 * @return java.lang.String 响应报文
 	 */
-	@RequestMapping(value = "/trade/pay/prePay", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/pay/prePay", method = RequestMethod.POST)
 	public String prePay(@RequestBody GpTradeOrderVo tradeOrderVo, HttpServletRequest request) {
 		String logPrefix = "【H5支付-主扫】";
 		JSONObject jo = new JSONObject();
@@ -322,7 +323,112 @@ public class GpTradeController extends BaseController {
 		return jo.toJSONString();
 	}
 
-	@RequestMapping(value = "/pay/refund", method = RequestMethod.PUT)
+
+	/**
+	 * @Title: dynamicOrder
+	 * @Description: 动态订单扫码支付接口
+	 * @param requestXml 请求报文
+	 * @throws
+	 * @author Ripin Yan
+	 * @return java.lang.String 响应报文
+	 */
+	@RequestMapping(value = "/api/pay/dynamicOrder", method = RequestMethod.POST)
+	public String dynamicOrder(@RequestBody GpTradeOrderVo tradeOrderVo, HttpServletRequest request) {
+		String logPrefix = "【动态订单扫码支付】";
+		JSONObject jo = new JSONObject();
+		String errorMessage = "";
+		String channelType = isWeixinOrAlipay(request);
+		// TODO 测试
+		tradeOrderVo.setOpenId("sdfdsf");
+		if (TradeConstant.CHANNEL_TYPE_OTHER.equals(channelType)) {
+			errorMessage = "请使用微信或支付宝扫描二维码！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "2001");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+		if (tradeOrderVo.getId() == null) {
+			errorMessage = "商户号不能为空！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "2002");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+		if (tradeOrderVo.getTotalAmount() == null || tradeOrderVo.getTotalAmount() <= 0) {
+			errorMessage = "金额必须为正数！";
+			logger.info("{}信息：{}", logPrefix, errorMessage);
+			jo.put("resCode", "2003");
+			jo.put("resMsg", errorMessage);
+			return jo.toJSONString();
+		}
+
+
+		// 支付渠道类型
+		tradeOrderVo.setChannelType(channelType);
+		// 订单类型
+		tradeOrderVo.setOrderType(ORDER_TYPE_DYNAMIC);
+		// 终端IP
+		tradeOrderVo.setDeviceCreateIp(IpUtils.getIpAddr(request));
+
+		String result;
+		try {
+			GgMerchantVo merchantVo = ggMerchantService.findMerchantByMerchantId(tradeOrderVo.getMerchantId());
+			if (merchantVo == null) {
+				errorMessage = "商户不存在！";
+				logger.info("{}信息：{}", logPrefix, errorMessage);
+				jo.put("resCode", "2005");
+				jo.put("resMsg", errorMessage);
+				return jo.toJSONString();
+			}
+
+			String body = tradeOrderVo.getBody();
+			if (StringUtils.isBlank(body)) {
+				errorMessage = "商品描述为空！";
+				logger.info("{}信息：{}", logPrefix, errorMessage);
+				tradeOrderVo.setBody(merchantVo.getGgMerchantDetailVo().getAlias()+"-消费");
+			}else {
+				tradeOrderVo.setBody(URLDecoder.decode(body, "UTF-8"));
+			}
+
+			// 禁用支付方式
+			tradeOrderVo.setPayLimit(transferPayLimit(merchantVo.getDeniedPayToolList()));
+
+			// 支付渠道类型
+			if(StringUtils.isBlank(tradeOrderVo.getSettleType())){
+				tradeOrderVo.setSettleType(transferSettleType(channelType, merchantVo.getFeeParamList()));
+			}
+
+			// 字段[SubAppId]不能为空
+			if (StringUtils.isBlank(tradeOrderVo.getSubAppId())) {
+				tradeOrderVo.setSubAppId(tradeConfig.getSubAppId());
+			}
+			// 币种，默认CNY
+			if (StringUtils.isBlank(tradeOrderVo.getCurrency())) {
+				tradeOrderVo.setCurrency("CNY");
+			}
+
+			// 主扫支付api调用
+			GpTradeOrderVo resultVo = gpTradeService.dynamicOrder(tradeOrderVo);
+			RespInfoVo respInfoVo = resultVo.getRespInfo();
+			if (respInfoVo != null) {
+				jo.put("resCode", respInfoVo.getResultCode());
+				jo.put("resMsg", respInfoVo.getResultMsg());
+				jo.put("qrCodeUrl", resultVo.getQrCodeUrl());
+			}
+
+		} catch (Exception e) {
+			result = "动态订单扫码支付异常!";
+			logger.error(result + e.getMessage(), e);
+			jo.put("resCode", "2010");
+			jo.put("resMsg", result);
+		}
+
+		return jo.toJSONString();
+	}
+
+	@RequestMapping(value = "/api/pay/refund", method = RequestMethod.PUT)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public String refund(@RequestBody GpRefundOrderVo refundVo, HttpServletRequest request) {
@@ -442,7 +548,7 @@ public class GpTradeController extends BaseController {
 	}
 
 
-	@RequestMapping(value = "/pay/query/{merchantId}/{outTradeNo}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/pay/query/{merchantId}/{outTradeNo}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@ResponseBody
 	public String payQuery(@PathVariable(value = "merchantId") String merchantId, @PathVariable(value = "outTradeNo") String outTradeNo) {

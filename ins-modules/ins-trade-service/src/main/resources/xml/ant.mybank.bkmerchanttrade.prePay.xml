@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<!--5.2.10	H5支付（主扫）创建订单接口< ant.mybank.bkmerchanttrade.prePay > -->
+<!--5.2.9	H5支付（主扫）创建订单接口< ant.mybank.bkmerchanttrade.prePay > -->
 <body>
   <xmlTag tagName="OutTradeNo"></xmlTag>
   <xmlTag tagName="Body"></xmlTag>

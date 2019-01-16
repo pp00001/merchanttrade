@@ -41,6 +41,7 @@ public class ApiCallUtil extends AbstractReq {
 
 	public final static String FUNCTION_PAY = "ant.mybank.bkmerchanttrade.pay";
 	public final static String FUNCTION_PRE_PAY = "ant.mybank.bkmerchanttrade.prePay";
+	public final static String FUNCTION_DYNAMIC_ORDER = "ant.mybank.bkmerchanttrade.dynamicOrder";
 	public final static String FUNCTION_REFUND = "ant.mybank.bkmerchanttrade.refund";
 	public final static String FUNCTION_PAY_QUERY = "ant.mybank.bkmerchanttrade.payQuery";
 	public final static String FUNCTION_REFUND_QUERY = "ant.mybank.bkmerchanttrade.refundQuery";

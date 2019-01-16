@@ -56,6 +56,10 @@ public class GpTradeOrderVo {
      */
     private String body;
     /**
+     * 商品id，此id为二维码中包含的商品ID，商户自行定义。
+     */
+    private String goodsId;
+    /**
      * 商品标记
      */
     private String goodsTag;
@@ -163,6 +167,10 @@ public class GpTradeOrderVo {
      * 原生态js支付信息
      */
     private String payInfo;
+    /**
+     * 二维码串值，用以生成支付二维码
+     */
+    private String qrCodeUrl;
     /**
      * 支付完成时间
      */

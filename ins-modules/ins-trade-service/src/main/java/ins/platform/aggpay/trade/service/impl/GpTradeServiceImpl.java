@@ -417,6 +417,83 @@ public class GpTradeServiceImpl implements GpTradeService {
 		return rs;
 	}
 
+	@Override
+	public GpTradeOrderVo dynamicOrder(GpTradeOrderVo tradeOrderVo) {
+		GpTradeOrderVo rs = new GpTradeOrderVo();
+		try {
+			tradeOrderVo.setOutTradeNo(ApiCallUtil.generateOutTradeNo());
+			ApiCallUtil prePay = new ApiCallUtil(ApiCallUtil.FUNCTION_DYNAMIC_ORDER);
+			prePay.setBody(new HashMap<String, String>() {
+				{
+					put("OutTradeNo", tradeOrderVo.getOutTradeNo());
+					put("Body", tradeOrderVo.getBody());
+					put("Goodsid", tradeOrderVo.getGoodsId());
+					put("GoodsDetail", tradeOrderVo.getGoodsDetail());
+					put("TotalAmount", String.valueOf(tradeOrderVo.getTotalAmount()));
+					put("Currency", tradeOrderVo.getCurrency());
+					put("MerchantId", tradeOrderVo.getMerchantId());
+					put("IsvOrgId", tradeConfig.getIsvOrgId());
+					put("ChannelType", tradeOrderVo.getChannelType());
+					put("OperatorId", tradeOrderVo.getOperatorId());
+					put("StoreId", tradeOrderVo.getStoreId());
+					put("DeviceId", tradeOrderVo.getDeviceId());
+					put("DeviceCreateIp", tradeOrderVo.getDeviceCreateIp());
+					if (tradeOrderVo.getExpireExpress() != null && tradeOrderVo.getExpireExpress() > 0) {
+						put("ExpireExpress", String.valueOf(tradeOrderVo.getExpireExpress()));
+					} else {
+						tradeOrderVo.setExpireExpress(Integer.valueOf(tradeConfig.getExpireExpress()));
+						put("ExpireExpress", tradeConfig.getExpireExpress());
+					}
+					put("SettleType", tradeOrderVo.getSettleType());
+					put("Attach", tradeOrderVo.getAttach());
+					put("PayLimit", tradeOrderVo.getPayLimit());
+					if (TradeConstant.CHANNEL_TYPE_WX.equals(tradeOrderVo.getChannelType())) {
+						put("SubAppId", tradeOrderVo.getSubAppId());
+						put("SpecifySubMerchId", tradeOrderVo.getSpecifySubMerchId());
+						put("ChannelId", tradeOrderVo.getChannelId());
+						put("SubMerchId", tradeOrderVo.getSubMerchId());
+					} else {
+						put("DiscountableAmount", tradeOrderVo.getDiscountableAmount() == null ? null : String.valueOf(tradeOrderVo
+								.getDiscountableAmount()));
+						put("UndiscountableAmount", tradeOrderVo.getUndiscountableAmount() == null ? null : String.valueOf(tradeOrderVo
+								.getUndiscountableAmount()));
+						put("AlipayStoreId", tradeOrderVo.getAlipayStoreId());
+						put("SysServiceProviderId", tradeOrderVo.getSysServiceProviderId());
+						put("CheckLaterNm", tradeOrderVo.getCheckLaterNm());
+
+					}
+				}
+			});
+
+			logger.info("开始调用dynamicOrder接口, url={}", tradeConfig.getPayUrl());
+			Map<String, Object> resMap = prePay.call(tradeConfig.getPayUrl());
+
+			// 数据转换
+			rs = MapUtil.map2Obj(resMap, GpTradeOrderVo.class);
+			RespInfoVo respInfoVo = rs.getRespInfo();
+
+			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+				logger.info("订单创建成功!外部交易号：{}，订单号：{}", rs.getOutTradeNo(), rs.getOrderNo());
+				tradeOrderVo.setOrderNo(rs.getOrderNo());
+				tradeOrderVo.setQrCodeUrl(rs.getQrCodeUrl());
+				tradeOrderVo.setTradeStatus(TRADE_STATUS_PAYING);
+			} else {
+				logger.info("订单创建失败!外部交易号：{}", rs.getOutTradeNo());
+				tradeOrderVo.setValidInd("0");
+			}
+
+			GpTradeOrder gpTradeOrder = new GpTradeOrder();
+			BeanUtils.copyProperties(tradeOrderVo, gpTradeOrder);
+			gpTradeOrderMapper.insert(gpTradeOrder);
+
+		} catch (Exception e) {
+			logger.error("动态订单扫码支付异常！");
+			throw new RuntimeException(e);
+		}
+
+		return rs;
+	}
+
 
 }
 

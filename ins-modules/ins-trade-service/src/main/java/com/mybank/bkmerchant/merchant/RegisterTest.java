@@ -330,6 +330,7 @@ public class RegisterTest extends AbstractReq {
 				"12"
 		);
 
+
 		RegisterTest register = new RegisterTest(
 				"名称",
 				MerchantTypeEnum.Enterprising,
@@ -351,11 +352,14 @@ public class RegisterTest extends AbstractReq {
 				"",
 				"RS"
 		);
+		register.setFeeParamList(feeParamList);
+		register.setBankCardParam(bankCardParam);
+		register.setMerchantDetail(merchantDetail);
 
 		System.out.println("post Json: "+JSON.toJSONString(register));
 
-		Map<String, Object> call = register.call(HttpsMain.reqUrl);
-		System.out.println("#######" + call.toString());
+		/*Map<String, Object> call = register.call(HttpsMain.reqUrl);
+		System.out.println("#######" + call.toString());*/
 	}
 
 

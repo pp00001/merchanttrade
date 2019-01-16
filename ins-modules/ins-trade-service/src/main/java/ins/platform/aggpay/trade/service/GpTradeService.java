@@ -86,4 +86,16 @@ public interface GpTradeService {
 	 */
 	GpRefundOrderVo refundQuery(String merchantId, String outRefundNo);
 
+	/**
+	 * dynamicOrder(动态订单扫码支付接口)
+	 *
+	 * @Title: dynamicOrder
+	 * @Description: 
+	 * @param tradeOrderVo 订单vo
+	 * @throws 
+	 * @author Ripin Yan
+	 * @return ins.platform.aggpay.trade.vo.GpTradeOrderVo
+	 */
+	GpTradeOrderVo dynamicOrder(GpTradeOrderVo tradeOrderVo);
+
 }

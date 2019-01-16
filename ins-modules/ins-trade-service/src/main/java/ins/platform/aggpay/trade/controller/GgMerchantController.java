@@ -92,8 +92,9 @@ public class GgMerchantController extends BaseController {
 	 * @return success/false
 	 */
 	@PostMapping
-	public R<Boolean> add(@RequestBody GgMerchant ggMerchant) {
-		return new R<>(ggMerchantService.insert(ggMerchant));
+	public R<Boolean> add(@RequestBody GgMerchantVo ggMerchantVo) {
+		ggMerchantService.insert(ggMerchantVo);
+		return new R<>(true);
 	}
 
 	/**

@@ -56,6 +56,11 @@ public class GpTradeOrder extends Model<GpTradeOrder> {
      */
     private String body;
     /**
+     * 商品id，此id为二维码中包含的商品ID，商户自行定义。
+     */
+    @TableField("goods_id")
+    private String goodsId;
+    /**
      * 商品标记
      */
     @TableField("goods_tag")
@@ -188,6 +193,11 @@ public class GpTradeOrder extends Model<GpTradeOrder> {
      */
     @TableField("pay_info")
     private String payInfo;
+    /**
+     * 二维码串值，用以生成支付二维码
+     */
+    @TableField("qr_code_url")
+    private String qrCodeUrl;
     /**
      * 支付完成时间
      */

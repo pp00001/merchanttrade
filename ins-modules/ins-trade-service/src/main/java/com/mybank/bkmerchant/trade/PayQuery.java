@@ -32,7 +32,7 @@ public class PayQuery {
         // payQuery(HttpsMain.merchantId, "0651e38c0fa243dfab6f99a4f7ed21e5");
         // payQuery(HttpsMain.merchantId, "a64ae87aba43413f9e4b78584c3dfc4f");
         // 微信主扫成功-993edfe6a2844edb854cb845be3019ba
-        payQuery(HttpsMain.merchantId, "993edfe6a2844edb854cb845be3019ba");
+        payQuery(HttpsMain.merchantId, "INS201810241849410022030");
 
     }
 

@@ -33,7 +33,7 @@ public class PayClose {
      */
     public static void main(String[] args) throws Exception {
         Map<String, Object> map = PayQuery.payQuery(HttpsMain.merchantId,
-            "3db6ec42abd142b98377a681b944b8bf");
+            "bdc73f7d8c3d4998a816847a2ede7818");
         //非处理中订单不能关闭
         if (MapUtils.isEmpty(map)
             || !StringUtils.equals(TradeStatusEnum.paying.getStatusCode(), map.get("tradeStatus")
@@ -41,7 +41,7 @@ public class PayClose {
             System.out.println(map.get("tradeStatus").toString() + "订单状态不是支付中无法关单");
             return;
         }
-        payClose(HttpsMain.merchantId, "3db6ec42abd142b98377a681b944b8bf");
+        payClose(HttpsMain.merchantId, "bdc73f7d8c3d4998a816847a2ede7818");
 
     }
 
