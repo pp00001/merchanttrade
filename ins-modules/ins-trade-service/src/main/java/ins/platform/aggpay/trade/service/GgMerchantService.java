@@ -28,6 +28,20 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface GgMerchantService extends IService<GgMerchant> {
 
+	GgMerchantVo update(GgMerchantVo ggMerchantVo);
+
+    /**
+     * delete(商户数据保存)
+     *
+     * @Title: delete
+     * @Description:
+     * @param id
+     * @throws
+     * @author Ripin Yan
+     * @return void
+     */
+    boolean deleteById(Long id);
+
 	/**
 	 * insert(商户数据保存)
 	 *
@@ -38,7 +52,7 @@ public interface GgMerchantService extends IService<GgMerchant> {
 	 * @author Ripin Yan
 	 * @return void
 	 */
-	void insert(GgMerchantVo ggMerchantVo);
+	boolean insert(GgMerchantVo ggMerchantVo);
 
 	/**
 	 * findMerchantById(通过id查询商户信息)

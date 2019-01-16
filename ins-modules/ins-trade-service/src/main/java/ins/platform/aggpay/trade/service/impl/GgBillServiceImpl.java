@@ -82,11 +82,7 @@ public class GgBillServiceImpl extends ServiceImpl<GgBillMapper, GgBill> impleme
             SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss z", Locale.ENGLISH);
             Date dateTrans;
             String date;
-
-            //获取当前时间(YYYYMM)
-            DateFormat dfMonth = new SimpleDateFormat("yyyyMM");
-            Calendar calendar = Calendar.getInstance();
-            String month = dfMonth.format(calendar.getTime());
+            String isvOrgId = tradeConfig.getIsvOrgId();
 
             //连接sftp
             Map<String, Object> resultMap = new SFTP().connect(sftpConfig.getHost(), sftpConfig.getPort(), sftpConfig.getUsername(), sftpConfig.getPassword());
@@ -99,11 +95,12 @@ public class GgBillServiceImpl extends ServiceImpl<GgBillMapper, GgBill> impleme
                     //日期转换为String类型
                     DateFormat dfDate = new SimpleDateFormat("yyyyMMdd");
                     date = dfDate.format(dateTrans);
+                    String month = date.substring(0, 6);
                     logger.info("日期为："+date);
+                    //获取连接的sftp
+                    ChannelSftp sftp = (ChannelSftp) resultMap.get("sftp");
 
-                    ChannelSftp sftp = (ChannelSftp) resultMap.get("sftp");//获取连接的sftp
-
-                    String saveFile = tradeConfig.getIsvOrgId() + "_" + date + ".txt";
+                    String saveFile =  isvOrgId + "_" + date + ".txt";
                     String savePath = sftpConfig.getBillPath() + "/" + month + "/";
 
                     //要保存的对账文件
@@ -115,7 +112,7 @@ public class GgBillServiceImpl extends ServiceImpl<GgBillMapper, GgBill> impleme
                     }
                     FileOutputStream fos = new FileOutputStream(new File(localFile));
                     //下载文件地址
-                    String ftpBillPath = sftpConfig.getFtpBillPath();
+                    String ftpBillPath = sftpConfig.getFtpBillPath()+isvOrgId+ "/" + month + "/"+isvOrgId+"_"+billDate+".txt";
                     sftp.get(ftpBillPath, fos);
 
                     // 4. 调用txt2excel方法

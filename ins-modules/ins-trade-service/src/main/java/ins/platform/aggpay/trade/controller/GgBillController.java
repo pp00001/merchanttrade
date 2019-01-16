@@ -67,16 +67,14 @@ public class GgBillController extends BaseController {
                                @PathVariable String merchantId,
                                @PathVariable String billDate) {
 
-        JSONObject jo = new JSONObject();
-        String errorMessage = "";
         //处理yyyy-MM-dd格式时间
         billDate = billDate.replace("-", "");
         String month = billDate.substring(0, 6);
         //文件名
         String fileName = merchantId + "_" + billDate;
-//        String path = "E:/sftp_root/merchant/" + merchantId + "/" + month + "/" + merchantId + "_" + billDate + ".xls";
-        String path = sftpConfig.getExcelPath()+merchantId+"/"+month+"/"+fileName + ".xls";
-        logger.info(path);
+        //测试使用的excel文件路径
+        String path = "E:/sftp_root/merchant/" + merchantId + "/" + month + "/" + merchantId + "_" + billDate + ".xls";
+//        String path = sftpConfig.getExcelPath()+merchantId+"/"+month+"/"+fileName + ".xls";
         //判断文件是否存在
         File file = new File(path);
         if (file.exists() && file.isFile()) {
@@ -99,21 +97,14 @@ public class GgBillController extends BaseController {
 
 
             } catch (Exception e) {
-                errorMessage = "bill download fail！";
-                logger.error(errorMessage + e.getMessage(), e);
-                jo.put("resCode", "9000");
-                jo.put("resMsg", errorMessage);
-                return jo.toJSONString();
+                logger.error("bill download fail！" + e.getMessage(), e);
             }
             logger.info("账单文件下载成功！");
             return null;
         } else {
-            errorMessage = "file is exists！";
-            logger.info(errorMessage);
-            jo.put("resCode", "9000");
-            jo.put("resMsg", errorMessage);
-            return jo.toJSONString();
+            logger.info("file is exists！");
         }
+        return null;
     }
 
     /**

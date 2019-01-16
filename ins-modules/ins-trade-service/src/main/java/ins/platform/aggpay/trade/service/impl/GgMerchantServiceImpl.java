@@ -87,445 +87,577 @@ public class GgMerchantServiceImpl extends ServiceImpl<GgMerchantMapper, GgMerch
     @Autowired
     private TradeConfig tradeConfig;
 
-	@Override
-	public void insert(GgMerchantVo register) {
-		try {
-			// 插入商户信息
-			GgMerchant insert = new GgMerchant();
-			BeanUtils.copyProperties(register, insert);
-			ggMerchantMapper.insert(insert);
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public GgMerchantVo update(GgMerchantVo register) {
+        GgMerchantVo rs;
+        try {
+            ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_MERCHANT_UPDATE);
+            pc.setBody(new HashMap<String, String>() {
+                {
+                    put("IsvOrgId", tradeConfig.getIsvOrgId());
+                    put("MerchantId", register.getMerchantId());
+                    put("DealType", register.getDealType());
+                    put("SupportPrepayment", register.getSupportPrepayment());
+                    put("SettleMode", register.getSettleMode());
+                    put("Mcc", register.getMcc());
+                    put("MerchantDetail", register.getGgMerchantDetailVo().genJsonBase64());
+                    put("TradeTypeList", register.getTradeTypeList());
+                    put("PayChannelList", register.getPayChannelList());
+                    put("DeniedPayToolList", register.getDeniedPayToolList());
+                    put("FeeParamList", GgFeeParamVo.genJsonBase64(register.getFeeParamList()));
+                    put("BankCardParam", register.getGgBankCardParamVo().genJsonBase64());
+                    put("AuthCode", register.getAuthCode());
+                    put("OutTradeNo", register.getOutTradeNo());
+                    put("SupportStage", register.getSupportStage());
+                    put("AlipaySource", register.getAlipaySource());
+                }
+            });
+            Map<String, Object> resMap = pc.call(tradeConfig.getReqUrl());
 
-			String outMerchantId = register.getOutMerchantId();
-			// 插入商户详情信息
-			GgMerchantDetail detail = new GgMerchantDetail();
-			BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
-			detail.setOutMerchantId(outMerchantId);
-			ggMerchantDetailMapper.insert(detail);
+            // 数据转换
+            rs = MapUtil.map2Obj(resMap, GgMerchantVo.class);
+            RespInfoVo respInfoVo = rs.getRespInfo();
 
-			// 插入手续费列表信息
-			List<GgFeeParamVo> feeParamList = register.getFeeParamList();
-			for (int i = 0; i < feeParamList.size(); i++) {
-				GgFeeParam feeParam = new GgFeeParam();
-				BeanUtils.copyProperties(feeParamList.get(i), feeParam);
-				feeParam.setOutMerchantId(outMerchantId);
-				ggFeeParamMapper.insert(feeParam);
-			}
+            if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+                logger.info("商户信息修改已受理!外部交易号：{}", rs.getOutTradeNo());
+            }else{
+                logger.info("商户信息修改失败!外部交易号：{}", rs.getOutTradeNo());
+            }
 
-			// 插入清算卡信息
-			GgBankCardParam bankCardParam = new GgBankCardParam();
-			BeanUtils.copyProperties(register.getGgBankCardParamVo(), bankCardParam);
-			bankCardParam.setOutMerchantId(outMerchantId);
-			ggBankCardParamMapper.insert(bankCardParam);
-		} catch (Exception e) {
-			logger.error("商户保存数据库操作异常");
-			throw new RuntimeException(e);
-		}
-	}
+            if (register != null) {
+                //更新商户信息
+                GgMerchant update = new GgMerchant();
+                BeanUtils.copyProperties(register, update);
+                ggMerchantMapper.updateById(update);
 
-	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
-	public GgMerchantVo regist(GgMerchantVo register) {
+                String outMerchantId = register.getOutMerchantId();
+                //更新商户详情
+                GgMerchantDetail ggMerchantDetail = new GgMerchantDetail();
+                BeanUtils.copyProperties(register.getGgMerchantDetailVo(), ggMerchantDetail);
+                ggMerchantDetail.setOutMerchantId(outMerchantId);
+                ggMerchantDetailMapper.updateById(ggMerchantDetail);
 
-		GgMerchantVo rs;
-		try {
-			String outMerchantId = register.getOutMerchantId();
-			ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_REGISTER);
-			pc.setBody(new HashMap<String, String>() {
-				{
-					put("IsvOrgId", tradeConfig.getIsvOrgId());
-					put("OutMerchantId", outMerchantId);
-					put("MerchantName", register.getMerchantName());
-					put("MerchantType", register.getMerchantType());
-					put("DealType", register.getDealType());
-					put("SupportPrepayment", register.getSupportPrepayment());
-					put("SettleMode", register.getSettleMode());
-					put("Mcc", register.getMcc());
-					put("MerchantDetail", register.getGgMerchantDetailVo().genJsonBase64());
-					put("TradeTypeList", register.getTradeTypeList());
-					put("PayChannelList", register.getPayChannelList());
-					put("DeniedPayToolList", register.getDeniedPayToolList());
-					put("FeeParamList", GgFeeParamVo.genJsonBase64(register.getFeeParamList()));
-					put("BankCardParam", register.getGgBankCardParamVo().genJsonBase64());
-					put("AuthCode", register.getAuthCode());
-					put("OutTradeNo", register.getOutTradeNo());
-					put("SupportStage", register.getSupportStage());
-					put("PartnerType", register.getPartnerType());
-					put("AlipaySource", register.getAlipaySource());
-					put("WechatChannel", register.getWechatChannel());
-					put("RateVersion", register.getRateVersion());
-				}
-			});
+                //更新清算卡
+                GgBankCardParam bankCardParam = new GgBankCardParam();
+                BeanUtils.copyProperties(register.getGgBankCardParamVo(), bankCardParam);
+                bankCardParam.setOutMerchantId(outMerchantId);
+                ggBankCardParamMapper.updateById(bankCardParam);
 
-			Map<String, Object> resMap = pc.call(tradeConfig.getReqUrl());
+                List<GgFeeParamVo> fpList = register.getFeeParamList();
+                for (int i = 0; i < fpList.size(); i++) {
+                    GgFeeParam ggFeeParam = new GgFeeParam();
+                    BeanUtils.copyProperties(fpList.get(i), ggFeeParam);
+                    ggFeeParamMapper.updateById(ggFeeParam);
+                }
+                logger.info("商户信息修改成功！");
+            } else {
+                logger.error("商户修改失败！");
+            }
 
-			// 数据转换
-			rs = MapUtil.map2Obj(resMap, GgMerchantVo.class);
-			RespInfoVo respInfoVo = rs.getRespInfo();
-
-			boolean flag = false;
-			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
-				logger.info("商户入驻申请已受理!外部交易号：{}，订单号：{}", rs.getOutTradeNo(), rs.getOrderNo());
-				register.setOrderNo(rs.getOrderNo());
-				register.setRegisterStatus(TradeConstant.RegisterStatusEnum.Audit.getStatusCode());
-				flag = true;
-			} else {
-				logger.info("商户入驻申请失败!外部交易号：{}", rs.getOutTradeNo());
-			}
-			GgMerchant query = new GgMerchant();
-			query.setOutMerchantId(register.getOutMerchantId());
-			query = ggMerchantMapper.selectOne(query);
-			if (query != null) {
-				if (flag) {
-					//update merchant 入驻结果
-					GgMerchant update = new GgMerchant();
-					update.setId(query.getId());
-					update.setOrderNo(register.getOrderNo());
-					update.setRegisterStatus(register.getRegisterStatus());
-					ggMerchantMapper.updateById(update);
-				}
-			} else {
-				// 插入商户表
-				insert(register);
-			}
-
-		} catch (Exception e) {
-			logger.error("商户入驻异常！");
-			throw new RuntimeException(e);
-		}
-		return rs;
-	}
-
-	@Override
-	public RegisterQueryVo registerQuery(String orderNo) {
-		RegisterQueryVo rs = new RegisterQueryVo();
-		try {
-			ApiCallUtil registerQuery = new ApiCallUtil(ApiCallUtil.FUNCTION_REGISTER_QUERY);
-			registerQuery.setBody(new HashMap<String, String>() {
-				{
-					put("IsvOrgId", tradeConfig.getIsvOrgId());
-					put("OrderNo", orderNo);
-				}
-			});
-
-			logger.info("开始调用registerQuery接口, url={}", tradeConfig.getReqUrl());
-			Map<String, Object> resMap = registerQuery.call(tradeConfig.getReqUrl());
-
-			// 数据转换
-			rs = MapUtil.map2Obj(resMap, RegisterQueryVo.class);
-			RespInfoVo respInfoVo = rs.getRespInfo();
-
-			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
-				logger.info("商户入驻结果查询成功!订单号：{}，入驻状态：{}", orderNo, TradeConstant.RegisterStatusEnum.getRegisterStatusByCode(rs.getRegisterStatus())
-						.getStatusDesc());
-				GgMerchant merchant = new GgMerchant().setOrderNo(orderNo);
-				merchant = ggMerchantMapper.selectOne(merchant);
-				if (merchant != null) {
-					String registerStatus = merchant.getRegisterStatus();
-					String queryStatus = rs.getRegisterStatus();
-					try {
-						if (!queryStatus.equals(registerStatus)) {
-							GgMerchant update = new GgMerchant();
-							update.setId(merchant.getId());
-							update.setRegisterStatus(queryStatus);
-
-							if (TradeConstant.RegisterStatusEnum.Success.getStatusCode().equals(queryStatus)) {
-								update.setMerchantId(rs.getMerchantId());
-								update.setAccountNo(rs.getAccountNo());
-								update.setSmid(rs.getSmid());
-								if (StringUtils.isNotBlank(rs.getWechatChannelList())) {
-									String wechatChannels = new String(new BASE64Decoder().decodeBuffer(rs.getWechatChannelList()), "UTF-8");
-									rs.setWechatChannelList(wechatChannels);
-									List<GgWechatChannelVo> wechatChannelList = JSON.parseArray(wechatChannels, GgWechatChannelVo.class);
-									rs.setWechatChannelVoList(wechatChannelList);
-									if (wechatChannelList != null) {
-										for (int i = 0; i < wechatChannelList.size(); i++) {
-											GgWechatChannel ggWechatChannel = new GgWechatChannel();
-											BeanUtils.copyProperties(wechatChannelList.get(i), ggWechatChannel);
-											ggWechatChannel.setOutMerchantId(merchant.getOutMerchantId());
-											ggWechatChannelMapper.insert(ggWechatChannel);
-										}
-									}
-								}
-							}
-							ggMerchantMapper.updateById(update);
-						}
-					} catch (Exception e) {
-						logger.error("更新商户入驻结果信息失败！", e);
-					}
-
-				}
-			} else {
-				logger.info("商户入驻结果查询失败!订单号：{}", orderNo);
-			}
-
-		} catch (Exception e) {
-			logger.error("订单查询异常！", e);
-		}
-
-		return rs;
-	}
-
-	@Override
-	public GgMerchantVo findMerchantById(Long id) {
-		GgMerchantVo merchantVo = null;
-		try {
-			GgMerchant ggMerchant = ggMerchantMapper.selectById(id);
-			if (ggMerchant != null) {
-				merchantVo = assembleMerchantVo(ggMerchant);
-			}
-		} catch (Exception e) {
-			logger.error("查询商户信息异常！" + e.getMessage(), e);
-		}
-		return merchantVo;
-	}
-
-	@Override
-	public GgMerchantVo findMerchantByMerchantId(String merchantId) {
-		GgMerchantVo merchantVo = null;
-		try {
-			GgMerchant ggMerchant = this.selectOne(new EntityWrapper<GgMerchant>().eq("merchant_id", merchantId));
-			if (ggMerchant != null) {
-				merchantVo = assembleMerchantVo(ggMerchant);
-			}
-		} catch (Exception e) {
-			logger.error("查询商户信息异常！" + e.getMessage(), e);
-		}
-		return merchantVo;
-	}
+        } catch (Exception e) {
+            logger.error("商户修改异常！");
+            throw new RuntimeException(e);
+        }
+        return rs;
+    }
 
 
-	/**
-	 * assembleMerchantVo(组装商户信息vo)
-	 *
-	 * @Title: assembleMerchantVo
-	 * @Description:
-	 * @param merchant 商户信息
-	 * @param outMerchantId 外部商户号
-	 * @throws
-	 * @author Ripin Yan
-	 * @return ins.platform.aggpay.trade.vo.GgMerchantVo
-	 */
-	public GgMerchantVo assembleMerchantVo(GgMerchant merchant) {
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean deleteById(Long id) {
+        try {
+            GgMerchant ggMerchant = ggMerchantMapper.selectById(id);
+            GgMerchantVo merchantVo = new GgMerchantVo();
+            if (ggMerchant != null) {
+                ggMerchantMapper.deleteById(id);
+                BeanUtils.copyProperties(ggMerchant, merchantVo);
+                String outMerchantId = ggMerchant.getOutMerchantId();
 
-		GgMerchantVo merchantVo = new GgMerchantVo();
-		BeanUtils.copyProperties(merchant, merchantVo);
+                // 商户详情
+                GgMerchantDetail ggMerchantDetail = new GgMerchantDetail().setOutMerchantId(outMerchantId);
+                ggMerchantDetail = ggMerchantDetailMapper.selectOne(ggMerchantDetail);
+                if(ggMerchantDetail != null){
+                    ggMerchantDetailMapper.deleteById(ggMerchantDetail.getId());
+                }
+                // 清算卡
+                GgBankCardParam ggBankCardParam = new GgBankCardParam().setOutMerchantId(outMerchantId);
+                ggBankCardParam = ggBankCardParamMapper.selectOne(ggBankCardParam);
+                if(ggBankCardParam != null){
+                    ggBankCardParamMapper.deleteById(ggBankCardParam.getId());
+                }
+                // 手续费
+                List<GgFeeParam> fpList = ggFeeParamMapper.selectList(new EntityWrapper<GgFeeParam>().eq("out_merchant_id", outMerchantId));
+                if(fpList != null && fpList.size() != 0){
+                    for (int i = 0; i < fpList.size(); i++) {
+                        GgFeeParamVo fpVo = new GgFeeParamVo();
+                        BeanUtils.copyProperties(fpList.get(i), fpVo);
+                        ggFeeParamMapper.deleteById(fpVo.getId());
+                    }
+                    logger.info("商户信息删除成功！");
+                }
+                return true;
+            } else {
+                logger.error("商户信息删除失败！");
+            }
+        } catch (Exception e) {
+            logger.error("商户信息删除异常！", e);
+            throw new RuntimeException(e);
+        }
 
-		// 商户详情
-		String outMerchantId = merchant.getOutMerchantId();
-		GgMerchantDetail ggMerchantDetail = new GgMerchantDetail().setOutMerchantId(outMerchantId);
-		ggMerchantDetail = ggMerchantDetailMapper.selectOne(ggMerchantDetail);
-		if (ggMerchantDetail != null) {
-			GgMerchantDetailVo ggMerchantDetailVo = new GgMerchantDetailVo();
-			BeanUtils.copyProperties(ggMerchantDetail, ggMerchantDetailVo);
-			merchantVo.setGgMerchantDetailVo(ggMerchantDetailVo);
-		}
-		// 清算卡
-		GgBankCardParam ggBankCardParam = new GgBankCardParam().setOutMerchantId(outMerchantId);
-		ggBankCardParam = ggBankCardParamMapper.selectOne(ggBankCardParam);
-		if (ggBankCardParam != null) {
-			GgBankCardParamVo bcpVo = new GgBankCardParamVo();
-			BeanUtils.copyProperties(ggBankCardParam, bcpVo);
-			merchantVo.setGgBankCardParamVo(bcpVo);
-		}
-		// 手续费
-		List<GgFeeParam> fpList = ggFeeParamMapper.selectList(new EntityWrapper<GgFeeParam>().eq("out_merchant_id", outMerchantId));
-		if (fpList != null && fpList.size() > 0) {
-			List<GgFeeParamVo> fpListVo = new ArrayList<>();
-			for (int i = 0; i < fpList.size(); i++) {
-				GgFeeParamVo fpVo = new GgFeeParamVo();
-				BeanUtils.copyProperties(fpList.get(i), fpVo);
-				fpListVo.add(fpVo);
-			}
-			merchantVo.setFeeParamList(fpListVo);
-		}
-		return merchantVo;
-	}
+        return false;
+    }
 
-	@Override
-	public RespInfoVo sendSmsCode(SmsVo smsVo) {
-		RespInfoVo rs = null;
-		try {
-			String outTradeNo = ApiCallUtil.generateOutTradeNo();
-			smsVo.setOutTradeNo(outTradeNo);
-			String bizType = smsVo.getBizType();
-			ApiCallUtil sms = new ApiCallUtil(ApiCallUtil.FUNCTION_SEND_SMS_CODE);
-			sms.setBody(new HashMap<String, String>() {
-				{
-					put("IsvOrgId", tradeConfig.getIsvOrgId());
-					put("BizType", bizType);
-					if ("02".equals(bizType) || "03".equals(bizType) || "05".equals(bizType)) {
-						put("MerchantId", smsVo.getMerchantId());
-					}
-					if ("01".equals(bizType) || "03".equals(bizType) || "04".equals(bizType)) {
-						put("Mobile", smsVo.getMobile());
-					}
-					put("OutTradeNo", outTradeNo);
-				}
-			});
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean insert(GgMerchantVo register) {
+        try {
+            if (register != null) {
+                String outMerchantId = ApiCallUtil.generateOutTradeNo();
+                // 插入商户信息
+                GgMerchant insert = new GgMerchant();
+                BeanUtils.copyProperties(register, insert);
+                insert.setOutMerchantId(outMerchantId);
+                ggMerchantMapper.insert(insert);
 
-			logger.info("开始调用sendSmsCode接口, url={}", tradeConfig.getReqUrl());
-			Map<String, Object> resMap = sms.call(tradeConfig.getReqUrl());
+                // 插入商户详情信息
+                GgMerchantDetail detail = new GgMerchantDetail();
+                BeanUtils.copyProperties(register.getGgMerchantDetailVo(), detail);
+                detail.setOutMerchantId(outMerchantId);
+                ggMerchantDetailMapper.insert(detail);
 
-			// 数据转换
-			rs = MapUtil.map2Obj((Map) resMap.get("respInfo"), RespInfoVo.class);
-			if (rs != null && RESULT_STATUS_SUCCESS.equals(rs.getResultStatus())) {
-				logger.info("发送短信成功!外部订单号：{}", outTradeNo);
-			} else {
-				logger.info("发送短信失败!外部订单号：{}，失败原因：{}", outTradeNo, rs != null ? rs.getResultMsg() : "");
-			}
+                // 插入手续费列表信息
+                List<GgFeeParamVo> feeParamList = register.getFeeParamList();
+                for (int i = 0; i < feeParamList.size(); i++) {
+                    GgFeeParam feeParam = new GgFeeParam();
+                    BeanUtils.copyProperties(feeParamList.get(i), feeParam);
+                    feeParam.setOutMerchantId(outMerchantId);
+                    ggFeeParamMapper.insert(feeParam);
+                }
 
-		} catch (Exception e) {
-			logger.error("发送短信异常！", e);
-		}
+                // 插入清算卡信息
+                GgBankCardParam bankCardParam = new GgBankCardParam();
+                BeanUtils.copyProperties(register.getGgBankCardParamVo(), bankCardParam);
+                bankCardParam.setOutMerchantId(outMerchantId);
+                ggBankCardParamMapper.insert(bankCardParam);
 
-		return rs;
-	}
+                logger.info("商户信息添加成功！");
+                return true;
+            } else {
+                logger.error("商户信息为空！");
+            }
 
-	@Override
-	public UploadPhotoVo uploadPhoto(UploadPhotoVo uploadPhotoVo) {
-		UploadPhotoVo rs = null;
-		try {
-			String outTradeNo = ApiCallUtil.generateOutTradeNo();
-			uploadPhotoVo.setOutTradeNo(outTradeNo);
-			UploadPhoto uploadPhoto = new UploadPhoto(tradeConfig.getIsvOrgId(), tradeConfig.getAppId(), tradeConfig.getVersion(), tradeConfig
-					.getAppPrivateKey(), uploadPhotoVo.getPhotoType(), outTradeNo, uploadPhotoVo.getPicture());
-			Map<String, Object> result = uploadPhoto.call();
-			rs = MapUtil.map2Obj(result, UploadPhotoVo.class);
-			RespInfoVo respInfoVo = rs.getRespInfo();
+        } catch (Exception e) {
+            logger.error("商户保存数据库操作异常");
+            throw new RuntimeException(e);
+        }
+        logger.error("商户添加失败！");
+        return false;
+    }
 
-			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
-				logger.info("上传图片成功!外部订单号：{}，图片url：{}", outTradeNo, rs.getPhotoUrl());
-			} else {
-				logger.info("上传图片失败!外部订单号：{}，失败原因：{}", outTradeNo, respInfoVo != null ? respInfoVo.getResultMsg() : "");
-			}
-		} catch (Exception e) {
-			logger.error("上传图片异常！", e);
-		}
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public GgMerchantVo regist(GgMerchantVo register) {
 
-		return rs;
-	}
+        GgMerchantVo rs;
+        try {
+            String outMerchantId = register.getOutMerchantId();
+            ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_REGISTER);
+            pc.setBody(new HashMap<String, String>() {
+                {
+                    put("IsvOrgId", tradeConfig.getIsvOrgId());
+                    put("OutMerchantId", outMerchantId);
+                    put("MerchantName", register.getMerchantName());
+                    put("MerchantType", register.getMerchantType());
+                    put("DealType", register.getDealType());
+                    put("SupportPrepayment", register.getSupportPrepayment());
+                    put("SettleMode", register.getSettleMode());
+                    put("Mcc", register.getMcc());
+                    put("MerchantDetail", register.getGgMerchantDetailVo().genJsonBase64());
+                    put("TradeTypeList", register.getTradeTypeList());
+                    put("PayChannelList", register.getPayChannelList());
+                    put("DeniedPayToolList", register.getDeniedPayToolList());
+                    put("FeeParamList", GgFeeParamVo.genJsonBase64(register.getFeeParamList()));
+                    put("BankCardParam", register.getGgBankCardParamVo().genJsonBase64());
+                    put("AuthCode", register.getAuthCode());
+                    put("OutTradeNo", register.getOutTradeNo());
+                    put("SupportStage", register.getSupportStage());
+                    put("PartnerType", register.getPartnerType());
+                    put("AlipaySource", register.getAlipaySource());
+                    put("WechatChannel", register.getWechatChannel());
+                    put("RateVersion", register.getRateVersion());
+                }
+            });
 
-	@Override
-	public RespInfoVo updateMerchant(GgMerchantVo merchantVo) {
-		RespInfoVo rs;
-		try {
-			ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_MERCHANT_UPDATE);
-			pc.setBody(new HashMap<String, String>() {
-				{
-					put("IsvOrgId", tradeConfig.getIsvOrgId());
-					put("MerchantId", merchantVo.getMerchantId());
-					put("DealType", merchantVo.getDealType());
-					put("SupportPrepayment", merchantVo.getSupportPrepayment());
-					put("SettleMode", merchantVo.getSettleMode());
-					put("Mcc", merchantVo.getMcc());
-					if (merchantVo.getGgMerchantDetailVo() != null) {
-						put("MerchantDetail", merchantVo.getGgMerchantDetailVo().genJsonBase64());
-					}
-					put("TradeTypeList", merchantVo.getTradeTypeList());
-					put("PayChannelList", merchantVo.getPayChannelList());
-					put("DeniedPayToolList", merchantVo.getDeniedPayToolList());
-					if (merchantVo.getFeeParamList() != null) {
-						put("FeeParamList", GgFeeParamVo.genJsonBase64(merchantVo.getFeeParamList()));
-					}
-					if (merchantVo.getGgBankCardParamVo() != null) {
-						put("BankCardParam", merchantVo.getGgBankCardParamVo().genJsonBase64());
-					}
-					put("OutTradeNo", merchantVo.getOutTradeNo());
-					put("SupportStage", merchantVo.getSupportStage());
-					put("AlipaySource", merchantVo.getAlipaySource());
-				}
-			});
+            Map<String, Object> resMap = pc.call(tradeConfig.getReqUrl());
 
-			Map<String, Object> resMap = pc.call(tradeConfig.getReqUrl());
-			// 数据转换
-			rs = MapUtil.map2Obj((Map) resMap.get("respInfo"), RespInfoVo.class);
+            // 数据转换
+            rs = MapUtil.map2Obj(resMap, GgMerchantVo.class);
+            RespInfoVo respInfoVo = rs.getRespInfo();
 
-			if (rs != null && RESULT_STATUS_SUCCESS.equals(rs.getResultStatus())) {
-				logger.info("商户信息修改成功!外部交易号：{}", merchantVo.getOutTradeNo());
+            boolean flag = false;
+            if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+                logger.info("商户入驻申请已受理!外部交易号：{}，订单号：{}", rs.getOutTradeNo(), rs.getOrderNo());
+                register.setOrderNo(rs.getOrderNo());
+                register.setRegisterStatus(TradeConstant.RegisterStatusEnum.Audit.getStatusCode());
+                flag = true;
+            } else {
+                logger.info("商户入驻申请失败!外部交易号：{}", rs.getOutTradeNo());
+            }
+            GgMerchant query = new GgMerchant();
+            query.setOutMerchantId(register.getOutMerchantId());
+            query = ggMerchantMapper.selectOne(query);
+            if (query != null) {
+                if (flag) {
+                    //update merchant 入驻结果
+                    GgMerchant update = new GgMerchant();
+                    update.setId(query.getId());
+                    update.setOrderNo(register.getOrderNo());
+                    update.setRegisterStatus(register.getRegisterStatus());
+                    ggMerchantMapper.updateById(update);
+                }
+            } else {
+                // 插入商户表
+                insert(register);
+            }
 
-				// 更新商户主表
-				GgMerchant merchant = new GgMerchant();
-				BeanUtils.copyProperties(merchantVo, merchant);
-				ggMerchantMapper.updateById(merchant);
-				// 更新商户详情
-				GgMerchantDetailVo merchantDetailVo = merchantVo.getGgMerchantDetailVo();
-				if (merchantDetailVo != null) {
-					GgMerchantDetail merchantDetail = new GgMerchantDetail();
-					BeanUtils.copyProperties(merchantDetailVo, merchantDetail);
-					ggMerchantDetailMapper.updateById(merchantDetail);
-				}
-				// 更新清算卡信息
-				if (merchantVo.getGgBankCardParamVo() != null) {
-					GgBankCardParam bankCardParam = new GgBankCardParam();
-					BeanUtils.copyProperties(merchantVo.getGgBankCardParamVo(), bankCardParam);
-					ggBankCardParamMapper.updateById(bankCardParam);
-				}
-				// 更新手续费列表
-				List<GgFeeParamVo> feeParamList = merchantVo.getFeeParamList();
-				if (merchantVo.getFeeParamList() != null && merchantVo.getFeeParamList().size() > 0) {
-					for (int i = 0; i < feeParamList.size(); i++) {
-						GgFeeParamVo feeParamVo = feeParamList.get(i);
-						GgFeeParam feeParam = new GgFeeParam();
-						BeanUtils.copyProperties(feeParamVo, feeParam);
-						ggFeeParamMapper.updateById(feeParam);
-					}
-				}
+        } catch (Exception e) {
+            logger.error("商户入驻异常！");
+            throw new RuntimeException(e);
+        }
+        return rs;
+    }
 
-			} else {
-				logger.info("商户信息修改失败，不更新db库数据!商户号：{}，失败原因：{}", merchantVo.getMerchantId(), rs != null ? rs.getResultMsg() : "rs is null");
-			}
+    @Override
+    public RegisterQueryVo registerQuery(String orderNo) {
+        RegisterQueryVo rs = new RegisterQueryVo();
+        try {
+            ApiCallUtil registerQuery = new ApiCallUtil(ApiCallUtil.FUNCTION_REGISTER_QUERY);
+            registerQuery.setBody(new HashMap<String, String>() {
+                {
+                    put("IsvOrgId", tradeConfig.getIsvOrgId());
+                    put("OrderNo", orderNo);
+                }
+            });
 
-		} catch (Exception e) {
-			logger.error("商户信息修改异常！");
-			throw new RuntimeException(e);
-		}
-		return rs;
-	}
+            logger.info("开始调用registerQuery接口, url={}", tradeConfig.getReqUrl());
+            Map<String, Object> resMap = registerQuery.call(tradeConfig.getReqUrl());
 
-	@Override
-	public GgMerchantVo merchantQuery(String merchantId) {
-		ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_MERCHANT_QUERY);
-		pc.setBody(new HashMap<String, String>() {
-			{
-				put("IsvOrgId", tradeConfig.getIsvOrgId());
-				put("MerchantId", merchantId);
-			}
-		});
-		GgMerchantVo rs = null;
-		try {
-			Map<String, Object> result = pc.call(tradeConfig.getReqUrl());
-			rs = MapUtil.map2Obj(result, GgMerchantVo.class);
-			RespInfoVo respInfoVo = rs.getRespInfo();
+            // 数据转换
+            rs = MapUtil.map2Obj(resMap, RegisterQueryVo.class);
+            RespInfoVo respInfoVo = rs.getRespInfo();
 
-			if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
-				logger.info("商户信息查询成功!商户号：{}", merchantId);
+            if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+                logger.info("商户入驻结果查询成功!订单号：{}，入驻状态：{}", orderNo, TradeConstant.RegisterStatusEnum.getRegisterStatusByCode(rs.getRegisterStatus())
+                        .getStatusDesc());
+                GgMerchant merchant = new GgMerchant().setOrderNo(orderNo);
+                merchant = ggMerchantMapper.selectOne(merchant);
+                if (merchant != null) {
+                    String registerStatus = merchant.getRegisterStatus();
+                    String queryStatus = rs.getRegisterStatus();
+                    try {
+                        if (!queryStatus.equals(registerStatus)) {
+                            GgMerchant update = new GgMerchant();
+                            update.setId(merchant.getId());
+                            update.setRegisterStatus(queryStatus);
 
-				BASE64Decoder decoder = new BASE64Decoder();
-				// 商户详情信息
-				String merchantDetailJson = new String(decoder.decodeBuffer((String) result.get("merchantDetail")));
-				GgMerchantDetailVo ggMerchantDetailVo = JSON.parseObject(merchantDetailJson).toJavaObject(GgMerchantDetailVo.class);
-				rs.setGgMerchantDetailVo(ggMerchantDetailVo);
-				// 费率列表
-				String feeParamListJson = new String(decoder.decodeBuffer((String) result.get("feeParamList")));
-				List<GgFeeParamVo> ggFeeParamVos = JSON.parseArray(feeParamListJson, GgFeeParamVo.class);
-				rs.setFeeParamList(ggFeeParamVos);
-				// 清算卡信息
-				String bankCardParamJson = new String(decoder.decodeBuffer((String) result.get("bankCardParam")));
-				GgBankCardParamVo ggBankCardParamVo = JSON.parseObject(bankCardParamJson).toJavaObject(GgBankCardParamVo.class);
-				rs.setGgBankCardParamVo(ggBankCardParamVo);
-				// 微信渠道号进驻信息
-				String wechatChannelListJson = new String(decoder.decodeBuffer((String) result.get("wechatChannelList")));
-				List<GgWechatChannelVo> wechatChannelList = JSON.parseArray(wechatChannelListJson, GgWechatChannelVo.class);
-				rs.setWechatChannelList(wechatChannelList);
-				rs.setWechatChannel(wechatChannelListJson);
-			} else {
-				logger.info("商户信息查询失败!商户号：{}", merchantId);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return rs;
-	}
+                            if (TradeConstant.RegisterStatusEnum.Success.getStatusCode().equals(queryStatus)) {
+                                update.setMerchantId(rs.getMerchantId());
+                                update.setAccountNo(rs.getAccountNo());
+                                update.setSmid(rs.getSmid());
+                                if (StringUtils.isNotBlank(rs.getWechatChannelList())) {
+                                    String wechatChannels = new String(new BASE64Decoder().decodeBuffer(rs.getWechatChannelList()), "UTF-8");
+                                    rs.setWechatChannelList(wechatChannels);
+                                    List<GgWechatChannelVo> wechatChannelList = JSON.parseArray(wechatChannels, GgWechatChannelVo.class);
+                                    rs.setWechatChannelVoList(wechatChannelList);
+                                    if (wechatChannelList != null) {
+                                        for (int i = 0; i < wechatChannelList.size(); i++) {
+                                            GgWechatChannel ggWechatChannel = new GgWechatChannel();
+                                            BeanUtils.copyProperties(wechatChannelList.get(i), ggWechatChannel);
+                                            ggWechatChannel.setOutMerchantId(merchant.getOutMerchantId());
+                                            ggWechatChannelMapper.insert(ggWechatChannel);
+                                        }
+                                    }
+                                }
+                            }
+                            ggMerchantMapper.updateById(update);
+                        }
+                    } catch (Exception e) {
+                        logger.error("更新商户入驻结果信息失败！", e);
+                    }
+
+                }
+            } else {
+                logger.info("商户入驻结果查询失败!订单号：{}", orderNo);
+            }
+
+        } catch (Exception e) {
+            logger.error("订单查询异常！", e);
+        }
+
+        return rs;
+    }
+
+    @Override
+    public GgMerchantVo findMerchantById(Long id) {
+        GgMerchantVo merchantVo = null;
+        try {
+            GgMerchant ggMerchant = ggMerchantMapper.selectById(id);
+            if (ggMerchant != null) {
+                merchantVo = assembleMerchantVo(ggMerchant);
+            }
+        } catch (Exception e) {
+            logger.error("查询商户信息异常！" + e.getMessage(), e);
+        }
+        return merchantVo;
+    }
+
+    @Override
+    public GgMerchantVo findMerchantByMerchantId(String merchantId) {
+        GgMerchantVo merchantVo = null;
+        try {
+            GgMerchant ggMerchant = this.selectOne(new EntityWrapper<GgMerchant>().eq("merchant_id", merchantId));
+            if (ggMerchant != null) {
+                merchantVo = assembleMerchantVo(ggMerchant);
+            }
+        } catch (Exception e) {
+            logger.error("查询商户信息异常！" + e.getMessage(), e);
+        }
+        return merchantVo;
+    }
+
+
+    /**
+     * assembleMerchantVo(组装商户信息vo)
+     *
+     * @param merchant 商户信息
+     * @return ins.platform.aggpay.trade.vo.GgMerchantVo
+     * @throws
+     * @Title: assembleMerchantVo
+     * @Description:
+     * @author Ripin Yan
+     */
+    public GgMerchantVo assembleMerchantVo(GgMerchant merchant) {
+
+        GgMerchantVo merchantVo = new GgMerchantVo();
+        BeanUtils.copyProperties(merchant, merchantVo);
+
+        // 商户详情
+        String outMerchantId = merchant.getOutMerchantId();
+        GgMerchantDetail ggMerchantDetail = new GgMerchantDetail().setOutMerchantId(outMerchantId);
+        ggMerchantDetail = ggMerchantDetailMapper.selectOne(ggMerchantDetail);
+        if (ggMerchantDetail != null) {
+            GgMerchantDetailVo ggMerchantDetailVo = new GgMerchantDetailVo();
+            BeanUtils.copyProperties(ggMerchantDetail, ggMerchantDetailVo);
+            merchantVo.setGgMerchantDetailVo(ggMerchantDetailVo);
+        }
+        // 清算卡
+        GgBankCardParam ggBankCardParam = new GgBankCardParam().setOutMerchantId(outMerchantId);
+        ggBankCardParam = ggBankCardParamMapper.selectOne(ggBankCardParam);
+        if (ggBankCardParam != null) {
+            GgBankCardParamVo bcpVo = new GgBankCardParamVo();
+            BeanUtils.copyProperties(ggBankCardParam, bcpVo);
+            merchantVo.setGgBankCardParamVo(bcpVo);
+        }
+        // 手续费
+        List<GgFeeParam> fpList = ggFeeParamMapper.selectList(new EntityWrapper<GgFeeParam>().eq("out_merchant_id", outMerchantId));
+        if (fpList != null && fpList.size() > 0) {
+            List<GgFeeParamVo> fpListVo = new ArrayList<>();
+            for (int i = 0; i < fpList.size(); i++) {
+                GgFeeParamVo fpVo = new GgFeeParamVo();
+                BeanUtils.copyProperties(fpList.get(i), fpVo);
+                fpListVo.add(fpVo);
+            }
+            merchantVo.setFeeParamList(fpListVo);
+        }
+        return merchantVo;
+    }
+
+    @Override
+    public RespInfoVo sendSmsCode(SmsVo smsVo) {
+        RespInfoVo rs = null;
+        try {
+            String outTradeNo = ApiCallUtil.generateOutTradeNo();
+            smsVo.setOutTradeNo(outTradeNo);
+            String bizType = smsVo.getBizType();
+            ApiCallUtil sms = new ApiCallUtil(ApiCallUtil.FUNCTION_SEND_SMS_CODE);
+            sms.setBody(new HashMap<String, String>() {
+                {
+                    put("IsvOrgId", tradeConfig.getIsvOrgId());
+                    put("BizType", bizType);
+                    if ("02".equals(bizType) || "03".equals(bizType) || "05".equals(bizType)) {
+                        put("MerchantId", smsVo.getMerchantId());
+                    }
+                    if ("01".equals(bizType) || "03".equals(bizType) || "04".equals(bizType)) {
+                        put("Mobile", smsVo.getMobile());
+                    }
+                    put("OutTradeNo", outTradeNo);
+                }
+            });
+
+            logger.info("开始调用sendSmsCode接口, url={}", tradeConfig.getReqUrl());
+            Map<String, Object> resMap = sms.call(tradeConfig.getReqUrl());
+
+            // 数据转换
+            rs = MapUtil.map2Obj((Map) resMap.get("respInfo"), RespInfoVo.class);
+            if (rs != null && RESULT_STATUS_SUCCESS.equals(rs.getResultStatus())) {
+                logger.info("发送短信成功!外部订单号：{}", outTradeNo);
+            } else {
+                logger.info("发送短信失败!外部订单号：{}，失败原因：{}", outTradeNo, rs != null ? rs.getResultMsg() : "");
+            }
+
+        } catch (Exception e) {
+            logger.error("发送短信异常！", e);
+        }
+
+        return rs;
+    }
+
+    @Override
+    public UploadPhotoVo uploadPhoto(UploadPhotoVo uploadPhotoVo) {
+        UploadPhotoVo rs = null;
+        try {
+            String outTradeNo = ApiCallUtil.generateOutTradeNo();
+            uploadPhotoVo.setOutTradeNo(outTradeNo);
+            UploadPhoto uploadPhoto = new UploadPhoto(tradeConfig.getIsvOrgId(), tradeConfig.getAppId(), tradeConfig.getVersion(), tradeConfig
+                    .getAppPrivateKey(), uploadPhotoVo.getPhotoType(), outTradeNo, uploadPhotoVo.getPicture());
+            Map<String, Object> result = uploadPhoto.call();
+            rs = MapUtil.map2Obj(result, UploadPhotoVo.class);
+            RespInfoVo respInfoVo = rs.getRespInfo();
+
+            if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+                logger.info("上传图片成功!外部订单号：{}，图片url：{}", outTradeNo, rs.getPhotoUrl());
+            } else {
+                logger.info("上传图片失败!外部订单号：{}，失败原因：{}", outTradeNo, respInfoVo != null ? respInfoVo.getResultMsg() : "");
+            }
+        } catch (Exception e) {
+            logger.error("上传图片异常！", e);
+        }
+
+        return rs;
+    }
+
+    @Override
+    public RespInfoVo updateMerchant(GgMerchantVo merchantVo) {
+        RespInfoVo rs;
+        try {
+            ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_MERCHANT_UPDATE);
+            pc.setBody(new HashMap<String, String>() {
+                {
+                    put("IsvOrgId", tradeConfig.getIsvOrgId());
+                    put("MerchantId", merchantVo.getMerchantId());
+                    put("DealType", merchantVo.getDealType());
+                    put("SupportPrepayment", merchantVo.getSupportPrepayment());
+                    put("SettleMode", merchantVo.getSettleMode());
+                    put("Mcc", merchantVo.getMcc());
+                    if (merchantVo.getGgMerchantDetailVo() != null) {
+                        put("MerchantDetail", merchantVo.getGgMerchantDetailVo().genJsonBase64());
+                    }
+                    put("TradeTypeList", merchantVo.getTradeTypeList());
+                    put("PayChannelList", merchantVo.getPayChannelList());
+                    put("DeniedPayToolList", merchantVo.getDeniedPayToolList());
+                    if (merchantVo.getFeeParamList() != null) {
+                        put("FeeParamList", GgFeeParamVo.genJsonBase64(merchantVo.getFeeParamList()));
+                    }
+                    if (merchantVo.getGgBankCardParamVo() != null) {
+                        put("BankCardParam", merchantVo.getGgBankCardParamVo().genJsonBase64());
+                    }
+                    put("OutTradeNo", merchantVo.getOutTradeNo());
+                    put("SupportStage", merchantVo.getSupportStage());
+                    put("AlipaySource", merchantVo.getAlipaySource());
+                }
+            });
+
+            Map<String, Object> resMap = pc.call(tradeConfig.getReqUrl());
+            // 数据转换
+            rs = MapUtil.map2Obj((Map) resMap.get("respInfo"), RespInfoVo.class);
+
+            if (rs != null && RESULT_STATUS_SUCCESS.equals(rs.getResultStatus())) {
+                logger.info("商户信息修改成功!外部交易号：{}", merchantVo.getOutTradeNo());
+
+                // 更新商户主表
+                GgMerchant merchant = new GgMerchant();
+                BeanUtils.copyProperties(merchantVo, merchant);
+                ggMerchantMapper.updateById(merchant);
+                // 更新商户详情
+                GgMerchantDetailVo merchantDetailVo = merchantVo.getGgMerchantDetailVo();
+                if (merchantDetailVo != null) {
+                    GgMerchantDetail merchantDetail = new GgMerchantDetail();
+                    BeanUtils.copyProperties(merchantDetailVo, merchantDetail);
+                    ggMerchantDetailMapper.updateById(merchantDetail);
+                }
+                // 更新清算卡信息
+                if (merchantVo.getGgBankCardParamVo() != null) {
+                    GgBankCardParam bankCardParam = new GgBankCardParam();
+                    BeanUtils.copyProperties(merchantVo.getGgBankCardParamVo(), bankCardParam);
+                    ggBankCardParamMapper.updateById(bankCardParam);
+                }
+                // 更新手续费列表
+                List<GgFeeParamVo> feeParamList = merchantVo.getFeeParamList();
+                if (merchantVo.getFeeParamList() != null && merchantVo.getFeeParamList().size() > 0) {
+                    for (int i = 0; i < feeParamList.size(); i++) {
+                        GgFeeParamVo feeParamVo = feeParamList.get(i);
+                        GgFeeParam feeParam = new GgFeeParam();
+                        BeanUtils.copyProperties(feeParamVo, feeParam);
+                        ggFeeParamMapper.updateById(feeParam);
+                    }
+                }
+
+            } else {
+                logger.info("商户信息修改失败，不更新db库数据!商户号：{}，失败原因：{}", merchantVo.getMerchantId(), rs != null ? rs.getResultMsg() : "rs is null");
+            }
+
+        } catch (Exception e) {
+            logger.error("商户信息修改异常！");
+            throw new RuntimeException(e);
+        }
+        return rs;
+    }
+
+    @Override
+    public GgMerchantVo merchantQuery(String merchantId) {
+        ApiCallUtil pc = new ApiCallUtil(ApiCallUtil.FUNCTION_MERCHANT_QUERY);
+        pc.setBody(new HashMap<String, String>() {
+            {
+                put("IsvOrgId", tradeConfig.getIsvOrgId());
+                put("MerchantId", merchantId);
+            }
+        });
+        GgMerchantVo rs = null;
+        try {
+            Map<String, Object> result = pc.call(tradeConfig.getReqUrl());
+            rs = MapUtil.map2Obj(result, GgMerchantVo.class);
+            RespInfoVo respInfoVo = rs.getRespInfo();
+
+            if (respInfoVo != null && RESULT_STATUS_SUCCESS.equals(respInfoVo.getResultStatus())) {
+                logger.info("商户信息查询成功!商户号：{}", merchantId);
+
+                BASE64Decoder decoder = new BASE64Decoder();
+                // 商户详情信息
+                String merchantDetailJson = new String(decoder.decodeBuffer((String) result.get("merchantDetail")));
+                GgMerchantDetailVo ggMerchantDetailVo = JSON.parseObject(merchantDetailJson).toJavaObject(GgMerchantDetailVo.class);
+                rs.setGgMerchantDetailVo(ggMerchantDetailVo);
+                // 费率列表
+                String feeParamListJson = new String(decoder.decodeBuffer((String) result.get("feeParamList")));
+                List<GgFeeParamVo> ggFeeParamVos = JSON.parseArray(feeParamListJson, GgFeeParamVo.class);
+                rs.setFeeParamList(ggFeeParamVos);
+                // 清算卡信息
+                String bankCardParamJson = new String(decoder.decodeBuffer((String) result.get("bankCardParam")));
+                GgBankCardParamVo ggBankCardParamVo = JSON.parseObject(bankCardParamJson).toJavaObject(GgBankCardParamVo.class);
+                rs.setGgBankCardParamVo(ggBankCardParamVo);
+                // 微信渠道号进驻信息
+                String wechatChannelListJson = new String(decoder.decodeBuffer((String) result.get("wechatChannelList")));
+                List<GgWechatChannelVo> wechatChannelList = JSON.parseArray(wechatChannelListJson, GgWechatChannelVo.class);
+                rs.setWechatChannelList(wechatChannelList);
+                rs.setWechatChannel(wechatChannelListJson);
+            } else {
+                logger.info("商户信息查询失败!商户号：{}", merchantId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
 
     @Override
     public RespInfoVo merchantFreeze(String merchantId, String freezeReason) {

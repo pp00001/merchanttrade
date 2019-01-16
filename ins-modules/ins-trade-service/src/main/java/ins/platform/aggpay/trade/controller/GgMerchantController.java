@@ -112,17 +112,86 @@ public class GgMerchantController extends BaseController {
 		return new R<>(ggMerchantService.updateById(ggMerchant));
 	}
 
-	/**
-	 * 编辑
-	 *
-	 * @param ggMerchant 实体
-	 * @return success/false
-	 */
-	@PutMapping
-	public R<Boolean> edit(@RequestBody GgMerchant ggMerchant) {
-		ggMerchant.setUpdateTime(new Date());
-		return new R<>(ggMerchantService.updateById(ggMerchant));
-	}
+    /**
+     * 编辑
+     *
+     * @param ggMerchantVo 实体
+     * @return success/false
+     */
+    @PutMapping
+    public String edit(@RequestBody GgMerchantVo ggMerchantVo) {
+        JSONObject jo = new JSONObject();
+        String logPrefix = "【商户信息修改】";
+        try {
+            ggMerchantVo.setUpdateTime(new Date());
+            ggMerchantVo.setOutTradeNo(ApiCallUtil.generateOutTradeNo());
+            if (StringUtils.isBlank(ggMerchantVo.getOutMerchantId())) {
+                ggMerchantVo.setOutMerchantId(ggMerchantVo.getOutTradeNo());
+            }
+            GgMerchantVo resultVo = ggMerchantService.update(ggMerchantVo);
+            RespInfoVo respInfoVo = resultVo.getRespInfo();
+            if (respInfoVo != null) {
+                jo.put("resCode", respInfoVo.getResultCode());
+                jo.put("resMsg", respInfoVo.getResultMsg());
+                jo.put("outTradeNo", resultVo.getOutTradeNo());
+            }
+        } catch (Exception e) {
+            String errorMessage = logPrefix + "异常:" + e.getMessage();
+            logger.error(errorMessage, e);
+            jo.put("resCode", "1005");
+            jo.put("resMsg", errorMessage);
+        }
+        return jo.toJSONString();
+
+    }
+
+    /**
+     * 接收图片流接口
+     *
+     * @param file
+     * @param request
+     */
+    @PostMapping(value = "/uploadImg")
+    public String UploadImage(HttpServletRequest request,
+                            @RequestParam(value = "file", required = false) MultipartFile file) {
+        //获取文件在服务器的储存位置
+        String path = request.getSession().getServletContext().getRealPath("/upload");
+        File filePath = new File(path);
+        logger.info("文件的保存路径：" + path);
+        if (!filePath.exists() && !filePath.isDirectory()) {
+            filePath.mkdir();
+        }
+
+        //获取原始文件名称(包含格式)
+        String originalFileName = file.getOriginalFilename();
+        logger.info("原始文件名称：" + originalFileName);
+
+        //获取文件类型，以最后一个`.`为标识
+        String type = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+        logger.info("文件类型：" + type);
+        //获取文件名称（不包含格式）
+        String name = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+
+        //设置文件新名称: 当前时间+文件名称（不包含格式）
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(d);
+        String fileName = date + name + "." + type;
+        logger.info(fileName);
+
+        //在指定路径下创建一个文件
+        File targetFile = new File(path, fileName);
+
+        //将文件保存到服务器指定位置
+        try {
+            file.transferTo(targetFile);
+            logger.info("图片上传成功！");
+        } catch (Exception e) {
+            logger.error("图片上传异常："+e);
+        }
+
+        return "/upload/" + fileName;
+    }
 
 	/**
 	 * 5.1.1	短信验证码发送接口
@@ -265,8 +334,8 @@ public class GgMerchantController extends BaseController {
 	public R<Object> merchantFreeze(@RequestBody Map<String,String> params) {
         String merchantId = params.get("merchantId");
         String freezeReason = params.get("freezeReason");
-		return new R<>(ggMerchantService.merchantFreeze(merchantId , freezeReason));
-	}
+        return new R<>(ggMerchantService.merchantFreeze(merchantId, freezeReason));
+    }
 
 	/**
 	 * 5.2.8	商户开启接口
