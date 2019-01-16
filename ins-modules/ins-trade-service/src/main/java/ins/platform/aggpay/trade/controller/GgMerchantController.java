@@ -29,8 +29,11 @@ import ins.platform.aggpay.trade.vo.RespInfoVo;
 import ins.platform.aggpay.trade.vo.SmsVo;
 import ins.platform.aggpay.trade.vo.UploadPhotoVo;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -88,7 +92,7 @@ public class GgMerchantController extends BaseController {
 	/**
 	 * 添加
 	 *
-	 * @param ggMerchant 实体
+	 * @param ggMerchantVo 实体
 	 * @return success/false
 	 */
 	@PostMapping
