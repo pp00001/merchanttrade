@@ -19,6 +19,8 @@ import lombok.Data;
 @Data
 public class ResponseBodyVo {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 返回码组件
 	 */

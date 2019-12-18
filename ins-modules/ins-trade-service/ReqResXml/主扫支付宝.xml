@@ -1,0 +1,54 @@
+<document>
+  <request id="request">
+    <head>
+      <Version>1.0.0</Version>
+      <Appid>2018020200000155</Appid>
+      <Function>ant.mybank.bkmerchanttrade.prePay</Function>
+      <ReqTime>20141001010000</ReqTime>
+      <ReqTimeZone>UTC+8</ReqTimeZone>
+      <ReqMsgId>d374b12845bc4d2d8c4f90d49c07bf67</ReqMsgId>
+      <InputCharset>UTF-8</InputCharset>
+      <Reserve></Reserve>
+    </head>
+    <body>
+      <IsvOrgId>202210000000000001185</IsvOrgId>
+      <Body>汤臣一品</Body>
+      <GoodsTag></GoodsTag>
+      <GoodsDetail></GoodsDetail>
+      <TotalAmount>1</TotalAmount>
+      <Currency>CNY</Currency>
+      <MerchantId>226801000000093097765</MerchantId>
+      <SubAppIdType>SUBSCRIPTION</SubAppIdType>
+      <ChannelType>ALI</ChannelType>
+      <OpenId>2088012733782230</OpenId>
+      <OperatorId></OperatorId>
+      <StoreId></StoreId>
+      <DeviceId></DeviceId>
+      <DeviceCreateIp>8.8.8.8</DeviceCreateIp>
+      <ExpireExpress></ExpireExpress>
+      <SettleType>T1</SettleType>
+      <Attach></Attach>
+      <NotifyUrl>http://bkmock.stable.mayibank.net/home/merchant/notify</NotifyUrl>
+      <SubAppId></SubAppId>
+      <SpecifySubMerchId>N</SpecifySubMerchId>
+      <OutTradeNo>123123146545646455646545</OutTradeNo>
+    </body>
+  </request>
+  <ds:Signature
+      xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"></ds:CanonicalizationMethod>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"></ds:SignatureMethod>
+      <ds:Reference URI="">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"></ds:Transform>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod>
+        <ds:DigestValue>ZejJPTCX3m9BA/wjFittRNc84oo=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>
+      b6lynGO9fSHFlGcVQtn3r9PaOAZBf+A4E3HnWV3mkmpc1EfB6iR922kOG68mUPgW5WL48WTm4zqWGVT6NXtSyZR85rN++sbKMfgPReLoU6YD/ouSdCvr8JeNOJ+tKuWERDSG3X9LMJnC1FeTNR2nRAUO8I4CLFr8O8LjklbCdTEh+eCzOlOLhoorHqd1qzXJbwTvnchzGlQt4VvkbEneV9ffLEiuJSimP2VmrPE4jdpxpz0EE0f7DCrDTUVBgl4fel6jhoHjX4KDz70RwQ40zVpKjdTKwpDL/xYdHwzoR19UDXpAtgWo/pV9nrFx1JVeEBjvLacEXy9eaZaYyZ7GHw==
+    </ds:SignatureValue>
+  </ds:Signature>
+</document>

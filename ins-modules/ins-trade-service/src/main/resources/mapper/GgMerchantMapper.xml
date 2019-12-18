@@ -47,6 +47,8 @@
         <result column="smid" property="smid" />
         <result column="freeze_ind" property="freezeInd" />
         <result column="freeze_reason" property="freezeReason" />
+        <result column="notify_url" property="notifyUrl" />
+        <result column="public_key" property="publicKey" />
         <result column="valid_ind" property="validInd" />
         <result column="del_flag" property="delFlag" />
         <result column="creator_code" property="creatorCode" />
@@ -57,7 +59,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, out_merchant_id AS outMerchantId, order_no AS orderNo, merchant_id AS merchantId, merchant_name AS merchantName, merchant_type AS merchantType, deal_type AS dealType, support_prepayment AS supportPrepayment, settle_mode AS settleMode, mcc, trade_type_list AS tradeTypeList, pay_channel_list AS payChannelList, denied_pay_tool_list AS deniedPayToolList, auth_code AS authCode, out_trade_no AS outTradeNo, support_stage AS supportStage, partner_type AS partnerType, alipay_source AS alipaySource, wechat_channel AS wechatChannel, rate_version AS rateVersion, register_status AS registerStatus, account_no AS accountNo, fail_reason AS failReason, smid, freeze_ind AS freezeInd, freeze_reason AS freezeReason, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
+        id, out_merchant_id AS outMerchantId, order_no AS orderNo, merchant_id AS merchantId, merchant_name AS merchantName, merchant_type AS merchantType, deal_type AS dealType, support_prepayment AS supportPrepayment, settle_mode AS settleMode, mcc, trade_type_list AS tradeTypeList, pay_channel_list AS payChannelList, denied_pay_tool_list AS deniedPayToolList, auth_code AS authCode, out_trade_no AS outTradeNo, support_stage AS supportStage, partner_type AS partnerType, alipay_source AS alipaySource, wechat_channel AS wechatChannel, rate_version AS rateVersion, register_status AS registerStatus, account_no AS accountNo, fail_reason AS failReason, smid, freeze_ind AS freezeInd, freeze_reason AS freezeReason, notify_url AS notifyUrl, public_key AS publicKey, valid_ind AS validInd, del_flag AS delFlag, creator_code AS creatorCode, create_time AS createTime, updater_code AS updaterCode, update_time AS updateTime
     </sql>
 
 </mapper>

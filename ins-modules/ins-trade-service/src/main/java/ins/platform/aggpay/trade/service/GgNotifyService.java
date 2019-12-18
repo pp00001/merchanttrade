@@ -16,6 +16,8 @@
 
 package ins.platform.aggpay.trade.service;
 
+import ins.platform.aggpay.trade.vo.GpTradeOrderVo;
+
 /**
  * @author RipinYan
  * @ClassName: GgNotifyService
@@ -25,7 +27,7 @@ package ins.platform.aggpay.trade.service;
 public interface GgNotifyService {
 
 	/**
-	 * prePayNotice(主扫H5支付结果通知)
+	 * prePayNotice(主扫H5&动态订单扫码支付结果通知)
 	 *
 	 * @Title: prePayNotice
 	 * @Description:
@@ -47,4 +49,21 @@ public interface GgNotifyService {
 	 * @return java.lang.String 响应报文
 	 */
 	String notifyPayResult(String requestXml) throws Exception;
+
+
+	/**
+	 * merchantPayResultNotice(通知商户主扫H5&动态订单扫码支付结果)
+	 *
+	 * @Title: merchantPayResultNotice
+	 * @Description:
+	 * @param orderVo 支付结果vo
+	 * @throws
+	 * @author Ripin Yan
+	 */
+	void merchantPayResultNotice(GpTradeOrderVo orderVo);
+
+
+
+
+
 }

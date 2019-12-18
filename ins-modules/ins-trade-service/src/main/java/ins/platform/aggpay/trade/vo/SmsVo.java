@@ -18,6 +18,8 @@ package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author RipinYan
  * @ClassName: SmsVo
@@ -25,7 +27,9 @@ import lombok.Data;
  * @date 2018/10/30 7:33 PM
  */
 @Data
-public class SmsVo {
+public class SmsVo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 短信业务类型。本短信验证码对应的业务。可选值：

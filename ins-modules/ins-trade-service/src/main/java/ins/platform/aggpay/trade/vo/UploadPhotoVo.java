@@ -2,11 +2,15 @@ package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 5.1.2	图片上传接口应答报文
  */
 @Data
-public class UploadPhotoVo {
+public class UploadPhotoVo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 外部交易号

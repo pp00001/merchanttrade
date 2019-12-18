@@ -175,6 +175,14 @@ public class GgMerchantVo implements Serializable {
 	 */
 	private String freezeReason;
 	/**
+	 * 支付成功通知url地址
+	 */
+	private String notifyUrl;
+	/**
+	 * 商户公钥
+	 */
+	private String publicKey;
+	/**
 	 * 微信渠道入驻情况
 	 */
 	private List<GgWechatChannelVo> wechatChannelList;

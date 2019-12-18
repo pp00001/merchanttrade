@@ -36,7 +36,7 @@ public class ResourcesGenerator {
 
 
 	public static void main(String[] args) {
-        String outputDir = "/Users/yanshuiping/Desktop/generator/trade3";
+        String outputDir = "/Users/yanshuiping/Desktop/generator/trade5";
 		final String viewOutputDir = outputDir + "/view/";
 		AutoGenerator mpg = new AutoGenerator();
 		// 全局配置
@@ -72,7 +72,7 @@ public class ResourcesGenerator {
 		// 表名生成策略
 		strategy.setNaming(NamingStrategy.underline_to_camel);
 		strategy.setEntityLombokModel(true);
-		String[] tableNames = new String[]{"gp_refund_order"};
+		String[] tableNames = new String[]{"gg_merchant"};
 		strategy.setInclude(tableNames);
 		mpg.setStrategy(strategy);
 

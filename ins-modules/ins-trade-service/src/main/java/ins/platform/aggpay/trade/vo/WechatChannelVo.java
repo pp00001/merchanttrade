@@ -10,6 +10,8 @@ package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author RipinYan
  * @ClassName: WechatChannelVo
@@ -17,7 +19,9 @@ import lombok.Data;
  * @date 2018/9/18 下午2:08
  */
 @Data
-public class WechatChannelVo {
+public class WechatChannelVo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 微信渠道号

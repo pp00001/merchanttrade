@@ -29,6 +29,8 @@ DROP TABLE IF EXISTS gp_refund_order;
 /*==============================================================*/
 CREATE TABLE gg_merchant (
   id                   BIGINT (20) NOT NULL auto_increment COMMENT '主键',
+  notify_url           VARCHAR(256) DEFAULT NULL COMMENT '支付成功通知url地址',
+  public_key           VARCHAR(256) DEFAULT NULL COMMENT '商户公钥',
   out_merchant_id      VARCHAR(64)  DEFAULT NULL COMMENT '外部商户号',
   order_no             VARCHAR(64)  DEFAULT NULL COMMENT '申请单号',
   merchant_id          VARCHAR(64)  DEFAULT NULL COMMENT '商户号',

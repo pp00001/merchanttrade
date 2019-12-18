@@ -40,14 +40,9 @@ trade:
   reqUrl: https://fcsupergw.dl.alipaydev.com/open/api/common/request2.htm
   payUrl: https://fcsupergw.dl.alipaydev.com/open/api/common/requestasync.htm
   uploadUrl: https://fcsupergwlite.dl.alipaydev.com/ant/mybank/merchantprod/merchant/uploadphoto.htm
-  aliOpenauthUrl: https://openauth.alipay.com/oauth2/publicAppAuthorize.htm
-  wxOpenauthUrl: https://open.weixin.qq.com/connect/oauth2/authorize
   aliOauthUrl: https://openapi.alipay.com/gateway.do
   wxOauthUrl: https://api.weixin.qq.com/sns/oauth2/access_token
-  aliRedirectUrl: http://ripin925.ngrok.xiaomiqiu.cn/oauth/ali
-  wxRedirectUrl: http://ripin925.ngrok.xiaomiqiu.cn/oauth/wx
-#  aliRedirectUrl: https://hnxinshixian.com/oauth/ali
-#  wxRedirectUrl: https://hnxinshixian.com/oauth/wx
+
 ---
 spring:
   profiles: prd

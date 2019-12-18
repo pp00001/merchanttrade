@@ -1,14 +1,14 @@
 package ins.platform.aggpay.mc.handler;
 
-import ins.platform.aggpay.common.util.template.DingTalkMsgTemplate;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.alibaba.fastjson.JSONObject;
-import ins.platform.aggpay.mc.config.DingTalkPropertiesConfig;
 import com.xiaoleilu.hutool.http.HttpUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
+import ins.platform.aggpay.common.util.template.DingTalkMsgTemplate;
+import ins.platform.aggpay.mc.config.DingTalkPropertiesConfig;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author lengleng
@@ -18,6 +18,7 @@ import com.xiaoleilu.hutool.util.StrUtil;
 @Slf4j
 @Component
 public class DingTalkMessageHandler {
+
     @Autowired
     private DingTalkPropertiesConfig dingTalkPropertiesConfig;
 

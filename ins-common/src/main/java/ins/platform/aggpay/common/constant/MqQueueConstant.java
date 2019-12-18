@@ -12,6 +12,13 @@ public interface MqQueueConstant {
     String LOG_QUEUE = "log";
 
     /**
+     * 支付结果通知队列
+     */
+    String PAY_NOTICE_QUEUE = "pay_notice";
+    String PAY_NOTICE_15_QUEUE = "pay_notice_15";
+    String PAY_NOTICE_30_QUEUE = "pay_notice_30";
+
+    /**
      * 发送短信验证码队列
      */
     String MOBILE_CODE_QUEUE = "mobile_code_queue";

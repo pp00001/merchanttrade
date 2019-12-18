@@ -18,6 +18,7 @@ package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Date;
  * @since 2018-10-18
  */
 @Data
-public class GpRefundOrderVo {
+public class GpRefundOrderVo implements Serializable{
 
     private static final long serialVersionUID = 1L;
 

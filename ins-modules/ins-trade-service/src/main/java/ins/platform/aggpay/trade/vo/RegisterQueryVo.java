@@ -16,12 +16,15 @@
 
 package ins.platform.aggpay.trade.vo;
 
-import lombok.Data;
-
+import java.io.Serializable;
 import java.util.List;
 
+import lombok.Data;
+
 @Data
-public class RegisterQueryVo {
+public class RegisterQueryVo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private RespInfoVo respInfo;//返回码组件。Result Status 返回S不代表入驻成功，只代表申请单据已经查询到，结果需要看RegisterStatus字段。
 	

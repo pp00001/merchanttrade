@@ -16,16 +16,16 @@
 
 package ins.platform.aggpay.trade.entity;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 import java.io.Serializable;
 import java.util.Date;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * <p>
@@ -170,6 +170,16 @@ public class GgMerchant extends Model<GgMerchant> {
      */
     @TableField("freeze_reason")
     private String freezeReason;
+    /**
+     * 支付成功通知url地址
+     */
+    @TableField("notify_url")
+    private String notifyUrl;
+    /**
+     * 商户公钥
+     */
+    @TableField("public_key")
+    private String publicKey;
     /**
      * 是否有效 - 1：有效，0：无效
      */

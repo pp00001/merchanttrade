@@ -18,7 +18,9 @@ package ins.platform.aggpay.trade.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author RipinYan
@@ -27,7 +29,8 @@ import java.util.Date;
  * @date 2018/10/12 下午3:53
  */
 @Data
-public class GpTradeOrderVo {
+@JsonIgnoreProperties({"id", "validInd"})
+public class GpTradeOrderVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
